@@ -45,12 +45,34 @@ class Map:
         """
         return 0 <= x < self.width and 0 <= y < self.height
 
-    def display(self):
-        # Method to print the map on console (optional for debugging)
-        for row in self.terrain:
-            print(" ".join(str(cell) if cell else "_" for cell in row))
+    # def display1(self):
+    #     # Method to print the map on console (optional for debugging)
+    #     for row in self.terrain:
+    #         print(" ".join(str(cell) if cell else "_" for cell in row))
 
-        pass
+    def display(self):
+        max_width = 0
+        for row in self.terrain:
+            for cell in row:
+                cell_length = len(str(cell) if cell else "-")
+                max_width = max(max_width, cell_length)
+
+        top_bottom_border = "-" + "-" * (
+            max_width * len(self.terrain[0]) + len(self.terrain[0])
+        )
+
+        print(top_bottom_border)  # Imprime el borde superior.
+        for row in self.terrain:
+            # Creamos la fila con cada celda ajustada al ancho máximo.
+            row_str = "|"
+            for cell in row:
+                row_str += (
+                    str(cell).ljust(max_width) + " "
+                )  # Aseguramos que cada celda tenga el mismo ancho.
+            print(
+                row_str[:-1] + "|"
+            )  # Imprimimos la fila y eliminamos el último espacio antes del borde derecho.
+        print(top_bottom_border)  # Imprime el borde inferior.
 
 
 class Agent:
@@ -100,6 +122,80 @@ class Agent:
         """
         # Interaction logic (fighting, forming alliances, etc.)
         pass
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Human_Agent(Agent):
+    """
+    Clase que representa un agente humano en la simulación, capaz de tomar decisiones basadas en su entorno y estado.
+
+    Atributos:
+        name (str): Nombre del agente.
+        health (int): Salud actual del agente.
+        x (int): Posición x actual del agente en el mapa.
+        y (int): Posición y actual del agente en el mapa.
+        inventory (list): Inventario de objetos que el agente ha recogido.
+        state (dict): Diccionario para almacenar estados adicionales del agente (hambre, sed, etc.).
+    """
+
+    def __init__(self, name, health, x, y):
+        """
+        Inicializa una nueva instancia de un agente humano.
+
+        Parámetros:
+            name (str): Nombre del agente.
+            health (int): Salud inicial del agente.
+            x (int): Posición x inicial del agente.
+            y (int): Posición y inicial del agente.
+            inventario (list): Lista de objetos que el agente ha recogido.
+            state (dict): Diccionario para almacenar estados adicionales del agente (hambre, sed, etc.).
+        """
+        super().__init__(name, health, x, y)
+        self.inventory = []
+        self.state = {}
+
+    def decide_actions(self):
+        """
+        Implementar la lógica para que el agente humano tome decisiones basadas en su entorno y estado actual.
+        """
+        # Decision-making logic
+        pass
+
+    def pick_up_object(self, obj):
+        """
+        Añade un objeto al inventario del agente.
+
+        Parámetros:
+            obj (Object): El objeto a recoger.
+        """
+        self.inventory.append(obj)
+
+
+import time
+
+
+class Simulation:
+    def __init__(self, map_width, map_height, num_agents):
+        self.map = Map(map_width, map_height)
+        self.agents = [Agent(f"Agent {i}", 100, i, i) for i in range(num_agents)]
+        for agent in self.agents:
+            self.map.update_cell(agent.x, agent.y, agent)
+
+    def execute_cycle(self):
+        for agent in self.agents:
+            agent.move(1, 0)  # Move to the right
+
+    def start(self):
+        while True:
+            self.execute_cycle()
+            self.map.display()
+            time.sleep(1)
+
+
+sim = Simulation(10, 10, 4)
+sim.start()
 
 
 class Object:
@@ -156,64 +252,3 @@ class Weapon(Object):
         """
         super().__init__("Weapon")
         self.damage = damage
-
-
-class Human_Agent(Agent):
-    """
-    Clase que representa un agente humano en la simulación, capaz de tomar decisiones basadas en su entorno y estado.
-
-    Atributos:
-        name (str): Nombre del agente.
-        health (int): Salud actual del agente.
-        x (int): Posición x actual del agente en el mapa.
-        y (int): Posición y actual del agente en el mapa.
-        inventory (list): Inventario de objetos que el agente ha recogido.
-        state (dict): Diccionario para almacenar estados adicionales del agente (hambre, sed, etc.).
-    """
-
-    def __init__(self, name, health, x, y):
-        """
-        Inicializa una nueva instancia de un agente humano.
-
-        Parámetros:
-            name (str): Nombre del agente.
-            health (int): Salud inicial del agente.
-            x (int): Posición x inicial del agente.
-            y (int): Posición y inicial del agente.
-            inventario (list): Lista de objetos que el agente ha recogido.
-            state (dict): Diccionario para almacenar estados adicionales del agente (hambre, sed, etc.).
-        """
-        super().__init__(name, health, x, y)
-        self.inventory = []
-        self.state = {}
-
-    def decide_actions(self):
-        """
-        Implementar la lógica para que el agente humano tome decisiones basadas en su entorno y estado actual.
-        """
-        # Decision-making logic
-        pass
-
-    def pick_up_object(self, obj):
-        """
-        Añade un objeto al inventario del agente.
-
-        Parámetros:
-            obj (Object): El objeto a recoger.
-        """
-        self.inventory.append(obj)
-
-
-class Simulation:
-    def __init__(self, map_width, map_height, num_agents):
-        self.map = Map(map_width, map_height)
-        self.agents = [Agent(f"Agent {i}", 100, i, i) for i in range(num_agents)]
-
-    def execute_cycle(self):
-        for agent in self.agents:
-            agent.move(1, 0)  # Move to the right
-
-    def start(self):
-        while True:
-            self.execute_cycle()
-            break
