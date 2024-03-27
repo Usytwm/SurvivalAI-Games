@@ -16,3 +16,13 @@ class IAgent(ABC):
     def heuristic(self):
         """Aplica una heurística para tomar decisiones."""
         pass
+
+    @abstractmethod
+    def decide_next_move(self):
+        """Decide el siguiente movimiento."""
+        pass
+
+    @abstractmethod
+    def decide_interaction(self):
+        """Decide si interactuar o no."""
+        pass

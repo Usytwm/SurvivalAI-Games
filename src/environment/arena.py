@@ -1,7 +1,8 @@
 import random
 import time
+from typing import List
 from Interfaces.IMap import IMapInfoProvider
-from agents.agent import Agent
+from agents.agent import IAgent
 
 
 class MapController(IMapInfoProvider):
@@ -9,6 +10,18 @@ class MapController(IMapInfoProvider):
         self.width = width
         self.height = height
         self.terrain = [[None for _ in range(width)] for _ in range(height)]
+        self.agents: List[IAgent] = []
+
+    def add_agent(self, agent):
+        if self.cell_content(agent.x, agent.y) is None:
+            self.update_cell(agent.x, agent.y, agent)
+            self.agents.append(agent)
+        else:
+            raise ValueError("Posición ocupada por otro agente.")
+
+    def remove_agent(self, agent):
+        self.update_cell(agent.x, agent.y, None)
+        self.agents.remove(agent)
 
     def valid_position(self, x, y):
         return 0 <= x < self.width and 0 <= y < self.height
@@ -32,8 +45,6 @@ class MapController(IMapInfoProvider):
         ):
             # Actualizar la celda anterior a None antes de moverse
             self.update_cell(agent.x, agent.y, None)
-            # Actualizar la posición del agente
-            agent.update_position(new_x, new_y)  # Esta será una nueva función en Agent
             # Reflejar el nuevo posicionamiento del agente en el mapa
             self.update_cell(new_x, new_y, agent)
             return True
@@ -61,33 +72,6 @@ class MapController(IMapInfoProvider):
                 row_str[:-1] + "|"
             )  # Imprimimos la fila y eliminamos el último espacio antes del borde derecho.
         print(top_bottom_border)  # Imprime el borde inferior.
-
-
-class Simulation:
-    def __init__(self, map_width, map_height, num_agents):
-        self.map_controller = MapController(map_width, map_height)
-        self.agents = [
-            Agent(
-                f"{i}",
-                100,
-                random.randint(0, map_width - 1),
-                random.randint(0, map_height - 1),
-                self.map_controller,
-            )
-            for i in range(num_agents)
-        ]
-        # Inicializar los agentes en el mapa
-
-    def run(self, steps=10):
-        for _ in range(steps):
-            for agent in self.agents:
-                if not agent.decide_interaction():
-                    # Si no hay interacción, el agente decide moverse
-                    dx, dy = agent.next_move()
-                    agent.move(dx, dy)
-                # dx, dy = agent.next_move()  # El agente decide su próximo movimiento
-                # agent.move(dx, dy)  # Intenta ejecutar el movimiento
-            self.map_controller.display()
 
 
 # class GameController:
