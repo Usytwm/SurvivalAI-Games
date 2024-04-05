@@ -15,5 +15,9 @@ class IMapInfoProvider(ABC):
         pass
 
     @abstractmethod
-    def request_move(self, agent, dx, dy):
+    def move(self, sx, sy, dx, dy):
+        pass
+
+    @abstractmethod
+    def peek_from(self, x, y, vision_range):
         pass
