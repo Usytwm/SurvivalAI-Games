@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List
 from environment.actions import Action, Alliance_Solicitude
-#from environment.objects import Object_Info
+from environment.objects import Object_Info
 
 class IAgent(ABC):
     @abstractmethod
@@ -30,6 +30,6 @@ class IAgent(ABC):
         pass
 
     @abstractmethod
-    def view(self, sight : List) -> None:
+    def view(self, sight : List[Tuple[int, int, Object_Info]]) -> None:
         "Muestra al agente la vista que le corresponde"
         pass

@@ -9,6 +9,7 @@ class Action(NamedTuple):
     type : ActionType
     agent : str
     direction : Tuple[int, int] | None = None
+    intensity : int = 1
 
 class Alliance_Solicitude:
     pass

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 
 class IMapInfoProvider(ABC):
@@ -20,4 +21,8 @@ class IMapInfoProvider(ABC):
 
     @abstractmethod
     def peek_from(self, x, y, vision_range):
+        pass
+
+    @abstractmethod
+    def shot(self, agent_id : str, direction : Tuple[int, int], max_length : int):
         pass
