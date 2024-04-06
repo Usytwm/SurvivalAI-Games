@@ -8,6 +8,7 @@ sys.path.insert(0, current_dir + '/src/interfaces')
 from typing import List, Dict, Tuple
 from environment.objects import Object_Type
 from Interfaces.IMap import IMapInfoProvider
+import math
 class Map(IMapInfoProvider):
     def __init__(self, width, height):
         self.width = width
@@ -57,19 +58,35 @@ class Map(IMapInfoProvider):
         """Para una posicion, retorna todo lo que se puede ver desde esa posicion,
         en forma de una tupla (coordenadas del objeto, id del objeto, nitidez)
         """
-        light_directions = [(x, y) for x in range(-1, 2) for y in range(-1, 2)]
+        top_row = max(0, y - vision_range)
+        down_row = min(self.height - 1, y + vision_range)
+        leftmost_row = max(0, x - vision_range)
+        rightmost_row = min(self.width, x + vision_range)
+        visible_squares = [(x, y) for x in range(leftmost_row, rightmost_row) for y in range(top_row, down_row)]
         sights = []
-        for dx, dy in light_directions:
-            for k in range(1, vision_range):
-                try:
-                    current_cell_content = self.cell_content(x + dx*k, y + dy*k)
-                    if current_cell_content:
-                        sights.append((x, y, current_cell_content, 1/k))
-                        #Por ahora la nitidez del objeto es el inverso de la distancia
-                        break
-                except:
-                    break
+        for cx, cy in visible_squares:
+            if cx == x and cy == y:
+                continue
+            sights.append((cx, cy, self.cell_content(cx, cy), self.get_nitidez(x, y, cx, cy)))
         return sights
+    
+    def shot(self, agent_id: str, direction: Tuple[int], max_length: int):
+        "Returns the id of the object hit by the shot, and the distance covered by the bullet"
+        curr_X, curr_Y = self.object_positions[agent_id]
+        curr_X += direction[0]
+        curr_Y += direction[1]
+        for i in range(0, max_length):
+            if not self.valid_position(curr_X, curr_Y):
+                break
+            content = self.cell_content(curr_X, curr_Y)
+            if content is not None:
+                return content, i + 1
+            curr_X += direction[0]
+            curr_Y += direction[1]
+        return None, max_length
+    
+    def get_nitidez(self, x, y, cx, cy):
+        return 1/math.sqrt((cx - x)**2 + (cy - y)**2)
 
     def display(self):
         max_width = 0

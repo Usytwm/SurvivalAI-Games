@@ -12,10 +12,11 @@ from typing import List, Tuple
 class Agent_Handler():
     """El manejador de Agente de la simulacion
     """
-    def __init__(self, id, health : int, ammo : int, agent : IAgent):
+    def __init__(self, id, health : int, ammo : int, range_of_vision : int, agent : IAgent):
         self.id = id
         self.health = health
         self.ammo = ammo
+        self.range_of_vision = range_of_vision
         self.agent = agent
     
     def move(self) -> Tuple[int, int]:

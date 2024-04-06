@@ -1,6 +1,5 @@
 from typing import Tuple, NamedTuple, List
 from enum import Enum
-from Interfaces.IAgent import IAgent
 class Object_Type(Enum):
     Agent = 1
     Obstacle = 2
@@ -15,4 +14,22 @@ class Sim_Object:
         self.type = type
 
 class Object_Info:
+    def __init__(self):
+        self.id = " "
+    def __eq__(self, other):
+        return self.id == other.id
+
+class Empty(Object_Info):
     pass
+
+class Presence(Object_Info):
+    def __init__(self):
+        self.id = "X"
+
+class Agent_Image(Object_Info):
+    """Representa la imagen que se forma un agente de otro agente cuando lo ve a lo
+    lejos. Mientras mas cercano, mas informacion, mientras mas lejos, mas campos nulos"""
+    def __init__(self, id = None, ammo = None, health = None):
+        self.id = id
+        self.ammo = ammo
+        self.health = health
