@@ -1,35 +1,19 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List
-from environment.actions import Action, Alliance_Solicitude
-from environment.objects import Object_Info
+from environment.object_info import Object_Info
 
 class IAgent(ABC):
     @abstractmethod
-    def move(self) -> Tuple[int, int]:
-        "Obtener un movimiento de parte del agente"
+    def move(self, possible_destinations : List[Tuple[int, int]]) -> Tuple[int, int]:
+        """Receives a list of possible destinations and returns the one where the player wants
+        to move to"""
+        pass
+    
+    def inform_move(self, position : Tuple[int, int]) -> None:
+        "Informs the agent he has moved to the given position"
         pass
 
     @abstractmethod
-    def actions(self) -> List[Action]:
-        "Obtener una lista de las acciones que realizara el agente durante el turno"
-        pass
-
-    @abstractmethod
-    def actualize_personal_info(self) -> None:
-        "Recibe una actualizacion de los datos personales del agente"
-        pass
-
-    @abstractmethod
-    def falled_in_a_trap(self) -> None:
-        "Informa al agente that que ha caido en una trampa"
-        pass
-
-    @abstractmethod
-    def received_attack(self) -> None:
-        "Informa al agente que ha recibido un ataque"
-        pass
-
-    @abstractmethod
-    def view(self, sight : List[Tuple[int, int, Object_Info]]) -> None:
-        "Muestra al agente la vista que le corresponde"
+    def see(self, info : List[Tuple[Tuple[int, int], Object_Info]]) -> None:
+        "This method passes the agent the information about what he can see"
         pass
