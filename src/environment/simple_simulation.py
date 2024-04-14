@@ -11,6 +11,52 @@ from environment.agent_handler import Agent_Handler
 from environment.map import Map
 
 
+class Display:
+    @staticmethod
+    def get_cell_color(position, map: Map, agent_color, terrain_color, resource_color):
+        content = map.peek_from_position(position)
+        if content:  # Si hay un agente
+            return agent_color
+        elif map.resources.get(position, 0) > 0:  # Si hay recursos
+            percentage = map.resource_percentage(position)
+            return [
+                int(
+                    terrain_color[i]
+                    + (resource_color[i] - terrain_color[i]) * percentage
+                )
+                for i in range(3)
+            ]
+        else:
+            return terrain_color
+
+    @staticmethod
+    def draw_cell(screen, position, color, cell_size, font, map: Map, border=0):
+        rect = pygame.Rect(
+            position[1] * cell_size,
+            position[0] * cell_size,
+            cell_size,
+            cell_size,
+        )
+        pygame.draw.rect(screen, color, rect)
+
+        if border > 0:
+            pygame.draw.rect(screen, (0, 0, 0), rect, border)  # Borde negro
+
+        content = map.peek_from_position(position)
+        if content:  # Si hay un agente
+            text = font.render(str(content), True, (0, 0, 0))
+            text_rect = text.get_rect(center=rect.center)
+            screen.blit(text, text_rect)
+
+    @staticmethod
+    def display_messages(screen, messages, cell_size, map_height, font):
+        message_y = map_height * cell_size + 10
+        for message in messages:
+            message_text = font.render(message, True, (255, 255, 255))
+            screen.blit(message_text, (10, message_y))
+            message_y += 30
+
+
 class SimpleSimulation(ISimulation):
 
     def __init__(
@@ -60,62 +106,30 @@ class SimpleSimulation(ISimulation):
                 sys.exit()
 
         self.screen.fill((0, 0, 0))  # Fondo negro
-        # Define colores para representar los recursos
-        # (210, 180, 140)
 
+        # Defini2 colores
         terrain_color = (255, 255, 255)  # Un color tipo arena para terreno sin recursos
         resource_color = (139, 69, 19)  # Un color marrón oscuro para recursos al máximo
-        agent_color = (255, 0, 0)
+        agent_color = (255, 0, 0)  # Un color roj para los agentes
 
         # Dibuja el campo de juego
         for row in range(self.map.height):
             for col in range(self.map.width):
                 position = (row, col)
-                content = self.map.peek_from_position(position)
-                if content:
-                    color = agent_color
-                elif self.map.resources.get(position, 0) > 0:
-                    # Calcula el porcentaje de recursos
-                    percentage = self.map.resource_percentage(position)
-                    # Interpola los colores en función del porcentaje de recursos
-                    color = [
-                        int(
-                            terrain_color[i]
-                            + (resource_color[i] - terrain_color[i]) * percentage
-                        )
-                        for i in range(3)
-                    ]
-                else:
-                    color = terrain_color  # Sin recursos, usa el color del terreno
-
-                rect = pygame.Rect(
-                    col * self.cell_size,
-                    row * self.cell_size,
-                    self.cell_size,
-                    self.cell_size,
+                color = Display.get_cell_color(
+                    position, self.map, agent_color, terrain_color, resource_color
                 )
-                pygame.draw.rect(self.screen, color, rect)
-                pygame.draw.rect(self.screen, (0, 0, 0), rect, 1)  # Borde negro
+                Display.draw_cell(
+                    self.screen, position, color, self.cell_size, self.font, self.map
+                )
 
-                if content:
-                    text = self.font.render(str(content), True, (0, 0, 0))
-                    text_rect = text.get_rect(center=rect.center)
-                    self.screen.blit(text, text_rect)
-                    self.add_message(
-                        f"Agente {content} es un tanque."
-                    )  # Suponiendo que esto se necesite
-
-        # Mostrar mensajes en el área designada para mensajes
-        message_y = (
-            self.map.height * self.cell_size + 10
-        )  # Comenzar justo debajo del campo de juego
-        for message in self.messages:
-            message_text = self.font.render(message, True, (255, 255, 255))
-            self.screen.blit(message_text, (10, message_y))
-            message_y += 30  # Espacio entre mensajes
+        # Mostrar mensajes
+        Display.display_messages(
+            self.screen, self.messages, self.cell_size, self.map.height, self.font
+        )
 
         pygame.display.flip()
-        self.messages = []  # Limpia los mensajes después de mostrarlos
+        # self.messages = []  # Limpia los mensajes después de mostrarlos
 
     def display_terminal(self):
         print("____________________")
