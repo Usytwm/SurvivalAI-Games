@@ -10,12 +10,12 @@ import pygame
 pygame.init()
 
 resources = {}
-for i in range(100):
-    for j in range(100):
+for i in range(15):
+    for j in range(15):
         resources[(i, j)] = (
             random.randint(0, 100) if random.choice([True, False]) else 0
         )
-map = Map(100, 100, resources)
+map = Map(15, 15, resources)
 positions = set()
 while len(positions) < 4:
     new_position = (randint(0, 9), randint(0, 9))
