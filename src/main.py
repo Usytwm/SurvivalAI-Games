@@ -4,6 +4,9 @@ from environment.agent_handler import Agent_Handler
 from environment.simple_range import SimpleWalking, SquareVision
 from agents.random_agent import Random_Agent
 from random import randint
+import pygame
+
+pygame.init()
 
 resources = {}
 for i in range(10):
@@ -17,13 +20,53 @@ while len(positions) < 4:
         positions.add(new_position)
 positions = list(positions)
 agents = [
-    (positions[0], (1, Agent_Handler(1, 3, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)))),
-    (positions[1], (2, Agent_Handler(2, 5, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)))),
-    (positions[2], (3, Agent_Handler(3, 7, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)))),
-    (positions[3], (4, Agent_Handler(4, 9, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3))))
+    (
+        positions[0],
+        (
+            1,
+            Agent_Handler(
+                1, 3, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
+            ),
+        ),
+    ),
+    (
+        positions[1],
+        (
+            2,
+            Agent_Handler(
+                2, 5, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
+            ),
+        ),
+    ),
+    (
+        positions[2],
+        (
+            3,
+            Agent_Handler(
+                3, 7, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
+            ),
+        ),
+    ),
+    (
+        positions[3],
+        (
+            4,
+            Agent_Handler(
+                4, 9, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
+            ),
+        ),
+    ),
 ]
 
 simulation = SimpleSimulation(map, agents)
 
-while True:
-    simulation.step()
+# while True:
+#     simulation.step()
+
+try:
+    while True:
+        simulation.step()  # Actualiza el estado del simulador
+except KeyboardInterrupt:
+    print("Simulación interrumpida")
+finally:
+    pygame.quit()
