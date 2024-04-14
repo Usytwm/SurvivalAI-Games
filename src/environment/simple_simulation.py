@@ -12,12 +12,27 @@ from environment.map import Map
 
 
 class Display:
+    def __init__(self, map: Map, cell_size=None, max_width=800, max_height=600):
+        self.map = map
+        self.cell_size = (
+            cell_size
+            if cell_size is not None
+            else min(max_width // self.map.width, (max_height - 100) // self.map.height)
+        )
+        self.screen_width = self.map.width * self.cell_size
+        self.screen_height = (
+            self.map.height * self.cell_size + 100
+        )  # 100 pixels for messages area
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        self.font = pygame.font.Font(None, 24)
+        pygame.display.set_caption("Simulation")
+
     @staticmethod
     def get_cell_color(position, map: Map, agent_color, terrain_color, resource_color):
         content = map.peek_from_position(position)
-        if content:  # Si hay un agente
+        if content:
             return agent_color
-        elif map.resources.get(position, 0) > 0:  # Si hay recursos
+        elif map.resources.get(position, 0) > 0:
             percentage = map.resource_percentage(position)
             return [
                 int(
@@ -32,28 +47,22 @@ class Display:
     @staticmethod
     def draw_cell(screen, position, color, cell_size, font, map: Map, border=0):
         rect = pygame.Rect(
-            position[1] * cell_size,
-            position[0] * cell_size,
-            cell_size,
-            cell_size,
+            position[1] * cell_size, position[0] * cell_size, cell_size, cell_size
         )
         pygame.draw.rect(screen, color, rect)
-
         if border > 0:
-            pygame.draw.rect(screen, (0, 0, 0), rect, border)  # Borde negro
-
+            pygame.draw.rect(screen, (0, 0, 0), rect, border)
         content = map.peek_from_position(position)
-        if content:  # Si hay un agente
+        if content:
             text = font.render(str(content), True, (0, 0, 0))
             text_rect = text.get_rect(center=rect.center)
             screen.blit(text, text_rect)
 
-    @staticmethod
-    def display_messages(screen, messages, cell_size, map_height, font):
-        message_y = map_height * cell_size + 10
+    def display_messages(self, messages):
+        message_y = self.map.height * self.cell_size + 10
         for message in messages:
-            message_text = font.render(message, True, (255, 255, 255))
-            screen.blit(message_text, (10, message_y))
+            message_text = self.font.render(message, True, (255, 255, 255))
+            self.screen.blit(message_text, (10, message_y))
             message_y += 30
 
 
@@ -63,15 +72,10 @@ class SimpleSimulation(ISimulation):
         self, map: Map, agents: List[Tuple[Tuple[int] | Tuple[int | Agent_Handler]]]
     ):
         super().__init__(map, agents)
-        self.cell_size = 50
-        self.message_area_height = 100  # Altura del área de mensajes
-        self.screen_height = self.map.height * self.cell_size + self.message_area_height
-        self.screen = pygame.display.set_mode(
-            (self.map.width * self.cell_size, self.screen_height)
+        self._display = Display(
+            map,
         )
-        self.font = pygame.font.Font(None, 24)
-        self.messages = []  # Almacenar los mensajes
-        pygame.display.set_caption("Simulation Display")
+        self.messages = []  # Almacenar mensajes para la simulación
 
     def add_message(self, message: str):
         if len(self.messages) > 10:  # Limitar el número de mensajes almacenados
@@ -105,31 +109,27 @@ class SimpleSimulation(ISimulation):
                 pygame.quit()
                 sys.exit()
 
-        self.screen.fill((0, 0, 0))  # Fondo negro
+        self._display.screen.fill((0, 0, 0))  # Limpiar pantalla para nuevo frame
 
-        # Defini2 colores
-        terrain_color = (255, 255, 255)  # Un color tipo arena para terreno sin recursos
-        resource_color = (139, 69, 19)  # Un color marrón oscuro para recursos al máximo
-        agent_color = (255, 0, 0)  # Un color roj para los agentes
-
-        # Dibuja el campo de juego
+        # Dibujar y mostrar mensajes
         for row in range(self.map.height):
             for col in range(self.map.width):
                 position = (row, col)
-                color = Display.get_cell_color(
-                    position, self.map, agent_color, terrain_color, resource_color
+                color = self._display.get_cell_color(
+                    position, self.map, (255, 0, 0), (255, 255, 255), (139, 69, 19)
                 )
-                Display.draw_cell(
-                    self.screen, position, color, self.cell_size, self.font, self.map
+                self._display.draw_cell(
+                    self._display.screen,
+                    position,
+                    color,
+                    self._display.cell_size,
+                    self._display.font,
+                    self.map,
                 )
 
-        # Mostrar mensajes
-        Display.display_messages(
-            self.screen, self.messages, self.cell_size, self.map.height, self.font
-        )
-
+        self._display.display_messages(self.messages)
         pygame.display.flip()
-        # self.messages = []  # Limpia los mensajes después de mostrarlos
+        self.messages = []  # Limpia los mensajes después de mostrarlos
 
     def display_terminal(self):
         print("____________________")
