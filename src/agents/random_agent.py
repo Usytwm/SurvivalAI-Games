@@ -1,23 +1,21 @@
-from typing import List
+from typing import List, Tuple
+from environment.sim_object import Object_Info
+from environment.actions import Action_Info
 from Interfaces.IAgent import IAgent
-from environment.actions import Action, ActionType
 from random import randint
-
 class Random_Agent(IAgent):
-    def __init__(self):
+    def move(self, possible_destinations: List[Tuple[int, int]]) -> Tuple[int, int]:
+        return possible_destinations[randint(0, len(possible_destinations) - 1)]
+    def inform_move(self, position: Tuple[int]) -> None:
         pass
-    def move(self):
-        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
-        return directions[randint(0, 3)]
-    def actions(self) -> List[Action]:
-        directions = [(-1, 0), (0, -1), (1, 0), (0, 1)]
-        direction = directions[randint(0, 3)]
-        return [Action(ActionType.ATTACK, None, direction)]
-    def actualize_personal_info(self) -> None:
+    def see_objects(self, info: List[Object_Info]) -> None:
+        for obj in info:
+            print(str(obj.position) + " : " + str(obj.id))
         pass
-    def falled_in_a_trap(self) -> None:
+    def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
         pass
-    def received_attack(self) -> None:
-        pass
-    def view(self, sight: List) -> None:
+    def see_actions(self, info : List[Action_Info]):
+        for action in info:
+            print(str(action.type.name) + " in " + str(action.start_position))
+    def feed(self, sugar: int) -> None:
         pass

@@ -1,35 +1,39 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List
-from environment.actions import Action, Alliance_Solicitude
-from environment.objects import Object_Info
+from environment.sim_object import Object_Info
+from environment.actions import Action_Info
 
 class IAgent(ABC):
     @abstractmethod
-    def move(self) -> Tuple[int, int]:
-        "Obtener un movimiento de parte del agente"
+    def move(self, possible_destinations : List[Tuple[int, int]]) -> Tuple[int, int]:
+        """Dada una lista de movimientos posibles, descritos como tuplas
+        (desplazamiento_horizontal, desplazamiento_vertical), devuelve una de tales tuplas
+        el movimiento seleccionado a realizar"""
+        pass
+    
+    @abstractmethod
+    def inform_move(self, position : Tuple[int, int]) -> None:
+        """Informa al agente sobre el desplazamiento que realizo (que puede no ser excactamente
+        el que el deseaba)"""
         pass
 
     @abstractmethod
-    def actions(self) -> List[Action]:
-        "Obtener una lista de las acciones que realizara el agente durante el turno"
+    def see_objects(self, info : List[Object_Info]) -> None:
+        """Informa al agente de los objetos que puede ver"""
         pass
 
     @abstractmethod
-    def actualize_personal_info(self) -> None:
-        "Recibe una actualizacion de los datos personales del agente"
+    def see_resources(self, info : List[Tuple[Tuple[int, int], int]]) -> None:
+        """Informa al agente acerca de la cantidad de azucar en las posiciones en su rango de 
+        posicion"""
         pass
 
     @abstractmethod
-    def falled_in_a_trap(self) -> None:
-        "Informa al agente that que ha caido en una trampa"
+    def see_actions(self, info : List[Action_Info]):
+        "Informa al agente las acciones que ocurrieron en el pasado turno en su rango de vision"
         pass
 
     @abstractmethod
-    def received_attack(self) -> None:
-        "Informa al agente que ha recibido un ataque"
-        pass
-
-    @abstractmethod
-    def view(self, sight : List[Tuple[int, int, Object_Info]]) -> None:
-        "Muestra al agente la vista que le corresponde"
+    def feed(self, sugar : int) -> None:
+        """Informa al agente la cantidad de azucar que acaba de recolectar"""
         pass

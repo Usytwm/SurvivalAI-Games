@@ -1,15 +1,18 @@
-from typing import Tuple, NamedTuple
 from enum import Enum
+from typing import List, Tuple
 
-class ActionType(Enum):
-    ATTACK = 1
-    PLACE_TRAP = 2
+class Action_Type(Enum):
+    DIE = 1
 
-class Action(NamedTuple):
-    type : ActionType
-    agent : str
-    direction : Tuple[int, int] | None = None
-    intensity : int = 1
+class Action:
+    def __init__(self, type : Action_Type, actor_id : int, victim_ids : List[int] = None):
+        self.type = type
+        self.actor_id = actor_id
+        self.victim_ids = victim_ids
 
-class Alliance_Solicitude:
-    pass
+class Action_Info:
+    def __init__(self, start_position : Tuple[int, int], type : Action_Type, actor_id : int = None, victim_ids : List[int] = None):
+        self.start_position = start_position
+        self.type = type
+        self.actor_id = actor_id
+        self.victim_ids = victim_ids
