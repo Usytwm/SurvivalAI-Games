@@ -1,3 +1,4 @@
+import random
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
@@ -11,7 +12,9 @@ pygame.init()
 resources = {}
 for i in range(10):
     for j in range(10):
-        resources[(i, j)] = 0
+        resources[(i, j)] = (
+            random.randint(0, 100) if random.choice([True, False]) else 0
+        )
 map = Map(10, 10, resources)
 positions = set()
 while len(positions) < 4:
@@ -60,12 +63,9 @@ agents = [
 
 simulation = SimpleSimulation(map, agents)
 
-# while True:
-#     simulation.step()
-
 try:
     while True:
-        simulation.step()  # Actualiza el estado del simulador
+        simulation.step(0.05)  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:

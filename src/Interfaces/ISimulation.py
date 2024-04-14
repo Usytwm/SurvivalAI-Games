@@ -33,12 +33,12 @@ class ISimulation(ABC):
             self.agents[id] = agent
             self.objects[id] = agent
 
-    def step(self):
+    def step(self, sleep_time: float = 0.2):
         "Move the simulation one step"
         self.__actualize_agents_vision__()
         self.display()
         # input()
-        time.sleep(0.5)
+        time.sleep(sleep_time)
         # Pick actions from agents
         # Process actions from agents
         # Actualize each agent state
