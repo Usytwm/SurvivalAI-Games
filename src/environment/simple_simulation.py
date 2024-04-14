@@ -9,7 +9,9 @@ class SimpleSimulation(ISimulation):
         destinations : Dict[Tuple[int, int], List[int]] = {}
         
         for id, agent in self.agents.items():
-            destiny = agent.move()
+            mov_X, mov_Y = agent.move()
+            current_X, current_Y = self.map.peek_id(id)
+            destiny = (mov_X + current_X, mov_Y + current_Y)
             if not destiny in destinations:
                 destinations[destiny] = []
             destinations[destiny].append(id)

@@ -4,7 +4,7 @@ from environment.map import Map
 
 class IRange(ABC):
     @abstractmethod
-    def range(self, map : Map, id : int) -> List[Tuple[Tuple[int, int], Any]]:
+    def get_range(self, map : Map, id : int) -> List[Tuple[Tuple[int, int], Any]]:
         """Given an id and a map, returns all the positions that will be affected if the agent
         with such id, takes an action with this range.
 

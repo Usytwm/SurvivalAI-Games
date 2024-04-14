@@ -33,7 +33,7 @@ class Agent_Handler(Sim_Object):
     def inform_move(self, position : Tuple[int, int]) -> None:
         "Informs the agent he has moved to the given position"
         return self.agent.inform_move(position)
-    
+
     def see_objects(self, objects : Dict[int, Sim_Object]) -> None:
         "Loads the objects the agent can see in this turn, and sends it to him"
         vision = self.vision.see_objects(self.map, self.id, objects)
@@ -48,9 +48,9 @@ class Agent_Handler(Sim_Object):
     
     def see_actions(self) -> None:
         "Loads the info about events that had occured in the agents sight"
-        vision = self.vision.see_actions(self.map, self.id)
-        self.agent.see_actions(vision)
-    
+        vision = self.vision.see_events(self.map, self.id)
+        self.agent.see_events(vision)
+
     def feed(self, sugar : int) -> None:
         """Increaes the agent reserves with the amount of sugar given, substracts the agent consume
         from its reserves, and informs the agent about the amount of sugar received"""
