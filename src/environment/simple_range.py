@@ -2,6 +2,7 @@ from typing import Any, List, Tuple, Dict
 from Interfaces.IRange import IRange
 from Interfaces.IVision import IVision
 from Interfaces.IMovement import IMovement
+from Interfaces.IAttack_Range import IAttackRange
 from environment.actions import Action_Info
 from environment.map import Map
 from environment.sim_object import Sim_Object, Object_Info
@@ -71,7 +72,25 @@ class SquareVision(IVision):
                 continue
             try:
                 for act in map.last_turn_actions[(row, column)]:
-                    vision.append(Action_Info((row - current_X, column - current_Y), act.type, act.actor_id, act.victim_ids))
+                    vision.append(Action_Info((row - current_X, column - current_Y), act.type, act.actor_id, act.destinataries_ids))
             except Exception as ex:
                 continue
         return vision
+
+class SquareAttackRange(IAttackRange):
+    def __init__(self, radius : int):
+        self.range = SquareRange(radius)
+    
+    def possible_victims(self, map: Map, id: int) -> List[int]:
+        current_X, current_Y = map.peek_id(id)
+        victims = []
+        for row, column in self.range.get_range(map, id):
+            if (row == current_X) and (column == current_Y):
+                continue
+            try:
+                victim = map.peek_from_position((row, column))
+                if victim:
+                    victims.append(victim)
+            except Exception as ex:
+                continue
+        return victims

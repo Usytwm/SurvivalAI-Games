@@ -37,11 +37,12 @@ class ISimulation(ABC):
         "Move the simulation one step"
         self.__actualize_agents_vision__()
         self.display()
-        # input()
-        time.sleep(sleep_time)
-        # Pick actions from agents
-        # Process actions from agents
-        # Actualize each agent state
+        input()
+        actions = self.__get_actions__()
+        for id, action_list in actions.items():
+            for action in action_list:
+                self.map.add_action(action)
+        self.__execute_actions__(actions)
         moves = self.__get_moves__()
         self.__execute_moves__(moves)
         self.__feed_agents__()
@@ -73,6 +74,23 @@ class ISimulation(ABC):
         for id, destiny in moves.items():
             self.map.move(id, destiny)
             self.agents[id].inform_move(destiny)
+    
+    def __get_actions__(self) -> Dict[int, List[Action]]:
+        """Devuelve un diccionario donde a cada id de agente le hace corresponder la lista de
+        acciones que desea tomar en este turno tal agente"""
+        actions = {}
+        for id, agent in self.agents.items():
+            actions[id] = [act for act in agent.get_actions() if self.__validate_action__(act)]
+        return actions
+
+    def __validate_action__(self, action : Action) -> bool:
+        #Por Ahora
+        return True
+
+    @abstractmethod
+    def __execute_actions__(self, actions : Dict[int, List[Action]]):
+        """Ejecuta las acciones provistas en actions"""
+        pass
 
     def __feed_agents__(self):
         """Feed each agent with the amount of sugar that there is in its cell and substracts

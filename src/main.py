@@ -2,7 +2,7 @@ import random
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
-from environment.simple_range import SimpleWalking, SquareVision
+from environment.simple_range import SimpleWalking, SquareVision, SquareAttackRange
 from agents.random_agent import Random_Agent
 from random import randint
 import pygame
@@ -10,12 +10,10 @@ import pygame
 pygame.init()
 
 resources = {}
-for i in range(15):
-    for j in range(15):
-        resources[(i, j)] = (
-            random.randint(0, 100) if random.choice([True, False]) else 0
-        )
-map = Map(15, 15, resources)
+for i in range(10):
+    for j in range(10):
+        resources[(i, j)] = 1 #Pa q no se mueran de hambre y ver sus combates y sus alianzas y eso
+map = Map(10, 10, resources)
 positions = set()
 while len(positions) < 4:
     new_position = (randint(0, 9), randint(0, 9))
@@ -23,42 +21,10 @@ while len(positions) < 4:
         positions.add(new_position)
 positions = list(positions)
 agents = [
-    (
-        positions[0],
-        (
-            1,
-            Agent_Handler(
-                1, 3, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
-            ),
-        ),
-    ),
-    (
-        positions[1],
-        (
-            2,
-            Agent_Handler(
-                2, 5, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
-            ),
-        ),
-    ),
-    (
-        positions[2],
-        (
-            3,
-            Agent_Handler(
-                3, 7, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
-            ),
-        ),
-    ),
-    (
-        positions[3],
-        (
-            4,
-            Agent_Handler(
-                4, 9, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3)
-            ),
-        ),
-    ),
+    (positions[0], (1, Agent_Handler(1, 3, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3), SquareAttackRange(3)))),
+    (positions[1], (2, Agent_Handler(2, 5, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3), SquareAttackRange(3)))),
+    (positions[2], (3, Agent_Handler(3, 7, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3), SquareAttackRange(3)))),
+    (positions[3], (4, Agent_Handler(4, 9, 1, map, Random_Agent(), SimpleWalking(), SquareVision(3), SquareAttackRange(3))))
 ]
 
 simulation = SimpleSimulation(map, agents)
