@@ -105,3 +105,7 @@ class ISimulation(ABC):
     def display(self):
         "Shows whats happening"
         pass
+
+    @abstractmethod
+    def display_terminal(self):
+        pass
