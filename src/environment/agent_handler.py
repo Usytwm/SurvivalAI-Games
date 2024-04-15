@@ -1,8 +1,3 @@
-import os
-import sys
-current_dir = os.getcwd()
-sys.path.insert(0, current_dir + '/src')
-sys.path.insert(0, current_dir + '/src/environment')
 from typing import Tuple, Dict, List
 from Interfaces.IAgent import IAgent
 from Interfaces.IRange import IRange

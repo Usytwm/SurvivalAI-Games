@@ -1,9 +1,3 @@
-import os
-import sys
-
-current_dir = os.getcwd()
-sys.path.insert(0, current_dir + "/src")
-sys.path.insert(0, current_dir + "/src/Interfaces")
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
 from environment.actions import Action, Action_Type
