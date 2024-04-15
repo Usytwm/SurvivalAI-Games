@@ -1,9 +1,13 @@
+import random
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
 from environment.simple_range import SimpleWalking, SquareVision, SquareAttackRange
 from agents.random_agent import Random_Agent
 from random import randint
+import pygame
+
+pygame.init()
 
 resources = {}
 for i in range(10):
@@ -25,5 +29,10 @@ agents = [
 
 simulation = SimpleSimulation(map, agents)
 
-while True:
-    simulation.step()
+try:
+    while True:
+        simulation.step(0.05)  # Actualiza el estado del simulador
+except KeyboardInterrupt:
+    print("Simulación interrumpida")
+finally:
+    pygame.quit()
