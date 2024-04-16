@@ -1,3 +1,4 @@
+from enum import Enum
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
 from environment.actions import Action, Action_Type
@@ -7,9 +8,17 @@ from abc import ABC, abstractmethod
 import time
 
 
+class ViewOption(Enum):
+    TERMINAL = "terminal"
+    PYGAME = "pygame"
+
+
 class ISimulation(ABC):
     def __init__(
-        self, map: Map, agents: List[Tuple[Tuple[int, int], Tuple[int, Agent_Handler]]]
+        self,
+        map: Map,
+        agents: List[Tuple[Tuple[int, int], Tuple[int, Agent_Handler]]],
+        view: ViewOption,
     ):
         """Recibe los siguientes argumentos:
         - Un mapa ya creado
@@ -19,6 +28,7 @@ class ISimulation(ABC):
         """
         self.map = map
         self.agents: Dict[int, Agent_Handler] = {}
+        self.view = view
         self.objects = (
             self.agents.copy()
         )  # Por ahora los unicos objetos que consideramos en la sim son agentes
@@ -27,11 +37,20 @@ class ISimulation(ABC):
             self.agents[id] = agent
             self.objects[id] = agent
 
-    def step(self, sleep_time: float = 0.2):
+    def step(
+        self,
+        sleep_time: float = 0.2,
+    ):
         "Move the simulation one step"
         self.__actualize_agents_vision__()
-        self.display()
-        input()
+        if self.view == ViewOption.TERMINAL:
+            self.display_terminal()
+            input()
+        elif self.view == ViewOption.PYGAME:
+            self.display()
+            time.sleep(sleep_time)
+        else:
+            raise ValueError("Invalid view option")
         actions = self.__get_actions__()
         for id, action_list in actions.items():
             for action in action_list:
@@ -68,21 +87,23 @@ class ISimulation(ABC):
         for id, destiny in moves.items():
             self.map.move(id, destiny)
             self.agents[id].inform_move(destiny)
-    
+
     def __get_actions__(self) -> Dict[int, List[Action]]:
         """Devuelve un diccionario donde a cada id de agente le hace corresponder la lista de
         acciones que desea tomar en este turno tal agente"""
         actions = {}
         for id, agent in self.agents.items():
-            actions[id] = [act for act in agent.get_actions() if self.__validate_action__(act)]
+            actions[id] = [
+                act for act in agent.get_actions() if self.__validate_action__(act)
+            ]
         return actions
 
-    def __validate_action__(self, action : Action) -> bool:
-        #Por Ahora
+    def __validate_action__(self, action: Action) -> bool:
+        # Por Ahora
         return True
 
     @abstractmethod
-    def __execute_actions__(self, actions : Dict[int, List[Action]]):
+    def __execute_actions__(self, actions: Dict[int, List[Action]]):
         """Ejecuta las acciones provistas en actions"""
         pass
 
