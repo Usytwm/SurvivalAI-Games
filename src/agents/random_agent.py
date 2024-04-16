@@ -39,3 +39,6 @@ class Random_Agent(IAgent):
 
     def feed(self, sugar: int) -> None:
         pass
+
+    def burn(self) -> None:
+        pass

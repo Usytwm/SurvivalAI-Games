@@ -2,6 +2,7 @@ from enum import Enum
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
 from environment.actions import Action, Action_Type
+from environment.association import Association
 from typing import List, Dict, Set, Tuple
 from random import randint
 from abc import ABC, abstractmethod
@@ -32,6 +33,7 @@ class ISimulation(ABC):
         self.objects = (
             self.agents.copy()
         )  # Por ahora los unicos objetos que consideramos en la sim son agentes
+        self.associations : Dict[int, Association] = {}
         for position, (id, agent) in agents:
             self.map.insert(position, id)
             self.agents[id] = agent
@@ -110,12 +112,31 @@ class ISimulation(ABC):
     def __feed_agents__(self):
         """Feed each agent with the amount of sugar that there is in its cell and substracts
         his consume from his reserve"""
-        for id, agent in self.agents.items():
-            agent.feed(self.map.feed(id))
+        for agent_id, agent in self.agents.items():
+            crop = self.map.feed(agent_id)
+            self.__feed_single_agent__(agent_id, crop)
+            agent.burn()
+
         for agent in list(self.agents.values()):
             if agent.IsDead:
                 self.map.add_action(Action(Action_Type.DIE, agent.id))
                 self.__remove_agent__(agent.id)
+
+    def __feed_single_agent__(self, id : int, sugar : int, victim_id = None):
+        agent = self.agents[id]
+        if agent.IsAssociated:
+            for association_id in agent.associations:
+                distribution = self.associations[association_id].feed(id, sugar)
+                for ally_id, portion in distribution.items():
+                    if victim_id:
+                        self.agents[ally_id].take_attack_reward(victim_id, portion)
+                    else:
+                        self.agents[ally_id].feed(portion)
+        taxes_excented = int(agent.free_portion*sugar)
+        if victim_id:
+            agent.take_attack_reward(victim_id, taxes_excented)
+        else:
+            agent.feed(taxes_excented)
 
     def __remove_agent__(self, id: int):
         self.agents.pop(id)

@@ -7,6 +7,7 @@ from Interfaces.IAttack_Range import IAttackRange
 from map import Map
 from sim_object import Sim_Object, Sim_Object_Type
 from actions import Action_Info, Action
+from association import Association
 
 class Agent_Handler(Sim_Object):
     def __init__(self, id : int, reserve : int, consume : int, map : Map, agent : IAgent, movement : IMovement, vision : IVision, attack_range : IAttackRange):
@@ -18,10 +19,16 @@ class Agent_Handler(Sim_Object):
         self.movement = movement
         self.vision = vision
         self.attack_range = attack_range
+        self.associations : Dict[int, Association] = {}
+        self.free_portion = 1
     
     @property
     def IsDead(self):
         return (self.reserve < 0)
+    
+    @property
+    def IsAssociated(self):
+        return len(self.associations) > 0
     
     def move(self) -> Tuple[int, int]:
         "Gets the position the agent wants to move to"
@@ -42,22 +49,18 @@ class Agent_Handler(Sim_Object):
     def inform_of_attack_made(self, victim_id : int, strength : int) -> None:
         "Informs the agent that an attack that he has requested, has been executed"
         self.reserve -= strength
-        print("Agente " + str(self.id) + " afirma:")
         return self.agent.inform_of_attack_made(victim_id, strength)
     
     def inform_of_attack_received(self, attacker_id : int, strength : int) -> None:
         "Informs the agent of an attack he has received"
         self.reserve -= strength
-        print("Agente " + str(self.id) + " afirma:")
         return_value = self.agent.inform_of_received_attack(attacker_id, strength)
-        print("Me queda " + str(self.reserve) + " de reserva")
         return return_value
     
     def take_attack_reward(self, victim_id : int, reward : int):
         """Informs the agent of the reward obtained by killing an agent, and actualizes
         its reserves"""
         self.reserve += reward
-        print("Agente " + str(self.id) + " afirma:")
         return self.agent.take_attack_reward(victim_id, reward)
     
     def see_objects(self, objects : Dict[int, Sim_Object]) -> None:
@@ -78,7 +81,11 @@ class Agent_Handler(Sim_Object):
         self.agent.see_actions(vision)
     
     def feed(self, sugar : int) -> None:
-        """Increaes the agent reserves with the amount of sugar given, substracts the agent consume
-        from its reserves, and informs the agent about the amount of sugar received"""
-        self.reserve = self.reserve + sugar - self.consume
+        """Increaes the agent reserves with the amount of sugar given, and informs the agent"""
+        self.reserve = self.reserve + sugar
         self.agent.feed(sugar)
+    
+    def burn(self) -> None:
+        """Dimishes the agent reserves by his diary consume."""
+        self.reserve = self.reserve - self.consume
+        self.agent.burn()

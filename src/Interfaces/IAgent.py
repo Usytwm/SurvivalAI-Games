@@ -60,3 +60,8 @@ class IAgent(ABC):
     def feed(self, sugar : int) -> None:
         """Informa al agente la cantidad de azucar que acaba de recolectar"""
         pass
+
+    @abstractmethod
+    def burn(self) -> None:
+        """Informa al agente que acaba de consumir su racion diaria de azucar"""
+        pass
