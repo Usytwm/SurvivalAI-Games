@@ -23,3 +23,6 @@ class Action_Info:
         self.type = type
         self.actor_id = actor_id
         self.destinataries_ids = destinataries_ids
+
+class Association_Proposal:
+    pass

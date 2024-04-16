@@ -1,7 +1,7 @@
 from enum import Enum
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
-from environment.actions import Action, Action_Type
+from environment.actions import Action, Action_Type, Attack, Association_Proposal
 from environment.association import Association
 from typing import List, Dict, Set, Tuple
 from random import randint
@@ -53,11 +53,10 @@ class ISimulation(ABC):
             time.sleep(sleep_time)
         else:
             raise ValueError("Invalid view option")
-        actions = self.__get_actions__()
-        for id, action_list in actions.items():
-            for action in action_list:
-                self.map.add_action(action)
-        self.__execute_actions__(actions)
+        association_proposals = self.__get_association_proposals__()
+        attacks = self.__get_attacks__()
+        self.__execute_association_proposals__(association_proposals)
+        self.__execute_attacks__(attacks)
         moves = self.__get_moves__()
         self.__execute_moves__(moves)
         self.__feed_agents__()
@@ -90,23 +89,36 @@ class ISimulation(ABC):
             self.map.move(id, destiny)
             self.agents[id].inform_move(destiny)
 
-    def __get_actions__(self) -> Dict[int, List[Action]]:
+    def __get_association_proposals__(self) -> Dict[int, List[Association_Proposal]]:
         """Devuelve un diccionario donde a cada id de agente le hace corresponder la lista de
-        acciones que desea tomar en este turno tal agente"""
-        actions = {}
+        acciones relacionadas con Asociaciones que realizara en este turno."""
+        association_proposals = {}
         for id, agent in self.agents.items():
-            actions[id] = [
-                act for act in agent.get_actions() if self.__validate_action__(act)
-            ]
-        return actions
+            association_proposals[id] = agent.get_association_proposals()
+        return association_proposals
+
+    def __get_attacks__(self) -> Dict[int, List[Attack]]:
+        """Devuelve un diccionario donde a cada id de agente le hace corresponder la lista de
+        los ataques que el agente desea realizar en este turno"""
+        attacks = {}
+        for id, agent in self.agents.items():
+            attacks[id] = agent.get_attacks()
+        return attacks
 
     def __validate_action__(self, action: Action) -> bool:
         # Por Ahora
         return True
 
     @abstractmethod
-    def __execute_actions__(self, actions: Dict[int, List[Action]]):
-        """Ejecuta las acciones provistas en actions"""
+    def __execute_association_proposals__(self, association_proposals: Dict[int, List[Association_Proposal]]):
+        """Ejecuta las acciones relacionadas con Asociaciones de este turno, y coloca en el 
+        mapa de las acciones ocurridas en el ultimo turno a aquellas que lo requieran"""
+        pass
+    
+    @abstractmethod
+    def __execute_attacks__(self, actions: Dict[int, List[Attack]]):
+        """Ejecuta los ataques provistos, y los hace visibles colocandolos en el mapa de
+        acciones del ultimo turno"""
         pass
 
     def __feed_agents__(self):

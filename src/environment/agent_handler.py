@@ -1,4 +1,4 @@
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict, List, Set
 from Interfaces.IAgent import IAgent
 from Interfaces.IRange import IRange
 from Interfaces.IMovement import IMovement
@@ -6,7 +6,7 @@ from Interfaces.IVision import IVision
 from Interfaces.IAttack_Range import IAttackRange
 from map import Map
 from sim_object import Sim_Object, Sim_Object_Type
-from actions import Action_Info, Action
+from actions import Action_Info, Action, Attack, Association_Proposal
 from association import Association
 
 class Agent_Handler(Sim_Object):
@@ -20,6 +20,7 @@ class Agent_Handler(Sim_Object):
         self.vision = vision
         self.attack_range = attack_range
         self.associations : Dict[int, Association] = {}
+        self.partners : Set[int] = set()
         self.free_portion = 1
     
     @property
@@ -31,20 +32,43 @@ class Agent_Handler(Sim_Object):
         return len(self.associations) > 0
     
     def move(self) -> Tuple[int, int]:
-        "Gets the position the agent wants to move to"
+        """Devuelve el movimiento que desea realizar el agente este turno de ser valido.\n
+        El movimiento es expresado como una tupla que representa el movimiento en la posicion
+        horizontal y en la vertical respectivamente, por ejemplo (-1, 3) representa que se 
+        movio una fila hacia arriba y tres columnas a la derecha\n
+        Si el movimiento elegido por el agente no fuera valido devuelve (0, 0)"""
+        move = self.agent.move()
         possible_moves = self.movement.moves(self.map, self.id)
-        return self.agent.move(possible_moves)
+        return move if move in possible_moves else (0, 0)
     
     def inform_move(self, position : Tuple[int, int]) -> None:
         "Informs the agent he has moved to the given position"
         return self.agent.inform_move(position)
     
-    def get_actions(self) -> List[Action]:
-        possible_actions = self.attack_range.possible_victims(self.map, self.id)
-        actions_taken : List[Action] = self.agent.get_actions(possible_actions)
-        for action in actions_taken:
-            action.actor_id = self.id
-        return actions_taken
+    def get_attacks(self) -> List[Attack]:
+        """Get the attacks that the agent wants to make in this turn, and returns only the 
+        valid ones"""
+        attacks : List[Attack] = self.agent.get_attacks()
+        possible_victims  = set(self.attack_range.possible_victims(self.map, self.id))
+        sum_of_attacks = 0 #Verificamos ademas, que el agente no gaste mas en ataques de lo que puede gastar
+        confirmed_attacks = []
+        for attack in attacks:
+            victim = attack.destinataries_ids[0]
+            if not(victim in possible_victims) or (victim in self.partners) or (victim == self.id):
+                #no puede atacar a un socio o a alguien fuera de su rango o a si mismo
+                continue
+            confirmed_attacks.append(attack)
+            sum_of_attacks += attack.strength
+        if sum_of_attacks > self.reserve:
+            #Si hizo mas ataques de los que puede pagar, no le aceptamos ninguno
+            confirmed_attacks = []
+        return confirmed_attacks
+    
+    def get_association_proposals(self) -> List[Association_Proposal]:
+        """Get the association proposals the agent wants to make in this turn and returns only
+        the valid ones"""
+        #Insertar comprobaciones de que la propuesta tiene sentido
+        return self.agent.get_association_proposals()
     
     def inform_of_attack_made(self, victim_id : int, strength : int) -> None:
         "Informs the agent that an attack that he has requested, has been executed"

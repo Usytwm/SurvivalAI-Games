@@ -2,18 +2,26 @@ from typing import List, Tuple
 from environment.sim_object import Object_Info
 from environment.actions import Action_Info, Action, Attack
 from Interfaces.IAgent import IAgent
-from random import randint
+from random import randint, random
 class Random_Agent(IAgent):
-    def move(self, possible_destinations: List[Tuple[int, int]]) -> Tuple[int, int]:
-        return possible_destinations[randint(0, len(possible_destinations) - 1)]
+    def __init__(self, id):
+        self.id = id
+
+    def move(self) -> Tuple[int, int]:
+        directions = [(0, 0), (-1, 0), (0, -1), (1, 0), (0, 1)]
+        return directions[randint(0, 4)]
     
     def inform_move(self, position: Tuple[int]) -> None:
         pass
 
-    def get_actions(self, possible_victims : List[int]) -> List[Action]:
-        if possible_victims:
-            selected_victim = possible_victims[randint(0, len(possible_victims) - 1)]
-            return [Attack(None, selected_victim, 1)]
+    def get_attacks(self) -> List[Action]:
+        attacks = []
+        for i in range(1, 5):
+            if random() < 0.5:
+                attacks.append(Attack(self.id, i, 1))
+        return attacks
+    
+    def get_association_proposals(self) -> List:
         return []
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:

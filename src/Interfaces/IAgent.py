@@ -1,23 +1,24 @@
 from abc import ABC, abstractmethod
 from typing import Tuple, List
 from environment.sim_object import Object_Info
-from environment.actions import Action_Info, Action, Attack
+from environment.actions import Action_Info, Action, Attack, Association_Proposal
 
 class IAgent(ABC):
     @abstractmethod
-    def move(self, possible_movements : List[Tuple[int, int]]) -> Tuple[int, int]:
-        """Dada una lista de movimientos posibles, descritos como tuplas
-        (desplazamiento_horizontal, desplazamiento_vertical), devuelve una de tales tuplas
-        el movimiento seleccionado a realizar"""
+    def move(self) -> Tuple[int, int]:
+        """Devuelve el movimiento que desea realizar el agente este turno. El movimiento es
+        expresado como una tupla que representa el movimiento en la posicion horizontal y en la
+        vertical respectivamente, por ejemplo (-1, 3) representa que se movio una fila hacia
+        arriba y tres columnas a la derecha"""
         pass
 
-    @abstractmethod
-    def get_actions(self, possible_victims : List[int]) -> List[Action]:
-        """Dadas las posibles acciones que que puede realizar el agente en este turno, devuelve
-        una lista con las acciones tomadas por el agente. Las acciones que puede realizar
-        vienen descritas de forma variable, por ejemplo, los posibles ataques vienen como una
-        lista con los ids de las posibles victimas
-        """
+    def get_attacks(self) -> List[Attack]:
+        """Devuelve una lista con los ataques que el agente desea realizar este turno"""
+        pass
+    
+    def get_association_proposals(self) -> List[Association_Proposal]:
+        """Devuelve una lista con las propuestas de Asociacion que el agente desea realizar este
+        turno"""
         pass
     
     @abstractmethod
