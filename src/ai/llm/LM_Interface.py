@@ -1,5 +1,5 @@
 from openai import OpenAI
-
+import re
 
 class LLMInterface:
     MAIN_PROMPT = "create_character"
@@ -15,7 +15,7 @@ class LLMInterface:
             print("Error al acceder al modelo desde el programa xd")
             return False
 
-    def create_agent(self, character_resume: str):
+    def create_Agent(self, character_resume: str):
         # Prepare the list of characteristics for the prompt
         system_content = f"""
         Prompt:
@@ -34,6 +34,13 @@ class LLMInterface:
 
             User's character description:
             {character_resume}
+            (e.g.,character_resume: "He's strong."
+                  direct output:
+                      Life:  12
+                      Consumption: 3
+                      Movement: 3
+                      Vision: 3
+            )
             Direct Output:
 
                 * Life:  (Integer representing the Life)
@@ -55,13 +62,18 @@ class LLMInterface:
         # Get the response from the model
         response = completation.choices[0].message.content
         print(response)
+        patron = r':\s*(\d+)'
+
+        # Buscar coincidencias en el string
+        answer = re.findall(patron, response)
+        print(answer)
         # Extract the matching feature, gender, and name from the response
         #response_parts = response.split("\n")
         #matching_feature_index = int(response_parts[2].split(":")[0]) - 1 # Adjust based on the actual response format
         #matching_feature = types_characters[matching_feature_index]
         #gender_and_name = response_parts[3].split(":")[1].strip()
 
-        return response
+        return answer
     
 
     def create_Map(self, world_description: str):
@@ -70,7 +82,7 @@ class LLMInterface:
         system_content = f"""
         Prompt:
     
-        Given a description of a map (e.g., "A small grassy plain"), determine the appropriate width and height for the map based on its size description (small, medium, or large). 
+        Given a description of a map, determine the appropriate width and height for the map based on its size description (small, medium, or large). 
     
         Here's a reference for size categories:
     
@@ -82,7 +94,18 @@ class LLMInterface:
     
         User's map description:
         {world_description}
-    
+        (e.g., "A small grassy plain" 
+                direct output:
+                    width: 10
+                    heigth: 10
+        )
+        (e.g., "A small country" 
+            good  direct output:
+                    width: 50
+                    heigth: 50
+            bad   direct output:
+                    " Given the description \"It's a small country,\" the appropriate width for the map is 50 units and the appropriate height is 50 units."
+        )
         Direct Output:
     
             *width: (Integer representing the width of the map)
@@ -99,7 +122,7 @@ class LLMInterface:
         )
     
         response = completation.choices[0].message.content
-
+        print(response)
         lines = response.splitlines()
     
         # Initialize variables to store width and height
@@ -129,7 +152,7 @@ class LLMInterface:
 
         # Todo: Add more prompts 
         self.prompts = {
-            self.MAIN_PROMPT: "You are bla bla.",
+            selfMAIN_PROMPT: "You are bla bla."
         }
       
 
