@@ -34,12 +34,12 @@ class LLMInterface:
 
             User's character description:
             {character_resume}
-            Output:
+            Direct Output:
 
-                Life: [Generated value]
-                Consumption: [Generated value]
-                Movement: [Generated value]
-                Vision: [Generated value]
+                * Life:  (Integer representing the Life)
+                * Consumption: (Integer representing the Consumption)
+                * Movement: (Integer representing the Movement)
+                * Vision: (Integer representing the Vision)
         """
 
         # Request for resumes to the model
@@ -54,7 +54,7 @@ class LLMInterface:
 
         # Get the response from the model
         response = completation.choices[0].message.content
-
+        print(response)
         # Extract the matching feature, gender, and name from the response
         #response_parts = response.split("\n")
         #matching_feature_index = int(response_parts[2].split(":")[0]) - 1 # Adjust based on the actual response format
@@ -65,37 +65,62 @@ class LLMInterface:
     
 
     def create_Map(self, world_description: str):
+        print(world_description)
+
         system_content = f"""
         Prompt:
-
-            Given the user's description of a map, extract the width and height values that should be used to create the map.Taking a map of 10x10 as small, 200x200 as medium, and 500x500 as large. The description may include various details about the map, such as its size, terrain, and any objects or agents present.
-
-            User's map description:
-            {world_description}
-
-        Output:
-
-            The width and height values extracted from the user's description are: {width} x {height}
+    
+        Given a description of a map (e.g., "A small grassy plain"), determine the appropriate width and height for the map based on its size description (small, medium, or large). 
+    
+        Here's a reference for size categories:
+    
+        | Size | Dimensions |
+        |---|---|
+        | Small | 10x10 units |
+        | Medium | 25x25 units |
+        | Large | 50x50 units |
+    
+        User's map description:
+        {world_description}
+    
+        Direct Output:
+    
+            *width: (Integer representing the width of the map)
+            *heigth: (Integer representing the height of the map)
         """
-        """
-        # Format the system content with the actual world description
-        formatted_system_content = system_content.format(world_description=world_description)
-        """
-        # Request for map dimensions to the model
+    
         completation = self.client.chat.completions.create(
             model="local-model",
             messages=[
                 {"role": "system", "content": system_content},
+                {"role": "user", "content": world_description},
             ],
             temperature=1.0,
         )
-
-        # Get the response from the model
+    
         response = completation.choices[0].message.content
 
-        # Extract the width and height from the response
-        width, height = map(int, response.split("x"))
-
+        lines = response.splitlines()
+    
+        # Initialize variables to store width and height
+        width = None
+        height = None
+    
+        # Iterate through each line
+        for line in lines:
+            # Check if the line starts with "width:" or "height:"
+            if line.startswith("width:"):
+                # Extract the width value after the colon
+                width = int(line.split(":")[1])
+            elif line.startswith("height:"):
+                # Extract the height value after the colon
+                height = int(line.split(":")[1])
+    
+        # Check if both width and height were extracted
+        if width is None or height is None:
+            raise ValueError("Invalid dimensions string: missing width or height value")
+    
+        # Return the extracted width and height
         return width, height
     
 
@@ -106,3 +131,5 @@ class LLMInterface:
         self.prompts = {
             self.MAIN_PROMPT: "You are bla bla.",
         }
+      
+

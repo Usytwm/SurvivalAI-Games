@@ -1,7 +1,9 @@
 
-from ai.llm.inferencia_llm import LLMInterface
+from ai.llm.LM_Interface import LLMInterface
 from environment.map import Map
-constructor = LLMInterface
-description = "It's a small stage."
-answer = constructor.create_Map(description)
+constructor = LLMInterface()
+constructor.connect()
+descriptionTheMap = "It's a small country."
+descriptionTheAgent = "He's strong "
+answer = constructor.create_Map(descriptionTheMap)
 print(answer)
