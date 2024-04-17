@@ -152,7 +152,7 @@ class LLMInterface:
 
         # Todo: Add more prompts 
         self.prompts = {
-            selfMAIN_PROMPT: "You are bla bla."
+            self.MAIN_PROMPT: "You are bla bla."
         }
       
 
