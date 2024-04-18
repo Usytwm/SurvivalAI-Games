@@ -2,11 +2,8 @@ from openai import OpenAI
 import re
 
 class LLMInterface:
-    MAIN_PROMPT = "create_character"
-
-    def __init__(self):
-        self._poblate_prompts()
-
+    def __init__(self) -> None:
+        self.connect()
     def connect(self, base_url: str = "http://localhost:1234/v1", api_key: str = "lm-studio") -> bool:
         try:
             self.client = OpenAI(base_url=base_url, api_key=api_key)
@@ -34,13 +31,13 @@ class LLMInterface:
 
             User's character description:
             {character_resume}
-            (e.g.,character_resume: "He's strong."
-                  direct output:
-                      Life:  12
-                      Consumption: 3
-                      Movement: 3
-                      Vision: 3
-            )
+            (e.g., character description: "bla bla"
+                good direct output:
+                * Life:  int
+                * Consumption: int
+                * Movement: int
+                * Vision: int
+            
             Direct Output:
 
                 * Life:  (Integer representing the Life)
@@ -67,15 +64,8 @@ class LLMInterface:
         # Buscar coincidencias en el string
         answer = re.findall(patron, response)
         print(answer)
-        # Extract the matching feature, gender, and name from the response
-        #response_parts = response.split("\n")
-        #matching_feature_index = int(response_parts[2].split(":")[0]) - 1 # Adjust based on the actual response format
-        #matching_feature = types_characters[matching_feature_index]
-        #gender_and_name = response_parts[3].split(":")[1].strip()
-
         return answer
     
-
     def create_Map(self, world_description: str):
         print(world_description)
 
@@ -103,6 +93,9 @@ class LLMInterface:
             good  direct output:
                     width: 50
                     heigth: 50
+            good  direct output:
+                    width: 10
+                    heigth: 10
             bad   direct output:
                     " Given the description \"It's a small country,\" the appropriate width for the map is 50 units and the appropriate height is 50 units."
         )
@@ -123,36 +116,9 @@ class LLMInterface:
     
         response = completation.choices[0].message.content
         print(response)
-        lines = response.splitlines()
-    
-        # Initialize variables to store width and height
-        width = None
-        height = None
-    
-        # Iterate through each line
-        for line in lines:
-            # Check if the line starts with "width:" or "height:"
-            if line.startswith("width:"):
-                # Extract the width value after the colon
-                width = int(line.split(":")[1])
-            elif line.startswith("height:"):
-                # Extract the height value after the colon
-                height = int(line.split(":")[1])
-    
-        # Check if both width and height were extracted
-        if width is None or height is None:
-            raise ValueError("Invalid dimensions string: missing width or height value")
-    
-        # Return the extracted width and height
-        return width, height
-    
+        patron = r':\s*(\d+)'
 
-    def _poblate_prompts(self):
-        """The prompts dictionary with the prompts for each task."""
-
-        # Todo: Add more prompts 
-        self.prompts = {
-            self.MAIN_PROMPT: "You are bla bla."
-        }
-      
-
+        # Buscar coincidencias en el string
+        answer = re.findall(patron, response)
+    
+        return answer
