@@ -2,8 +2,13 @@ from openai import OpenAI
 import re
 
 class LLMInterface:
+    """
+    Class to interact with a language model through the LMstudio API.
+    Allows connecting to the model, creating agents based on descriptions, and generating maps.
+    """
     def __init__(self) -> None:
         self.connect()
+    
     def connect(self, base_url: str = "http://localhost:1234/v1", api_key: str = "lm-studio") -> bool:
         try:
             self.client = OpenAI(base_url=base_url, api_key=api_key)
@@ -13,6 +18,16 @@ class LLMInterface:
             return False
 
     def create_Agent(self, character_resume: str):
+        """
+        Creates an agent based on a description provided by the user.
+        Analyzes the description and generates a 4-tuple of integers representing the character's life, consumption, movement, and vision.
+        
+        Parameters:
+        - character_resume: Character description provided by the user.
+        
+        Returns:
+        - A list of integers representing the character's life, consumption, movement, and vision.
+        """
         # Prepare the list of characteristics for the prompt
         system_content = f"""
         Prompt:
@@ -58,15 +73,23 @@ class LLMInterface:
 
         # Get the response from the model
         response = completation.choices[0].message.content
-        print(response)
+        #print(response)
         patron = r':\s*(\d+)'
-
-        # Buscar coincidencias en el string
         answer = re.findall(patron, response)
-        print(answer)
+        #print(answer)
         return answer
     
     def create_Map(self, world_description: str):
+        """
+        Generates a map based on a description provided by the user.
+        Determines the appropriate width and height for the map based on its size description (small, medium, or large).
+        
+        Parameters:
+        - world_description: Map description provided by the user.
+        
+        Returns:
+        - A list of integers representing the width and height of the map.
+        """
         print(world_description)
 
         system_content = f"""
@@ -115,10 +138,7 @@ class LLMInterface:
         )
     
         response = completation.choices[0].message.content
-        print(response)
+        #print(response)
         patron = r':\s*(\d+)'
-
-        # Buscar coincidencias en el string
         answer = re.findall(patron, response)
-    
         return answer
