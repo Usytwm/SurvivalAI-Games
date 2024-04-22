@@ -32,27 +32,6 @@ def move_away_from_attacker(current_pos, attacker_pos, possible_moves):
     return best_move
 
 
-def update_attack_probability(attack_probability, did_attack):
-    """
-    Actualiza la probabilidad de ataque basándose en si el agente observado atacó o no.
-
-    Args:
-    - did_attack (bool): True si el agente atacó, False en caso contrario.
-    """
-    # Factor de aprendizaje que determina cuánto influye la nueva observación en la probabilidad existente
-    learning_rate = 0.1
-
-    # Actualización de la probabilidad usando una forma simplificada del promedio ponderado
-    if did_attack:
-        # Aumentar la probabilidad de que ataque
-        attack_probability += learning_rate * (1 - attack_probability)
-    else:
-        # Disminuir la probabilidad de que ataque
-        attack_probability -= learning_rate * attack_probability
-
-    return attack_probability
-
-
 class PacifistEstrategy(BaseKnowledge):
     def __init__(self, knowledge_base: Dict[Keys, Any] = None):
         super().__init__(knowledge_base)
