@@ -105,8 +105,9 @@ class SimpleSimulation(ISimulation):
         destinations: Dict[Tuple[int, int], List[int]] = {}
 
         for id, agent in self.agents.items():
-            mov_X, mov_Y = agent.move()
             current_X, current_Y = self.map.peek_id(id)
+            agent.agent.inform_position((current_X, current_Y))
+            mov_X, mov_Y = agent.move()
             destiny = (mov_X + current_X, mov_Y + current_Y)
             if not destiny in destinations:
                 destinations[destiny] = []
@@ -172,7 +173,9 @@ class SimpleSimulation(ISimulation):
                 )
                 self.__feed_single_agent__(attacker_id, reward, dead_id)
 
-    def __execute_association_proposals__(self, association_proposals: Dict[int, List[Association_Proposal]]):
+    def __execute_association_proposals__(
+        self, association_proposals: Dict[int, List[Association_Proposal]]
+    ):
         return
 
     def display(self):
