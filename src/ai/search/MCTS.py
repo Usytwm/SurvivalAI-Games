@@ -16,8 +16,8 @@ class MCTSNode:
         
     def expand(self): 
         #? Actua el agente principal en cuestion? 
-        #* Si, se expande de acuerdo a las decisiones del agente
-        #* primario, por cada una de las posibles acciones en ese escenario todos los agentes toman una decisión
+        #* Si, se expande de acuerdo a las decisiones del agente principald
+        #* por cada una de las posibles acciones en ese escenario todos los agentes toman una decisión
         #* Estás dependen de si se conoce el tipo de los agentes enemigos, del agente que se desconosca su tipo 
         #* (Enemigo o no) actuara random 
 
@@ -95,12 +95,12 @@ class MCTS:
 class State:
     def __init__(self, agent: Agent_Handler) -> None:
         self.map = {}
+        self.agents = 0 #TODO Esto lo dará el conocimiento que agente principal sobre los otros personajes 
         pass # Crear un mapa de acuerdo a la imagen 
 
     def CreateMap(self): 
         #? Este método debe crear un map según lo que vio el agente
         #? El agente debe ...
-        #! Tacto cosa gorda
         #! Este método emplear probilidades para generar de manera random recursos y agentes en la zona fuera del campo de visión real del agente primario
         width, height = 10 # TODO Estos números los conoce el agente según las dimensiones originales del mapa, !!!Cambiar
         resources = {}
@@ -144,7 +144,7 @@ class State:
     def PlayRound(self, action: tuple): #TODO Recibe una 3-upla (movimiento, ataque, alianza) del agente principal
         #TODO Se juega una ronda completa con la decisión del agente principal y después el resto de agente
         #for character in agents 
-            #association_proposals = character.get_association_proposals()
+            #association_proposals = character.get_association_proposals() #TODO No sé como modelar estás la alianzas
             #attacks = character.get_attacks()
             #moves = character.get_moves()
             #TODO aplicar estas acciones en el estado
@@ -152,6 +152,7 @@ class State:
     def ChildState():
         
         pass
+    
     def is_Terminal():
         #TODO Es Terminal si vence o se muere
         #* return self.agent.IsDead() or enemigos == 0
