@@ -31,9 +31,9 @@ class ISimulation(ABC):
         self.agents: Dict[int, Agent_Handler] = {}
         self.view = view
         self.objects = (
-            self.agents.copy()
+            {}
         )  # Por ahora los unicos objetos que consideramos en la sim son agentes
-        self.associations : Dict[int, Association] = {}
+        self.associations: Dict[int, Association] = {}
         for position, (id, agent) in agents:
             self.map.insert(position, id)
             self.agents[id] = agent
@@ -47,7 +47,7 @@ class ISimulation(ABC):
         self.__actualize_agents_vision__()
         if self.view == ViewOption.TERMINAL:
             self.display_terminal()
-            input()
+            # input()
         elif self.view == ViewOption.PYGAME:
             self.display()
             time.sleep(sleep_time)
@@ -69,8 +69,10 @@ class ISimulation(ABC):
                 "Agent "
                 + str(agent.id)
                 + " in position "
-                + str(self.map.peek_id(agent.id))
-                + "sees:"
+                + str(
+                    self.map.peek_id(agent.id)
+                )  #! obtengo la posicion de un elementio con un id dado
+                + " sees:"
             )
             agent.see_objects(self.objects)
             agent.see_resources()
@@ -110,11 +112,13 @@ class ISimulation(ABC):
         return True
 
     @abstractmethod
-    def __execute_association_proposals__(self, association_proposals: Dict[int, List[Association_Proposal]]):
-        """Ejecuta las acciones relacionadas con Asociaciones de este turno, y coloca en el 
+    def __execute_association_proposals__(
+        self, association_proposals: Dict[int, List[Association_Proposal]]
+    ):
+        """Ejecuta las acciones relacionadas con Asociaciones de este turno, y coloca en el
         mapa de las acciones ocurridas en el ultimo turno a aquellas que lo requieran"""
         pass
-    
+
     @abstractmethod
     def __execute_attacks__(self, actions: Dict[int, List[Attack]]):
         """Ejecuta los ataques provistos, y los hace visibles colocandolos en el mapa de
@@ -134,7 +138,7 @@ class ISimulation(ABC):
                 self.map.add_action(Action(Action_Type.DIE, agent.id))
                 self.__remove_agent__(agent.id)
 
-    def __feed_single_agent__(self, id : int, sugar : int, victim_id = None):
+    def __feed_single_agent__(self, id: int, sugar: int, victim_id=None):
         agent = self.agents[id]
         if agent.IsAssociated:
             for association_id in agent.associations:
@@ -144,7 +148,7 @@ class ISimulation(ABC):
                         self.agents[ally_id].take_attack_reward(victim_id, portion)
                     else:
                         self.agents[ally_id].feed(portion)
-        taxes_excented = int(agent.free_portion*sugar)
+        taxes_excented = int(agent.free_portion * sugar)
         if victim_id:
             agent.take_attack_reward(victim_id, taxes_excented)
         else:

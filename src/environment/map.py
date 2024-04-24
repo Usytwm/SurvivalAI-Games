@@ -76,7 +76,7 @@ class Map:
         raise NotValidPosition
 
     def peek_id(self, id: int) -> Tuple[int, int]:
-        "Returns the position of an element with the given id"
+        "Devuelve la posición de un elemento con el ID dado."
         try:
             return self.__terrain__.inverse[id]
         except:
