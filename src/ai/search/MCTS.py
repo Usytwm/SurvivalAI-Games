@@ -98,7 +98,7 @@ class State:
         pass # Crear un mapa de acuerdo a la imagen 
 
     def CreateMap(self): 
-        #? Este método debe crear un map según lo que vio el agente
+        #? Este método debe crear un mapa según lo que vio el agente
         #? El agente debe ...
         #! Este método emplear probilidades para generar de manera random recursos y agentes en la zona fuera del campo de visión real del agente primario
         width, height = 10 # TODO Estos números los conoce el agente según las dimensiones originales del mapa, !!!Cambiar
@@ -142,15 +142,19 @@ class State:
     
     def PlayRound(self, action: tuple): #TODO Recibe una 3-upla (movimiento, ataque, alianza) del agente principal
         #TODO Se juega una ronda completa con la decisión del agente principal y después el resto de agente
-        #for character in agents 
+        for character in self.agents: 
             #association_proposals = character.get_association_proposals() #TODO No sé como modelar estás la alianzas
-            #attacks = character.get_attacks()
-            #moves = character.get_moves()
+            attacks = character.get_attacks()
+            moves = character.get_moves()
             #TODO aplicar estas acciones en el estado
+        # Aplicar los ataques 
+        # Aplicar los movimientos 
+        #
         return 
-    def ChildState():
-        
-        pass
+    def ChildState(self, action: tuple):
+        self.PlayRound(action)
+        # return self.Copy # Devuelve el clon del estado
+
     
     def is_Terminal():
         #TODO Es Terminal si vence o se muere
