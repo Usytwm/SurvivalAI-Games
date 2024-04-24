@@ -51,6 +51,9 @@ class Agent_Handler(Sim_Object):
         possible_moves = self.movement.moves(self.map, self.id)
         move = self.agent.move(possible_moves)
         return move if move in possible_moves else (0, 0)
+    
+    def get_moves(self) -> List[Tuple[int, int]]: #TODO Nuevo para obtener todos los posibles movimientos
+        possible_moves = self.movement.moves(self.map, self.id)
 
     def inform_move(self, position: Tuple[int, int]) -> None:
         "Informs the agent he has moved to the given position"

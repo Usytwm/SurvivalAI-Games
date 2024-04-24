@@ -1,7 +1,10 @@
 import math
 import random
+from typing import List, Tuple
 from src.environment.agent_handler import Agent_Handler
 from src.environment.map import Map
+
+
 
 class MCTSNode:
     def __init__(self, state):
@@ -45,6 +48,9 @@ class MCTSNode:
         if self.parent is not None:
             self.parent.backpropagate(value)
 
+
+
+
 class MCTS:
     def __init__(self, iterations=1000, depth = 0):
         self.iterations = iterations
@@ -82,10 +88,15 @@ class MCTS:
             aux_state.ChildState(action) # El estado original no es una hoja
             # TODO Posible mejora: En lugar de crear constantemente un nuevo nodo crear iniciamente una copia del estado suministrado y ese modificarlo
         return aux_state.get_result()
+    
+    
+
+
 class State:
     def __init__(self, agent: Agent_Handler) -> None:
         self.map = {}
         pass # Crear un mapa de acuerdo a la imagen 
+
     def CreateMap(self): 
         #? Este método debe crear un map según lo que vio el agente
         #? El agente debe ...
@@ -109,32 +120,44 @@ class State:
         # sacar un random a partir de los agentes que desconoce el agente
         #! Está la posibilidad que se identifique un mismo agente como varios en distintos momentos, Creandose un escenario erroneo 
         #! Qué se haría en este caso? OJO!!! 
-        """
+        
         #! Colocar los agentes en el mapa
-        positions = set()
-        while len(positions) < 4:
-            new_position = (random.randint(0, 9), random.randint(0, 9))
-            if not new_position in positions:
-                positions.add(new_position)
-        positions = list(positions)
-        experts_agents = create_agents(4, positions, map)
-        """
+        
         pass 
-    def get_possible_actions():
-        #TODO Saca las posibles acciones del personaje
-        pass
-    def PlayRound():
+
+    #* Creo que este esta listo 
+    def get_possible_actions(self): #? Debe devolver una lista de 3-uplas (movimiento, ataque, alianza) 
+        #TODO Saca las posibles acciones del agente primario
+        association_proposals = self.get_association_proposals()
+        attacks = self.agent.get_attacks() 
+        moves = self.get_moves()
+
+        actions = []
+        #Crea todas las posibles 3-uplas (Las posibles acciones del agente principal)
+        for move in moves:
+            for attack in attacks:
+                for association in association_proposals:
+                    actions.append(tuple[move, attack, association])
+                    
+        return actions
+    
+    def PlayRound(self, action: tuple): #TODO Recibe una 3-upla (movimiento, ataque, alianza) del agente principal
         #TODO Se juega una ronda completa con la decisión del agente principal y después el resto de agente
-        pass
+        #for character in agents 
+            #association_proposals = character.get_association_proposals()
+            #attacks = character.get_attacks()
+            #moves = character.get_moves()
+            #TODO aplicar estas acciones en el estado
+        return 
     def ChildState():
-        #!Clona el estado
+        
         pass
     def is_Terminal():
-        #!Es Terminal si vence o se muere
-        # return self.agent.IsDead() or enemigos == 0
+        #TODO Es Terminal si vence o se muere
+        #* return self.agent.IsDead() or enemigos == 0
         pass
     def ValueState(): 
         #!Como uno evalua el estado?
-        #? Menos infinito si en este escenario el agente principal está muerto
-        #TODO Pensar en criterios para 
+        #*Tengo claro que Menos infinito si en este escenario el agente principal está muerto
+        #TODO Pensar en criterios para la evaluación de un estado
         pass 
