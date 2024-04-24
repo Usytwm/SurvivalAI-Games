@@ -86,7 +86,6 @@ class MCTS:
         while not state.is_terminal():
             action = random.choice(state.get_possible_actions())
             aux_state.ChildState(action) # El estado original no es una hoja
-            # TODO Posible mejora: En lugar de crear constantemente un nuevo nodo crear iniciamente una copia del estado suministrado y ese modificarlo
         return aux_state.get_result()
     
     
@@ -144,7 +143,7 @@ class State:
     def PlayRound(self, action: tuple): #TODO Recibe una 3-upla (movimiento, ataque, alianza) del agente principal
         #TODO Se juega una ronda completa con la decisión del agente principal y después el resto de agente
         #for character in agents 
-            #association_proposals = character.get_association_proposals() #TODO No sé como modelar estás la alianzas
+            association_proposals = character.get_association_proposals() #TODO No sé como modelar estás la alianzas
             #attacks = character.get_attacks()
             #moves = character.get_moves()
             #TODO aplicar estas acciones en el estado
