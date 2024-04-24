@@ -143,7 +143,7 @@ class State:
     def PlayRound(self, action: tuple): #TODO Recibe una 3-upla (movimiento, ataque, alianza) del agente principal
         #TODO Se juega una ronda completa con la decisión del agente principal y después el resto de agente
         #for character in agents 
-            association_proposals = character.get_association_proposals() #TODO No sé como modelar estás la alianzas
+            #association_proposals = character.get_association_proposals() #TODO No sé como modelar estás la alianzas
             #attacks = character.get_attacks()
             #moves = character.get_moves()
             #TODO aplicar estas acciones en el estado
