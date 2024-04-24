@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Any, Dict
+from typing import Any, Dict, Set, List, Callable
 
 
 class Knowledge(Enum):
@@ -21,6 +22,7 @@ class Knowledge(Enum):
     ALLIES = "allies"
     ENEMIES = "enemies"
     AGEENTS = "agents"
+    NEXT_MOVE = "next_move"
 
 
 class BaseKnowledge(ABC):
@@ -53,22 +55,80 @@ class BaseKnowledge(ABC):
         pass
 
 
-class Estrategy(BaseKnowledge):
-    def __init__(self, knowledge_base: Dict[Knowledge, Any] = None):
-        self.knowledge_base = {} if knowledge_base is None else knowledge_base
+class Fact:
+    def __init__(self, key: Knowledge, data: Any):
+        self.key = key
+        self.data = data
 
-    def learn(self, data: Dict[Knowledge, Any]):
-        for key in data.keys():
-            self.knowledge_base[key] = data[key]
+    def __hash__(self):
+        return hash(self.key)
 
-    def learn_especific(self, key: Knowledge, data: Any):
-        self.knowledge_base[key] = data
+    def __eq__(self, other):
+        return (
+            isinstance(other, Fact)
+            and self.key.value == other.key.value
+            and self.data == other.data
+        )
 
-    def make_decision(self):
-        pass
+    def __repr__(self):
+        return f"Fact({self.key.name}, {self.data})"
 
-    def get_knowledge(self, key: Knowledge):
-        try:
-            return self.knowledge_base[key]
-        except KeyError:
-            return None
+
+class Rule:
+    def __init__(
+        self,
+        condition: Callable[[Set[Fact]], bool],
+        action: Callable[[Set[Fact]], List[Fact]],
+    ):
+        self.condition = condition
+        self.action = action
+
+    def evaluate(self, facts: Set[Fact]) -> List[Fact]:
+        if self.condition(facts):
+            return self.action(facts)
+        return []
+
+
+class InferenceEngine:
+    def __init__(self):
+        self.facts: Set[Fact] = set()
+        self.rules: List[Rule] = []
+
+    def add_fact(self, fact: Fact):
+        self.facts = {f for f in self.facts if f.key != fact.key}
+        self.facts.add(fact)
+
+    def remove_fact(self, fact: Fact):
+        self.facts.discard(fact)
+
+    def add_rule(self, rule: Rule):
+        self.rules.append(rule)
+
+    def remove_rule(self, rule: Rule):
+        self.rules.remove(rule)
+
+    def run(self) -> List[Fact]:
+        new_facts: Set[Fact] = set()
+        for rule in self.rules:
+            results = rule.evaluate(self.facts)
+            new_facts.update(results)
+
+        # Preparar para actualizar o agregar nuevos Facts basados en la clave
+        temp_facts = {
+            fact.key: fact for fact in self.facts
+        }  # Crear un diccionario de los hechos actuales por clave
+
+        # Actualizar o agregar nuevos Facts
+        for new_fact in new_facts:
+            temp_facts[new_fact.key] = new_fact  # Sobrescribe o añade el nuevo Fact
+
+        # Restablecer self.facts con los Facts actualizados
+        self.facts = set(temp_facts.values())
+
+        return list(self.facts)
+        # new_facts = set()
+        # for rule in self.rules:
+        #     results = rule.evaluate(self.facts)
+        #     new_facts.update(results)
+        # self.facts.update(new_facts)
+        # return list(new_facts)
