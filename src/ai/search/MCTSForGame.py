@@ -1,6 +1,6 @@
 import math
 import random
-from src.environment.agent_handler import Agent_Handler
+
 class MCTSNode:
     def __init__(self, state):
         self.state = state
@@ -9,10 +9,11 @@ class MCTSNode:
         self.visits = 0
         self.value = 0
         
-    def expand(self): # Actua el agente en cuestion?
+    def expand(self):
         # Expand the node by adding child nodes for all possible actions
-        # Será que se expande según la función heuristica propia del tipo de agente?
-        possible_actions = self.state.get_possible_actions() 
+        #Vienen dadas por la heuristica del personaje
+        possible_actions = self.state.get_possible_actions()
+
         for action in possible_actions:
             new_state = self.state.perform_action(action)
             new_node = MCTSNode(new_state)
@@ -39,25 +40,22 @@ class MCTSNode:
             self.parent.backpropagate(value)
 
 class MCTS:
-    def __init__(self, iterations=1000, depth = 0):
+    def __init__(self, iterations=1000):
         self.iterations = iterations
-        self.depth = depth
 
-    def select_action(self, agent: Agent_Handler):
-        state = self.CreateState(agent) #!Tacto se crea un estado inicial
+    def select_action(self, state):
         root = MCTSNode(state)
-
         for _ in range(self.iterations):
             node = root
             # Select
-            while not node.state.is_terminal() and len(node.children) > 0: # No es terminal y No es hoja
+            while not node.state.is_terminal() and node.children:
                 node = node.select_child()
             # Expand
-            if not node.state.is_terminal() and len(node.children) == 0: # No es un estado terminal y es hoja
+            if not node.state.is_terminal():
                 node.expand()
-                node = random.choice(node.children) # Random en este punto?
+                node = random.choice(node.children)
             # Simulate
-            simulated_value = self.simulate(node.state) # 
+            simulated_value = self.simulate(node.state)
             # Backpropagate
             node.backpropagate(simulated_value)
         # Select the best action based on the most visited child
@@ -70,8 +68,4 @@ class MCTS:
             action = random.choice(state.get_possible_actions())
             state = state.perform_action(action)
         return state.get_result()
-    
-#? Este método debe crear un map según lo que vio el agente
-#? El agente debe ...
-    def CreateState(agent: Agent_Handler):
-        pass    
+
