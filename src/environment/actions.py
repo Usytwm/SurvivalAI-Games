@@ -1,9 +1,11 @@
 from enum import Enum
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 class Action_Type(Enum):
     DIE = 1
     ATTACK = 2
+    ASSOCIATION_PROPOSAL = 3
+    ASSOCIATION_CREATION = 4
 
 class Action:
     def __init__(self, type : Action_Type, actor_id : int, destinataries_ids : List[int] = None):
@@ -23,3 +25,10 @@ class Action_Info:
         self.type = type
         self.actor_id = actor_id
         self.destinataries_ids = destinataries_ids
+
+class Association_Proposal(Action):
+    def __init__(self, actor_id : int, association_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
+        super().__init__(Action_Type.ASSOCIATION_PROPOSAL, actor_id, members)
+        self.association_id = association_id
+        self.members = members
+        self.commitments = commitments

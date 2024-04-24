@@ -11,7 +11,7 @@
 
 from typing import Dict, Tuple, List, Set
 from Interfaces.ISimulation import ISimulation, ViewOption
-from environment.actions import Action
+from environment.actions import Action, Association_Proposal, Attack
 from environment.graph_of_attacks import Graph_of_Attacks, Component_of_Attacks_Graph
 import sys
 
@@ -105,8 +105,9 @@ class SimpleSimulation(ISimulation):
         destinations: Dict[Tuple[int, int], List[int]] = {}
 
         for id, agent in self.agents.items():
-            mov_X, mov_Y = agent.move()
             current_X, current_Y = self.map.peek_id(id)
+            agent.agent.inform_position((current_X, current_Y))
+            mov_X, mov_Y = agent.move()
             destiny = (mov_X + current_X, mov_Y + current_Y)
             if not destiny in destinations:
                 destinations[destiny] = []
@@ -121,9 +122,9 @@ class SimpleSimulation(ISimulation):
 
         return moves
 
-    def __execute_actions__(self, actions: Dict[int, List[Action]]):
+    def __execute_attacks__(self, attacks: Dict[int, List[Attack]]):
         initial_wealth = {id: agent.reserve for id, agent in self.agents.items()}
-        graph_of_attacks = Graph_of_Attacks(actions)
+        graph_of_attacks = Graph_of_Attacks(attacks)
         if not graph_of_attacks.empty:
             for attack in graph_of_attacks.connected_components():
                 self.__execute_attack__(attack, initial_wealth)
@@ -170,7 +171,12 @@ class SimpleSimulation(ISimulation):
                 reward = int(
                     (attack_strength * initial_wealth[dead_id]) / sum_of_strengths
                 )
-                self.agents[attacker_id].take_attack_reward(dead_id, reward)
+                self.__feed_single_agent__(attacker_id, reward, dead_id)
+
+    def __execute_association_proposals__(
+        self, association_proposals: Dict[int, List[Association_Proposal]]
+    ):
+        return
 
     def display(self):
         for event in pygame.event.get():
