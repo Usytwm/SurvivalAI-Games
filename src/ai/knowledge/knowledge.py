@@ -3,7 +3,7 @@ from enum import Enum
 from typing import Any, Dict
 
 
-class Keys(Enum):
+class Knowledge(Enum):
     POSITION = "position"
     RESERVE = "reserve"
     HEALTH = "health"
@@ -24,20 +24,18 @@ class Keys(Enum):
 
 
 class BaseKnowledge(ABC):
-    def __init__(self, knowledge_base: Dict[Keys, Any] = None):
-        self.knowledge_base = {} if knowledge_base is None else knowledge_base
 
     @abstractmethod
-    def learn(self, data: Dict[Keys, Any]):
+    def learn(self, data: Dict[Knowledge, Any]):
         """
         Aprende del entorno o de los datos proporcionados.
         """
         pass
 
     @abstractmethod
-    def learn_especific(self, key: Keys, data: Any):
+    def learn_especific(self, key: Knowledge, data: Any):
         """
-        Aprende del entorno.
+        Aprende del entorno un solo conocimiento.
         """
         pass
 
@@ -47,3 +45,30 @@ class BaseKnowledge(ABC):
         Toma una decisión basada en la base de conocimientos actual.
         """
         pass
+
+    def get_knowledge(self, key: Knowledge):
+        """
+        Retorna un conocimiento específico.
+        """
+        pass
+
+
+class Estrategy(BaseKnowledge):
+    def __init__(self, knowledge_base: Dict[Knowledge, Any] = None):
+        self.knowledge_base = {} if knowledge_base is None else knowledge_base
+
+    def learn(self, data: Dict[Knowledge, Any]):
+        for key in data.keys():
+            self.knowledge_base[key] = data[key]
+
+    def learn_especific(self, key: Knowledge, data: Any):
+        self.knowledge_base[key] = data
+
+    def make_decision(self):
+        pass
+
+    def get_knowledge(self, key: Knowledge):
+        try:
+            return self.knowledge_base[key]
+        except KeyError:
+            return None

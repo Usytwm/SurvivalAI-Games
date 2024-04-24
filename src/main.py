@@ -53,74 +53,8 @@ while len(positions) < 4:
         positions.add(new_position)
 positions = list(positions)
 experts_agents = create_agents(4, positions, map)
-# agents = [
-#     (
-#         positions[0],
-#         (
-#             1,
-#             Agent_Handler(
-#                 1,
-#                 3,
-#                 1,
-#                 map,
-#                 Random_Agent(1),
-#                 SimpleWalking(),
-#                 SquareVision(3),
-#                 SquareAttackRange(3),
-#             ),
-#         ),
-#     ),
-#     (
-#         positions[1],
-#         (
-#             2,
-#             Agent_Handler(
-#                 2,
-#                 5,
-#                 1,
-#                 map,
-#                 Random_Agent(2),
-#                 SimpleWalking(),
-#                 SquareVision(3),
-#                 SquareAttackRange(3),
-#             ),
-#         ),
-#     ),
-#     (
-#         positions[2],
-#         (
-#             3,
-#             Agent_Handler(
-#                 3,
-#                 7,
-#                 1,
-#                 map,
-#                 Random_Agent(3),
-#                 SimpleWalking(),
-#                 SquareVision(3),
-#                 SquareAttackRange(3),
-#             ),
-#         ),
-#     ),
-#     (
-#         positions[3],
-#         (
-#             4,
-#             Agent_Handler(
-#                 4,
-#                 9,
-#                 1,
-#                 map,
-#                 Random_Agent(4),
-#                 SimpleWalking(),
-#                 SquareVision(3),
-#                 SquareAttackRange(3),
-#             ),
-#         ),
-#     ),
-# ]
 
-simulation = SimpleSimulation(map, experts_agents, view=ViewOption.TERMINAL)
+simulation = SimpleSimulation(map, experts_agents, view=ViewOption.PYGAME)
 
 try:
     while True:

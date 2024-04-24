@@ -109,7 +109,7 @@ class Agent_Handler(Sim_Object):
         "Loads the objects the agent can see in this turn, and sends it to him"
         vision = self.vision.see_objects(self.map, self.id, objects)
         self.agent.see_objects(vision)
-        print("Agent " + str(self.id) + " sees: " + str(vision))
+        # print("Agent " + str(self.id) + " sees: " + str(vision))
 
     def see_resources(self) -> None:
         """Loads the info about the resources in the positions the agent can see in this turn
