@@ -30,4 +30,6 @@ class Agent_with_Memories(IAgent):
     
     def see_resources(self, info: List[Tuple[Tuple[int] | int]]) -> None:
         for row, column, sugar in info:
+            row = row + self.position[0]
+            column = column + self.position[1]
             self.geographic_memory.add_sugar_observation(row, column, self.iteration, sugar)
