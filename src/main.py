@@ -1,7 +1,7 @@
 import random
 from Interfaces.ISimulation import ViewOption
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
-from agents.expert_agent import ExpertAgent
+#from agents.expert_agent import ExpertAgent
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
