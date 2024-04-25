@@ -1,7 +1,6 @@
 from typing import Any, Dict
 from ai.knowledge.knowledge import (
     BaseKnowledge,
-    Estrategy,
     Fact,
     InferenceEngine,
     Knowledge,
