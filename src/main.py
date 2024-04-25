@@ -1,7 +1,9 @@
 import random
 from Interfaces.ISimulation import ViewOption
+from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
-from agents.expert_agent import ExpertAgent
+
+# from agents.expert_agent import ExpertAgent
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
@@ -27,7 +29,7 @@ def create_agents(num_agents, positions, map):
             3,  # Algún valor de configuración
             1,  # Otro valor de configuración
             map,  # Objeto del mapa
-            PacifistAgent(
+            FoodSeekerAgent(
                 agent_id
             ),  # Crear una instancia de PacifistAgent con el ID único
             SimpleWalking(),  # Instancia de SimpleWalking
@@ -41,6 +43,7 @@ def create_agents(num_agents, positions, map):
 resources = {}
 for i in range(10):
     for j in range(10):
+        # resources[(i, j)] = 1
         if random.choices([True, False]):
             resources[(i, j)] = randint(
                 1, 100
@@ -58,7 +61,7 @@ simulation = SimpleSimulation(map, experts_agents, view=ViewOption.PYGAME)
 
 try:
     while True:
-        simulation.step(sleep_time=0.01)  # Actualiza el estado del simulador
+        simulation.step(sleep_time=0.2)  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:

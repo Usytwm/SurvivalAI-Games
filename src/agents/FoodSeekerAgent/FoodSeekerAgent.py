@@ -1,33 +1,27 @@
+from random import random
 from typing import List, Tuple
-
-from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
-from environment.actions import Action, Action_Info
-from environment.sim_object import Object_Info
 from Interfaces.IAgent import IAgent
-from agents.PacifistAgent.strategy import PacifistEstrategy
-from agents.PacifistAgent.Rules import (
-    move_away_rule,
-    see_objects_rule,
-    see_actions_rule,
-    default_move,
+from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
+from environment.actions import Action, Action_Info, Attack
+from environment.sim_object import Object_Info
+from agents.FoodSeekerAgent.Rules import (
+    eat_not_enemy_rule,
+    eat_enemy_rule,
+    default_move_rule,
 )
 
 
-class PacifistAgent(IAgent):
+class FoodSeekerAgent(IAgent):
     def __init__(self, id):
         self.id = id
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
-            Fact(Knowledge.ENEMIES, set()),
+            Fact(Knowledge.ENEMIES, set([2, 3, 4])),
             Fact(Knowledge.AGEENTS, set()),
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
+            Fact(Knowledge.ID, id),
         ]
-        initial_rules = [
-            move_away_rule,
-            see_objects_rule,
-            see_actions_rule,
-            default_move,
-        ]
+        initial_rules = [eat_not_enemy_rule, eat_enemy_rule, default_move_rule]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
@@ -77,20 +71,18 @@ class PacifistAgent(IAgent):
         enemy = self.estrategy.get_knowledge(Knowledge.ENEMIES)
         enemy.add(attacker_id)
         self.estrategy.learn_especific(Knowledge.ENEMIES, enemy)
-        # decision = self.estrategy.make_decision()
-        # return decision
 
     def inform_move(self, position: Tuple[int, int]):
         self.position = position
         self.estrategy.learn_especific(Knowledge.POSITION, position)
 
     def get_attacks(self) -> List[Action]:
-        # * No ataca, solo tiene aliados
-        return []
-        # if randint(0, 100) < 20:  # 20% chance to attack
-        #     target_id = randint(1, 10)  # Random target for example
-        #     return [Attack(self.id, target_id, 1)]
-        # return []
+        decision = self.estrategy.make_decision()
+        filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
+        if len(filtered) == 0:
+            return []
+        attacks = list(map(lambda x: x.data, filtered))[0]
+        return attacks
 
     def get_association_proposals(self) -> List:
         return []  # Todo implementar
@@ -109,9 +101,7 @@ class PacifistAgent(IAgent):
         self.estrategy.learn_especific(Knowledge.SEE_OBJECTS, info)
 
     def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
-        # self.current_see_resources = info
         self.estrategy.learn_especific(Knowledge.SEE_RESOURCES, info)
-        # print(f"Seeing resources: {info}")
 
     def see_actions(self, info: List[Action_Info]):
         # Actualizar la base de hechos con acciones vistas
