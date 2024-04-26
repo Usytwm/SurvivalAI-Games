@@ -8,6 +8,7 @@ from agents.FoodSeekerAgent.Rules import (
     eat_not_enemy_rule,
     eat_enemy_rule,
     default_move_rule,
+    stuck_and_resources_available_rule,
 )
 
 
@@ -16,12 +17,17 @@ class FoodSeekerAgent(IAgent):
         self.id = id
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
-            Fact(Knowledge.ENEMIES, set([2, 3, 4])),
+            Fact(Knowledge.ENEMIES, set()),
             Fact(Knowledge.AGEENTS, set()),
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
             Fact(Knowledge.ID, id),
         ]
-        initial_rules = [eat_not_enemy_rule, eat_enemy_rule, default_move_rule]
+        initial_rules = [
+            eat_not_enemy_rule,
+            eat_enemy_rule,
+            stuck_and_resources_available_rule,
+            default_move_rule,
+        ]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
@@ -30,12 +36,15 @@ class FoodSeekerAgent(IAgent):
         self.estrategy.learn_especific(Knowledge.POSIBLES_MOVEMENTS, possible_moves)
         # Solicitar una decisión de movimiento
         decision = self.estrategy.make_decision()
+        filter_desicion = list(filter(lambda x: x.key == Knowledge.NEXT_MOVE, decision))
         move = list(
             map(
                 lambda x: x.data,
-                list(filter(lambda x: x.key == Knowledge.NEXT_MOVE, decision)),
+                filter_desicion,
             )
         )[0]
+        position = self.estrategy.get_knowledge(Knowledge.POSITION)
+        self.estrategy.learn_especific(Knowledge.PREVPOSSITION, position)
         return move
 
     def inform_move(self, position: Tuple[int, int]):

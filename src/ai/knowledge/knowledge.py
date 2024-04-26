@@ -24,6 +24,7 @@ class Knowledge(Enum):
     ENEMIES = "enemies"
     AGEENTS = "agents"
     NEXT_MOVE = "next_move"
+    PREVPOSSITION = "prevposition"
 
 
 class Fact:

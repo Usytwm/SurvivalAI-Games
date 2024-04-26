@@ -66,7 +66,8 @@ class ISimulation(ABC):
         "Passes to all the agents the info about what they can see"
         for agent in self.agents.values():
             position = self.map.peek_id(agent.id)
-            agent.agent.inform_position(position)
+
+            agent.agent.inform_position(position, agent.reserve)
             agent.see_objects(self.objects)
             agent.see_resources()
             agent.see_actions()
