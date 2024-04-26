@@ -44,10 +44,27 @@ class Display:
         pygame.display.set_caption("Simulation")
 
     @staticmethod
-    def get_cell_color(position, map: Map, agent_color, terrain_color, resource_color):
+    def get_cell_color(position, map: Map, agents, terrain_color, resource_color):
         content = map.peek_from_position(position)
+
         if content:
-            return agent_color
+            agent = agents.get(content, None)
+            return agent.agent.color
+        elif map.resources.get(position, 0) > 0:
+            percentage = map.resource_percentage(position)
+            return [
+                int(
+                    terrain_color[i]
+                    + (resource_color[i] - terrain_color[i]) * percentage
+                )
+                for i in range(3)
+            ]
+        else:
+            return terrain_color
+
+        content = map.peek_from_position(position)
+        if isinstance(content, Agent):  # Asumiendo que los agentes son de clase Agent
+            return content.color
         elif map.resources.get(position, 0) > 0:
             percentage = map.resource_percentage(position)
             return [
@@ -191,7 +208,7 @@ class SimpleSimulation(ISimulation):
             for col in range(self.map.width):
                 position = (row, col)
                 color = self._display.get_cell_color(
-                    position, self.map, (255, 0, 0), (255, 255, 255), (139, 69, 19)
+                    position, self.map, self.agents, (255, 255, 255), (139, 69, 19)
                 )
                 self._display.draw_cell(
                     self._display.screen,

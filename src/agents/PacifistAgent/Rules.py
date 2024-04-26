@@ -67,7 +67,7 @@ def see_actions_action(facts: Set[Fact]):
             possible_moves = fact.data
 
     for action in see_actions_info:
-        action = Action_Info(action)
+        action = action
         if action.type == Action_Type.ATTACK:
             id = action.actor_id
             if id in enemies_info:

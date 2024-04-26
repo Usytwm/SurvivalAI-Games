@@ -15,6 +15,7 @@ from agents.FoodSeekerAgent.Rules import (
 class FoodSeekerAgent(IAgent):
     def __init__(self, id):
         self.id = id
+        self.color = (0, 255, 0)  # Green
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
             Fact(Knowledge.ENEMIES, set()),
