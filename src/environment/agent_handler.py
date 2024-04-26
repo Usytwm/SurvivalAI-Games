@@ -52,9 +52,9 @@ class Agent_Handler(Sim_Object):
         move = self.agent.move()
         return move if move in possible_moves else (0, 0)
 
-    def inform_move(self, position: Tuple[int, int]) -> None:
+    def inform_move(self, movement: Tuple[int, int]) -> None:
         "Informs the agent he has moved to the given position"
-        return self.agent.inform_move(position)
+        return self.agent.inform_move(movement)
 
     def get_attacks(self) -> List[Attack]:
         """Get the attacks that the agent wants to make in this turn, and returns only the
@@ -128,9 +128,8 @@ class Agent_Handler(Sim_Object):
         self.reserve = self.reserve + sugar
         self.agent.feed(
             sugar
-        )  #!aki se le dice al agente cuanta asucar consumio, pero nunca se inicializa algo que diga dentro del agente cuanta azucar tiene  cuando comienza
-
+        )
     def burn(self) -> None:
         """Dimishes the agent reserves by his diary consume."""
         self.reserve = self.reserve - self.consume
-        self.agent.burn()  #! aki el agente no sabe cuanto consume, que sentido tiene ste metodo
+        self.agent.burn()

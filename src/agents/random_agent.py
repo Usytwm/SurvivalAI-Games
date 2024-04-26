@@ -13,7 +13,7 @@ class Random_Agent(IAgent):
         directions = [(0, 0), (-1, 0), (0, -1), (1, 0), (0, 1)]
         return directions[randint(0, 4)]
 
-    def inform_move(self, position: Tuple[int]) -> None:
+    def inform_move(self, movement: Tuple[int]) -> None:
         pass
 
     def get_attacks(self) -> List[Action]:

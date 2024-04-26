@@ -24,9 +24,9 @@ class Agent_with_Memories(Random_Agent):
         self.attacks_received : Dict[int, Tuple[int, int]] = {}
     
     #En IAgent deberiamos cambiar el nombre del parametro position por movement
-    def inform_move(self, position: Tuple[int, int]) -> None:
-        self.own_moves[self.iteration] = position
-        self.position = (self.position[0] + position[0], self.position[1] + position[1])
+    def inform_move(self, movement: Tuple[int, int]) -> None:
+        self.own_moves[self.iteration] = movement
+        self.position = (self.position[0] + movement[0], self.position[1] + movement[1])
         self.positions_visited[self.iteration] = self.position
 
     def see_objects(self, info: List[Object_Info]) -> None:

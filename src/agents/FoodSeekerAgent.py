@@ -13,9 +13,9 @@ class FoodSeekerAgent(IAgent):
         """Decide el siguiente movimiento basado en el recurso más cercano y rico en azúcar."""
         return (0, 0)
 
-    def inform_move(self, position: Tuple[int, int]):
-        self.position = position
-        print(f"Se ha movido a la posición {position}")
+    def inform_move(self, movement: Tuple[int, int]):
+        self.position = movement
+        print(f"Se ha movido a la posición {movement}")
 
     def inform_position(
         self, position: Tuple[int] = None, reserve: int = None, health: int = None
