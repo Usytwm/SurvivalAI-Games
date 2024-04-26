@@ -22,6 +22,7 @@ class Geographic_Memory:
     
     def add_sugar_observation(self, row : int, column : int, iteration : int, resources : int):
         """Dada una posicion y una cantidad de azucar, registra el dato"""
+        self.add_position(row, column)
         pos = (row, column)
         self.actual_sugar_per_position[pos] = resources
         self.top_sugar_per_position[pos] = max(self.actual_sugar_per_position[pos], self.top_sugar_per_position[pos])

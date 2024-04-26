@@ -30,11 +30,11 @@ class Memory_for_Agents_Sights:
         self.table_name = "agents_sights_" + str(self.id)
         self.cursor = self.cursor.execute(CREATE_TABLE%(self.table_name))
     
-    def add_appearence(self, other_id : int, position : Tuple[int, int], iteration : int, resources : int):
+    def add_appearence(self, other_id : int, row : int, column : int, iteration : int, resources : int):
         """Anhade a la base de datos la observacion de una posicion.\n
         La observacion es descrita con el id del agente observado, la iteracion en que ocurrio
         la observacion y la cantidad de azucar que llevaba el agente observado.\n"""
-        return self.cursor.execute(INSERT_APPEARENCE%(self.table_name, other_id, position[0], position[1], iteration, resources))
+        return self.cursor.execute(INSERT_APPEARENCE%(self.table_name, other_id, row, column, iteration, resources))
 
     def add_empty_sight(self, position : Tuple[int, int], iteration : int):
         """Anhade a la base de datos la observacion de que una posicion se encuentra vacia"""
