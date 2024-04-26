@@ -3,7 +3,7 @@ from typing import List, Tuple, Dict
 from Interfaces.IAgent import IAgent
 from agents.random_agent import Random_Agent
 from environment.actions import Action_Info, Attack
-from environment.sim_object import Object_Info
+from environment.sim_object import Object_Info, Agent_Info
 from environment.actions import Action_Type
 from agents.memory.memory_for_agents_sights import Memory_for_Agents_Sights
 from agents.memory.geographic_memory import Geographic_Memory
@@ -31,10 +31,11 @@ class Agent_with_Memories(Random_Agent):
 
     def see_objects(self, info: List[Object_Info]) -> None:
         for sight in info:
-            other_id = sight.id
-            row = sight.position[0] + self.position[0]
-            column = sight.position[1] + self.position[1]
-            resources = 0 #Tenemos que incluir la cantidad de azucar que lleva el agente en el Object_Info
+            if isinstance(sight, Agent_Info):
+                other_id = sight.id
+                row = sight.position[0] + self.position[0]
+                column = sight.position[1] + self.position[1]
+                resources = sight.resources
             self.memory_for_agents_sights.add_appearence(other_id, row, column, self.iteration, resources)
             self.geographic_memory.add_position(row, column)
         self.iteration = self.iteration + 1

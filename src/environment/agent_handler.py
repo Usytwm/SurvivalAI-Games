@@ -22,7 +22,7 @@ class Agent_Handler(Sim_Object):
         vision: IVision,
         attack_range: IAttackRange,
     ):
-        super().__init__(id, Sim_Object_Type.AGENT)
+        super().__init__(id, Sim_Object_Type.AGENT, reserve)
         self.reserve = reserve
         self.consume = consume
         self.map = map

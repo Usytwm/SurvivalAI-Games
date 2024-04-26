@@ -5,7 +5,7 @@ from Interfaces.IMovement import IMovement
 from Interfaces.IAttack_Range import IAttackRange
 from environment.actions import Action_Info
 from environment.map import Map
-from environment.sim_object import Sim_Object, Object_Info
+from environment.sim_object import Sim_Object, Object_Info, Agent_Info, Sim_Object_Type
 
 class SimpleWalking(IMovement):
     "You can walk north, south, east or west as long as is a valid not an occupied square"
@@ -52,7 +52,11 @@ class SquareVision(IVision):
             try:
                 #O sea si no hay nada en una posicion la pasamos como None
                 id = map.peek_from_position((row, column))
-                vision.append(Object_Info((row - current_X, column - current_Y), id, objects[id].type))
+                position = (row - current_X, column - current_Y)
+                type = objects[id].type
+                if type.value == Sim_Object_Type.AGENT.value:
+                    vision.append(Agent_Info(position, id, objects[id].resources))
+                vision.append(Object_Info(position, id, objects[id].type))
             except:
                 continue
         return vision

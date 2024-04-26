@@ -132,6 +132,7 @@ class ISimulation(ABC):
             crop = self.map.feed(agent_id)
             self.__feed_single_agent__(agent_id, crop)
             agent.burn()
+            self.objects[agent_id].resources = agent.resources
 
         for agent in list(self.agents.values()):
             if agent.IsDead:
