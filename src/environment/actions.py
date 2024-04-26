@@ -32,3 +32,11 @@ class Association_Proposal(Action):
         self.association_id = association_id
         self.members = members
         self.commitments = commitments
+    
+class Association_Creation(Action):
+    def __init__(self, actor_id : int, association_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
+        #Realmente deberian ser conocidos los commitments por agentes ajenos a la asociacion
+        super().__init__(Action_Type.ASSOCIATION_CREATION, actor_id, None)
+        self.association_id = association_id
+        self.members = members
+        self.commitments = commitments

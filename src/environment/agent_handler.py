@@ -84,6 +84,10 @@ class Agent_Handler(Sim_Object):
         the valid ones"""
         # TODOf Insertar comprobaciones de que la propuesta tiene sentido
         return self.agent.get_association_proposals()
+    
+    def consider_association_proposal(self, proposal : Association_Proposal) -> bool:
+        "Consulta al agente si desea o no ser miembro de la asociacion y retorna su respuesta"
+        return self.agent.consider_association_proposal(proposal)
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         "Informs the agent that an attack that he has requested, has been executed"
@@ -98,6 +102,12 @@ class Agent_Handler(Sim_Object):
             attacker_id, strength, position_attack_recived
         )
         return return_value
+    
+    def inform_joined_association(self, association : Association):
+        "Informa al agente que se ha unido a una asociacion"
+        self.associations[association.id] = association
+        self.free_portion = self.free_portion - association.commitments[self.id][0]
+        self.agent.inform_joined_association(association.id, association.members, association.commitments)
 
     def take_attack_reward(self, victim_id: int, reward: int):
         """Informs the agent of the reward obtained by killing an agent, and actualizes

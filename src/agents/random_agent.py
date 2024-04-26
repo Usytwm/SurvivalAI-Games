@@ -1,6 +1,6 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from environment.sim_object import Object_Info
-from environment.actions import Action_Info, Action, Attack
+from environment.actions import Action_Info, Action, Association_Proposal, Attack
 from Interfaces.IAgent import IAgent
 from random import randint, random
 
@@ -25,6 +25,9 @@ class Random_Agent(IAgent):
 
     def get_association_proposals(self) -> List:
         return []
+    
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
+        pass
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         print(
@@ -41,6 +44,9 @@ class Random_Agent(IAgent):
             + " con fuerza "
             + str(strength)
         )
+    
+    def inform_joined_association(self, association_id: int, members: List[int], commitments: Dict[int, Tuple[int]]):
+        pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
         print(

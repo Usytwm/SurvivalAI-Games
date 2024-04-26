@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 from environment.sim_object import Object_Info
 from environment.actions import Action_Info, Action, Attack, Association_Proposal
 
@@ -23,6 +23,16 @@ class IAgent(ABC):
     def get_association_proposals(self) -> List[Association_Proposal]:
         """Devuelve una lista con las propuestas de Asociacion que el agente desea realizar este
         turno"""
+        pass
+
+    @abstractmethod
+    def consider_association_proposal(self, proposal : Association_Proposal) -> bool:
+        "Devuelve si el agente acepta ser parte de la asociacion o no"
+        pass
+    
+    @abstractmethod
+    def inform_joined_association(self, association_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
+        "Informa al agente que se acaba de unir a una asociacion"
         pass
 
     @abstractmethod

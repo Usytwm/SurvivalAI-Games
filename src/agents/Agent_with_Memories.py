@@ -65,7 +65,7 @@ class Agent_with_Memories(Random_Agent):
         if not self.iteration in self.attacks_received:
             self.attacks_received[self.iteration] = []
         self.attacks_received[self.iteration].append((attacker_id, strength))
-    
+
     def burn(self) -> None:
         self.reserves = self.reserves - self.consume
     
