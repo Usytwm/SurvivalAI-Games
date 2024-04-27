@@ -37,7 +37,7 @@ class Random_Agent(IAgent):
             + str(strength)
         )
 
-    def inform_of_received_attack(self, attacker_id: int, strength: int) -> None:
+    def inform_of_attack_received(self, attacker_id: int, strength: int) -> None:
         print(
             f"{self.id} ha recibido un ataque de "
             + str(attacker_id)
