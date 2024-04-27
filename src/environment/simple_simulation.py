@@ -152,6 +152,7 @@ class SimpleSimulation(ISimulation):
 
         for actor_id, attacks_dict in graph.edges.items():
             for victim_id, attack_strength in attacks_dict.items():
+                print(str(actor_id) + " attacks " + str(victim_id))
                 self.agents[actor_id].inform_of_attack_made(
                     victim_id, attack_strength
                 )  # el costo de realizar el ataque

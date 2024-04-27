@@ -34,6 +34,7 @@ class ISimulation(ABC):
             {}
         )  # Por ahora los unicos objetos que consideramos en la sim son agentes
         self.associations: Dict[int, Association] = {}
+
         for position, (id, agent) in agents:
             self.map.insert(position, id)
             self.agents[id] = agent
@@ -57,7 +58,9 @@ class ISimulation(ABC):
         #print("Existen las siguientes asociaciones:")
         #for association in self.associations.values():
         #    print(association.members)
-        #input()
+        for agent in self.agents.values():
+            print(agent.partners)
+        input()
         attacks = self.__get_attacks__()
         self.__execute_association_proposals__(association_proposals)
         self.__execute_attacks__(attacks)
@@ -190,7 +193,8 @@ class ISimulation(ABC):
         self.map.pop_id(id)
     
     def __remove_association__(self, association_id : int):
-        for agent_id in self.associations[association_id].members:
+        members = self.associations[association_id].members
+        for agent_id in members:
             self.map.add_action(Association_Destruction(agent_id, association_id))
             self.agents[agent_id].inform_broken_association(association_id)
         self.associations.pop(association_id)

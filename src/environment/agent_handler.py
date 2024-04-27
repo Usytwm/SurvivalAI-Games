@@ -31,8 +31,11 @@ class Agent_Handler(Sim_Object):
         self.vision = vision
         self.attack_range = attack_range
         self.associations: Dict[int, Association] = {}
-        self.partners: Set[int] = set()
         self.free_portion = 1
+        self.partners: Dict[int, int] = {}
+        #partners contiene para cada aliado, cuantas asociaciones este agente comparte con tal aliado
+        #de manera que podemos saber si sigue siendo aliado tras eliminar una de esas asociaciones
+        #o no
 
     @property
     def IsDead(self):
@@ -107,11 +110,19 @@ class Agent_Handler(Sim_Object):
         "Informa al agente que se ha unido a una asociacion"
         self.associations[association.id] = association
         self.free_portion = self.free_portion - association.commitments[self.id][0]
+        for agent_id in association.members:
+            if agent_id != self.id:
+                self.partners[agent_id] = self.partners.get(agent_id, 0) + 1
         self.agent.inform_joined_association(association.id, association.members, association.commitments)
     
     def inform_broken_association(self, association_id : int):
         "Informa al agente que se ha roto una asociacion a la que pertenece"
         self.free_portion = self.free_portion + self.associations[association_id].commitments[self.id][0]
+        for agent_id in self.associations[association_id].members:
+            if agent_id != self.id:
+                self.partners[agent_id] -= 1
+                if self.partners[agent_id] == 0:
+                    self.partners.pop(agent_id)
         self.associations.pop(association_id)
         self.agent.inform_broken_association(association_id)
 
