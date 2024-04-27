@@ -1,10 +1,10 @@
 # SurvivalAI-Games
 
-| Nombre                     | Grupo | Github  |
-| -------------------------- | ----- | ------- |
-| Brián Ameht Inclán Quesada | C411  | @Usytwm |
-| Eric Lopez Tornas          | C411  |         |
-| Daviel Bello               | C411  |         |
+| Nombre                     | Grupo | Github                                       |
+| -------------------------- | ----- | -------------------------------------------- |
+| Brián Ameht Inclán Quesada | C411  | [@Usytwm](https://github.com/Usytwm)         |
+| Eric Lopez Tornas          | C411  | [@EricTornas](https://github.com/EricTornas) |
+| Davier Sanchez Bello       | C411  | [@DavierSB](https://github.com/DavierSB)     |
 
 ## Descripción
 
