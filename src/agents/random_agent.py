@@ -1,6 +1,6 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 from environment.sim_object import Object_Info
-from environment.actions import Action_Info, Action, Attack
+from environment.actions import Action_Info, Action, Association_Proposal, Attack
 from Interfaces.IAgent import IAgent
 from random import randint, random
 
@@ -13,7 +13,7 @@ class Random_Agent(IAgent):
         directions = [(0, 0), (-1, 0), (0, -1), (1, 0), (0, 1)]
         return directions[randint(0, 4)]
 
-    def inform_move(self, position: Tuple[int]) -> None:
+    def inform_move(self, movement: Tuple[int]) -> None:
         pass
 
     def get_attacks(self) -> List[Action]:
@@ -24,7 +24,18 @@ class Random_Agent(IAgent):
         return attacks
 
     def get_association_proposals(self) -> List:
-        return []
+        if self.id != 2:
+            commitments = {}
+            commitments[self.id] = (0.2, 0.5)
+            commitments[2] = (0.2, 0.5)
+            proposal = Association_Proposal(self.id, randint(1, 1000000), [self.id, 2], commitments)
+            return [proposal]
+        else:
+            return []
+    
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
+        #por ahora
+        return True
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         print(
@@ -34,13 +45,19 @@ class Random_Agent(IAgent):
             + str(strength)
         )
 
-    def inform_of_received_attack(self, attacker_id: int, strength: int) -> None:
+    def inform_of_attack_received(self, attacker_id: int, strength: int) -> None:
         print(
             f"{self.id} ha recibido un ataque de "
             + str(attacker_id)
             + " con fuerza "
             + str(strength)
         )
+    
+    def inform_joined_association(self, association_id: int, members: List[int], commitments: Dict[int, Tuple[int]]):
+        pass
+
+    def inform_broken_association(self, association_id: int):
+        pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
         print(

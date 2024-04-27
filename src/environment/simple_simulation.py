@@ -11,8 +11,9 @@
 
 from typing import Dict, Tuple, List, Set
 from Interfaces.ISimulation import ISimulation, ViewOption
-from environment.actions import Action, Association_Proposal, Attack
+from environment.actions import Action, Association_Proposal, Attack, Association_Creation
 from environment.graph_of_attacks import Graph_of_Attacks, Component_of_Attacks_Graph
+from environment.association import Association
 import sys
 
 import pygame
@@ -128,8 +129,6 @@ class SimpleSimulation(ISimulation):
         if not graph_of_attacks.empty:
             for attack in graph_of_attacks.connected_components():
                 self.__execute_attack__(attack, initial_wealth)
-        # Formalize asociations
-        pass
 
     # Usamos esta modelacion de los ataques como grafos por su expresividad, porque
     # perfectamente nos podra servir para implementar logicas de combate mas complejas, como
@@ -176,7 +175,18 @@ class SimpleSimulation(ISimulation):
     def __execute_association_proposals__(
         self, association_proposals: Dict[int, List[Association_Proposal]]
     ):
-        return
+        for proposer_id, propositions in association_proposals.items():
+            for proposal in propositions:
+                accepted = True
+                proposal.destinataries_ids.append(proposer_id)#Deberia esto ir aqui?
+                for destinatary_id in proposal.destinataries_ids:
+                    accepted = self.agents[destinatary_id].consider_association_proposal(proposal)
+                if accepted:
+                    association = Association(proposal.association_id, set(proposal.destinataries_ids), proposal.commitments)
+                    self.associations[association.id] = association
+                    for destinatary_id in proposal.destinataries_ids:
+                        self.agents[destinatary_id].inform_joined_association(association)
+                        self.map.add_action(Association_Creation(destinatary_id, association.id, association.members, association.commitments))
 
     def display(self):
         for event in pygame.event.get():

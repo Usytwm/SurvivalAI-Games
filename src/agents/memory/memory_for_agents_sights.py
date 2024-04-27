@@ -34,11 +34,11 @@ class Memory_for_Agents_Sights:
         """Anhade a la base de datos la observacion de una posicion.\n
         La observacion es descrita con el id del agente observado, la iteracion en que ocurrio
         la observacion y la cantidad de azucar que llevaba el agente observado.\n"""
-        return self.cursor.execute(INSERT_APPEARENCE%(self.table_name, other_id, row, column, iteration, resources))
+        self.cursor = self.cursor.execute(INSERT_APPEARENCE%(self.table_name, other_id, row, column, iteration, resources))
 
     def add_empty_sight(self, position : Tuple[int, int], iteration : int):
         """Anhade a la base de datos la observacion de que una posicion se encuentra vacia"""
-        return self.cursor.execute(INSERT_APPEARENCE%(self.table_name, 'NULL', position[0], position[1], iteration, 'NULL'))
+        self.cursor = self.cursor.execute(INSERT_APPEARENCE%(self.table_name, 'NULL', position[0], position[1], iteration, 'NULL'))
 
     def get_last_info_from_agent(self, other_id) -> Tuple[Tuple[int, int], int, int]:
         """Devuelve la ultima informacion recolectada sobre el agente cuyo id fue provisto.\n
