@@ -82,10 +82,6 @@ class FoodSeekerAgent(Agent_with_Memories):
         enemy.add(attacker_id)
         self.estrategy.learn_especific(Knowledge.ENEMIES, enemy)
 
-    def inform_move(self, position: Tuple[int, int]):
-        self.position = position
-        self.estrategy.learn_especific(Knowledge.POSITION, position)
-
     def get_attacks(self) -> List[Action]:
         decision = self.estrategy.make_decision()
         filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
