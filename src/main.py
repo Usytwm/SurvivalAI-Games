@@ -1,10 +1,10 @@
 import random
+import sqlite3
 from Interfaces.ISimulation import ViewOption
 from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
-
-# from agents.expert_agent import ExpertAgent
+from agents.Agent_with_Memories import Agent_with_Memories
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
@@ -40,20 +40,16 @@ def create_agents(num_agents, positions, map):
             ]  # Usar la última posición si no hay suficientes posiciones definidas
 
         agent_id = i + 1
+        reserves = 3
+        consume = 1
         handler = Agent_Handler(
             agent_id,  # ID único del agente
-            3,  # Algún valor de configuración
-            1,  # Otro valor de configuración
-            map,
-            random.choice(
-                [
-                    PacifistAgent(agent_id),
-                    FoodSeekerAgent(agent_id),
-                    RandomAgent(agent_id),
-                ]
-            ),
-            # RandomAgent(agent_id),
-            # Objeto del mapa  # Crear una instancia del agete con el ID único
+            reserves,  # Algún valor de configuración
+            consume,  # Otro valor de configuración
+            map,  # Objeto del mapa
+            Agent_with_Memories(
+                agent_id, consume, reserves, sqlite3.connect(":memory:")
+            ),  # Crear una instancia de PacifistAgent con el ID único
             SimpleWalking(),  # Instancia de SimpleWalking
             SquareVision(3),  # Instancia de SquareVision
             SquareAttackRange(3),  # Instancia de SquareAttackRange
@@ -62,24 +58,29 @@ def create_agents(num_agents, positions, map):
     return expert_agents
 
 
-resources = {}
-for i in range(20):
-    for j in range(20):
-        # resources[(i, j)] = 1
-        if random.choices([True, False]):
-            resources[(i, j)] = randint(
-                1, 100
-            )  # Pa q no se mueran de hambre y ver sus combates y sus alianzas y eso
-map = Map(20, 20, resources)
-positions = set()
-while len(positions) < 5:
-    new_position = (randint(0, 19), randint(0, 19))
-    if not new_position in positions:
-        positions.add(new_position)
-positions = list(positions)
-experts_agents = create_agents(5, positions, map)
+def create_simulation(
+    width_map, height_map, num_of_agents, view: ViewOption = ViewOption.PYGAME
+):
+    resources = {}
+    for i in range(width_map):
+        for j in range(height_map):
+            if random.choices([True, False]):
+                resources[(i, j)] = randint(
+                    1, 100
+                )  # Pa q no se mueran de hambre y ver sus combates y sus alianzas y eso
 
-simulation = SimpleSimulation(map, experts_agents, view=ViewOption.PYGAME)
+    map = Map(width_map, height_map, resources)
+    positions = set()
+    while len(positions) < num_of_agents:
+        new_position = (randint(0, width_map - 1), randint(0, height_map - 1))
+        if not new_position in positions:
+            positions.add(new_position)
+    positions = list(positions)
+    agents = create_agents(num_of_agents, positions, map)
+    return SimpleSimulation(map, agents, view)
+
+
+simulation = create_simulation(10, 10, 4)
 
 try:
     while True:
@@ -88,3 +89,22 @@ except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:
     pygame.quit()
+
+
+# resources = {}
+# for i in range(10):
+#     for j in range(10):
+#         if random.choices([True, False]):
+#             resources[(i, j)] = randint(
+#                 1, 100
+#             )  # Pa q no se mueran de hambre y ver sus combates y sus alianzas y eso
+# map = Map(10, 10, resources)
+# positions = set()
+# while len(positions) < 4:
+#     new_position = (randint(0, 9), randint(0, 9))
+#     if not new_position in positions:
+#         positions.add(new_position)
+# positions = list(positions)
+# experts_agents = create_agents(4, positions, map)
+
+# simulation = SimpleSimulation(map, experts_agents, view=ViewOption.PYGAME)

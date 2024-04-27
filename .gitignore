@@ -11,6 +11,9 @@ docs/*
 !docs/*.pdf
 
 
+docs/*
+
+!docs/*.pdf
 # Distribution / packaging
 .Python
 build/
