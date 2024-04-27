@@ -36,6 +36,10 @@ class IAgent(ABC):
         pass
 
     @abstractmethod
+    def inform_broken_association(self, association_id : int):
+        "Informa al agente que se acaba de diluir una asociacion a la que pertenece"
+
+    @abstractmethod
     def inform_move(self, movement: Tuple[int, int]) -> None:
         """Informa al agente sobre el desplazamiento que realizo (que puede no ser excactamente
         el que el deseaba)"""

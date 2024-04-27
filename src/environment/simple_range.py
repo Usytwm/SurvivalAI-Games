@@ -3,7 +3,7 @@ from Interfaces.IRange import IRange
 from Interfaces.IVision import IVision
 from Interfaces.IMovement import IMovement
 from Interfaces.IAttack_Range import IAttackRange
-from environment.actions import Action_Info
+from environment.actions import Action_Info, Association_Creation, Action_Type
 from environment.map import Map
 from environment.sim_object import Sim_Object, Object_Info, Agent_Info, Sim_Object_Type
 
@@ -76,7 +76,13 @@ class SquareVision(IVision):
                 continue
             try:
                 for act in map.last_turn_actions[(row, column)]:
-                    vision.append(Action_Info((row - current_X, column - current_Y), act.type, act.actor_id, act.destinataries_ids))
+                    match act.type.value:
+                        case Action_Type.ASSOCIATION_CREATION.value:
+                            vision.append(act)
+                        case Action_Type.ASSOCIATION_DESTRUCTION.value:
+                            vision.append(act)
+                        case _:
+                            vision.append(Action_Info((row - current_X, column - current_Y), act.type, act.actor_id, act.destinataries_ids))
             except Exception as ex:
                 continue
         return vision

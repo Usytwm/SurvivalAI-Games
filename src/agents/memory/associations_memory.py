@@ -5,6 +5,7 @@ CREATE_TABLE = """CREATE TABLE %s (agent_id INTEGER, association_id INTEGER, dut
 INSERT_MEMBRESY = """INSERT INTO %s (agent_id, association_id, duty, reward) VALUES(%s, %s, %s, %s);"""
 QUERY_FOR_AGENT_MEMBRESIES = """SELECT * FROM %s WHERE agent_id = %s"""
 QUERY_FOR_MEMBERS_OF_ASSOCIATION = """SELECT * FROM %s WHERE association_id = %s"""
+DELETE_ASSOCIATION = """DELETE FROM %s WHERE association_id = %s"""
 
 class Associations_Memory:
     def __init__(self, id : int, conn : sqlite3.Connection):
@@ -27,9 +28,21 @@ class Associations_Memory:
         ganancias que el agente debe entregar a la asociacion) y el reward (segunda componente
         del commitment, o sea, la porcion de la recaudacion de la asociacion que corresponde
         al agente)\n"""
+        if association_id in self.association_creation_time:
+            return
+        self.association_creation_time[association_id] = iteration
         for member_id in member_ids:
             duty, reward = commitments[member_id]
             self.cursor = self.cursor.execute(INSERT_MEMBRESY%(self.table_name, member_id, association_id, str(duty), str(reward)))
+        return self.cursor
+    
+    def remove_association(self, association_id : int):
+        """Dado el id de una asociacion verifica si esta existe en los recuerdos del agente
+        y de ser asi, elimina todas las entradas referentes a ella"""
+        if not association_id in self.association_creation_time:
+            return
+        self.association_creation_time.pop(association_id)
+        self.cursor = self.cursor.execute(DELETE_ASSOCIATION%(self.table_name, str(association_id)))
         return self.cursor
     
     def get_all_associations_of_agent(self, agent_id : int) -> List[Tuple[int, Tuple[int, int]]]:

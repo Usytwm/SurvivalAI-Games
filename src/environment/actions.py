@@ -6,6 +6,7 @@ class Action_Type(Enum):
     ATTACK = 2
     ASSOCIATION_PROPOSAL = 3
     ASSOCIATION_CREATION = 4
+    ASSOCIATION_DESTRUCTION = 5
 
 class Action:
     def __init__(self, type : Action_Type, actor_id : int, destinataries_ids : List[int] = None):
@@ -33,10 +34,15 @@ class Association_Proposal(Action):
         self.members = members
         self.commitments = commitments
     
-class Association_Creation(Action):
+class Association_Creation(Action_Info):
     def __init__(self, actor_id : int, association_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
         #Realmente deberian ser conocidos los commitments por agentes ajenos a la asociacion
-        super().__init__(Action_Type.ASSOCIATION_CREATION, actor_id, None)
+        super().__init__(None, Action_Type.ASSOCIATION_CREATION, actor_id, None)
         self.association_id = association_id
         self.members = members
         self.commitments = commitments
+
+class Association_Destruction(Action_Info):
+    def __init__(self, actor_id : int, association_id : int):
+        super().__init__(None, Action_Type.ASSOCIATION_DESTRUCTION, actor_id, None)
+        self.association_id = association_id

@@ -108,6 +108,12 @@ class Agent_Handler(Sim_Object):
         self.associations[association.id] = association
         self.free_portion = self.free_portion - association.commitments[self.id][0]
         self.agent.inform_joined_association(association.id, association.members, association.commitments)
+    
+    def inform_broken_association(self, association_id : int):
+        "Informa al agente que se ha roto una asociacion a la que pertenece"
+        self.free_portion = self.free_portion + self.associations[association_id].commitments[self.id][0]
+        self.associations.pop(association_id)
+        self.agent.inform_broken_association(association_id)
 
     def take_attack_reward(self, victim_id: int, reward: int):
         """Informs the agent of the reward obtained by killing an agent, and actualizes

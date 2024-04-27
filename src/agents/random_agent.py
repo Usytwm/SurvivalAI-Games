@@ -24,10 +24,18 @@ class Random_Agent(IAgent):
         return attacks
 
     def get_association_proposals(self) -> List:
-        return []
+        if self.id != 2:
+            commitments = {}
+            commitments[self.id] = (0.2, 0.5)
+            commitments[2] = (0.2, 0.5)
+            proposal = Association_Proposal(self.id, randint(1, 1000000), [self.id, 2], commitments)
+            return [proposal]
+        else:
+            return []
     
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
-        pass
+        #por ahora
+        return True
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         print(
@@ -46,6 +54,9 @@ class Random_Agent(IAgent):
         )
     
     def inform_joined_association(self, association_id: int, members: List[int], commitments: Dict[int, Tuple[int]]):
+        pass
+
+    def inform_broken_association(self, association_id: int):
         pass
 
     def take_attack_reward(self, victim_id: int, reward: int):

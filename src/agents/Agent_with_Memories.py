@@ -10,6 +10,7 @@ from agents.memory.memory_for_agents_sights import Memory_for_Agents_Sights
 from agents.memory.geographic_memory import Geographic_Memory
 from agents.memory.memory_for_attacks import Memory_for_Attacks
 from agents.memory.associations_memory import Associations_Memory
+
 class Agent_with_Memories(Random_Agent):
     def __init__(self, id : int, consume : int, reserves, conn : sqlite3.Connection):
         self.id = id
@@ -59,6 +60,9 @@ class Agent_with_Memories(Random_Agent):
                     self.memory_for_attacks.add_attack(action.actor_id, action.destinataries_ids[0], self.iteration, action.strength)
                 case Action_Type.ASSOCIATION_CREATION.value:
                     self.memory_for_associations.add_association(action.association_id, action.members, action.commitments, self.iteration)
+                case Action_Type.ASSOCIATION_DESTRUCTION.value:
+                    #El problema de esto es que no podremos recordar las asociaciones que existieron
+                    self.memory_for_associations.remove_association(action.association_id)
     
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         if not self.iteration in self.attacks_made:
@@ -73,6 +77,9 @@ class Agent_with_Memories(Random_Agent):
     def inform_joined_association(self, association_id: int, members: List[int], commitments: Dict[int, Tuple[int]]):
         association = Association(association_id, members, commitments)
         self.associations[association_id] = association
+    
+    def inform_broken_association(self, association_id: int):
+        self.associations.pop(association_id)
 
     def burn(self) -> None:
         self.reserves = self.reserves - self.consume
