@@ -1,16 +1,16 @@
 # SurvivalAI-Games
 
-| Nombre                     | Grupo | Github |
-| -------------------------- | ----- | ------ |
-| Brián Ameht Inclán Quesada | C411  |        |
-| Eric Lopez Tornas          | C411  |        |
-| Daviel Bello               | C411  |        |
+| Nombre                     | Grupo | Github  |
+| -------------------------- | ----- | ------- |
+| Brián Ameht Inclán Quesada | C411  | @Usytwm |
+| Eric Lopez Tornas          | C411  |         |
+| Daviel Bello               | C411  |         |
 
 ## Descripción
 
 Davier tira aki la descripcion que no se mucho de como va
 
-Para más detalles sobre el proyecto, puede consultar el reporte en el archivo [informe.pdf](https://github.com/nose-cs/Prisoner-Dilemma/blob/main/docs/report.pdf)
+Para más detalles sobre el proyecto, puede consultar el reporte en el archivo [informe.pdf](https://github.com/Usytwm/SurvivalAI-Games/blob/main/docs/informe.pdf)
 
 ## ¿Cómo ejecutarlo?
 
