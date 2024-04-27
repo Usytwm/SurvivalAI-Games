@@ -178,11 +178,10 @@ class SimpleSimulation(ISimulation):
         for proposer_id, propositions in association_proposals.items():
             for proposal in propositions:
                 accepted = True
-                proposal.destinataries_ids.append(proposer_id)#Deberia esto ir aqui?
                 for destinatary_id in proposal.destinataries_ids:
                     accepted = self.agents[destinatary_id].consider_association_proposal(proposal)
                 if accepted:
-                    association = Association(proposal.association_id, set(proposal.destinataries_ids), proposal.commitments)
+                    association = Association(set(proposal.destinataries_ids), proposal.commitments)
                     self.associations[association.id] = association
                     for destinatary_id in proposal.destinataries_ids:
                         self.agents[destinatary_id].inform_joined_association(association)

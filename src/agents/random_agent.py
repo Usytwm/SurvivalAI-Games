@@ -28,7 +28,7 @@ class Random_Agent(IAgent):
             commitments = {}
             commitments[self.id] = (0.2, 0.5)
             commitments[2] = (0.2, 0.5)
-            proposal = Association_Proposal(self.id, randint(1, 1000000), [self.id, 2], commitments)
+            proposal = Association_Proposal(self.id, [self.id, 2], commitments)
             return [proposal]
         else:
             return []

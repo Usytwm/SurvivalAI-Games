@@ -28,9 +28,9 @@ class Action_Info:
         self.destinataries_ids = destinataries_ids
 
 class Association_Proposal(Action):
-    def __init__(self, actor_id : int, association_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
+    def __init__(self, actor_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
         super().__init__(Action_Type.ASSOCIATION_PROPOSAL, actor_id, members)
-        self.association_id = association_id
+        self.association_id = None
         self.members = members
         self.commitments = commitments
     

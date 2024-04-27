@@ -67,7 +67,7 @@ simulation = create_simulation(10, 10, 4)
 
 try:
     while True:
-        simulation.step(sleep_time=1)  # Actualiza el estado del simulador
+        simulation.step(sleep_time=0.01)  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:
