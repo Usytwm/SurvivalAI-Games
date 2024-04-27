@@ -1,7 +1,9 @@
 import random
+import sqlite3
 from Interfaces.ISimulation import ViewOption
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
-from agents.expert_agent import ExpertAgent
+from agents.Agent_with_Memories import Agent_with_Memories
+#from agents.expert_agent import ExpertAgent
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
@@ -22,13 +24,18 @@ def create_agents(num_agents, positions, map):
             ]  # Usar la última posición si no hay suficientes posiciones definidas
 
         agent_id = i + 1
+        reserves = 3
+        consume = 1
         handler = Agent_Handler(
             agent_id,  # ID único del agente
-            3,  # Algún valor de configuración
-            1,  # Otro valor de configuración
+            reserves,  # Algún valor de configuración
+            consume,  # Otro valor de configuración
             map,  # Objeto del mapa
-            PacifistAgent(
-                agent_id
+            Agent_with_Memories(
+                agent_id,
+                consume,
+                reserves,
+                sqlite3.connect(':memory:')
             ),  # Crear una instancia de PacifistAgent con el ID único
             SimpleWalking(),  # Instancia de SimpleWalking
             SquareVision(3),  # Instancia de SquareVision

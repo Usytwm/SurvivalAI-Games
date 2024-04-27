@@ -49,7 +49,7 @@ class Agent_Handler(Sim_Object):
         movio una fila hacia arriba y tres columnas a la derecha\n
         Si el movimiento elegido por el agente no fuera valido devuelve (0, 0)"""
         possible_moves = self.movement.moves(self.map, self.id)
-        move = self.agent.move(possible_moves)
+        move = self.agent.move()
         return move if move in possible_moves else (0, 0)
 
     def inform_move(self, position: Tuple[int, int]) -> None:
