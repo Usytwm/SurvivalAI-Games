@@ -1,10 +1,10 @@
 from random import random
 import sqlite3
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 from Interfaces.IAgent import IAgent
 from agents.Agent_with_Memories import Agent_with_Memories
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
-from environment.actions import Action, Action_Info, Attack
+from environment.actions import Action, Action_Info, Association_Proposal, Attack
 from environment.sim_object import Object_Info
 from agents.FoodSeekerAgent.Rules import (
     eat_not_enemy_rule,
@@ -54,11 +54,11 @@ class FoodSeekerAgent(Agent_with_Memories):
         self.estrategy.learn_especific(Knowledge.PREVPOSSITION, position)
         return move
 
-    def inform_move(self, position: Tuple[int, int]):
-        super().inform_move(position)
+    def inform_move(self, movement: Tuple[int, int]):
+        super().inform_move(movement)
         # self.position = position
         # Informar al motor de inferencia la nueva posición
-        self.estrategy.learn_especific(Knowledge.POSITION, position)
+        self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
     def inform_position(self, position: Tuple[int, int] = None):
         if position:
@@ -96,6 +96,21 @@ class FoodSeekerAgent(Agent_with_Memories):
 
     def get_association_proposals(self) -> List:
         return []  # Todo implementar
+
+    def inform_joined_association(
+        self,
+        association_id: int,
+        members: List[int],
+        commitments: Dict[int, Tuple[int]],
+    ):
+        super().inform_joined_association(association_id, members, commitments)
+
+    def inform_broken_association(self, association_id: int):
+        super().inform_broken_association(association_id)
+
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
+        "Devuelve si el agente acepta ser parte de la asociacion o no"
+        pass
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)

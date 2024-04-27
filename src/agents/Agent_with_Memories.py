@@ -1,7 +1,6 @@
 import sqlite3
 from typing import List, Tuple, Dict
 from Interfaces.IAgent import IAgent
-from agents.random_agent import Random_Agent
 from environment.actions import Action_Info, Attack, Association_Creation
 from environment.sim_object import Object_Info, Agent_Info
 from ai.knowledge.knowledge import Knowledge

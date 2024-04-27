@@ -1,9 +1,9 @@
 import sqlite3
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from agents.Agent_with_Memories import Agent_with_Memories
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
-from environment.actions import Action, Action_Info
+from environment.actions import Action, Action_Info, Association_Proposal
 from environment.sim_object import Object_Info
 from Interfaces.IAgent import IAgent
 from agents.PacifistAgent.Rules import (
@@ -23,6 +23,9 @@ class PacifistAgent(Agent_with_Memories):
             Fact(Knowledge.ENEMIES, set()),
             Fact(Knowledge.AGEENTS, set()),
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
+            Fact(Knowledge.GEOGRAPHIC_MEMORY, self.geographic_memory),
+            Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
+            Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
         ]
         initial_rules = [
             move_away_rule,
@@ -89,6 +92,21 @@ class PacifistAgent(Agent_with_Memories):
 
     def get_association_proposals(self) -> List:
         return []  # Todo implementar
+
+    def inform_joined_association(
+        self,
+        association_id: int,
+        members: List[int],
+        commitments: Dict[int, Tuple[int]],
+    ):
+        super().inform_joined_association(association_id, members, commitments)
+
+    def inform_broken_association(self, association_id: int):
+        super().inform_broken_association(association_id)
+
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
+        "Devuelve si el agente acepta ser parte de la asociacion o no"
+        pass
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)

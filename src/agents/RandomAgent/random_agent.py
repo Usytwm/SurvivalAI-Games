@@ -1,8 +1,8 @@
 import sqlite3
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 from agents.Agent_with_Memories import Agent_with_Memories
 from environment.sim_object import Object_Info
-from environment.actions import Action_Info, Action
+from environment.actions import Action_Info, Action, Association_Proposal
 from Interfaces.IAgent import IAgent
 from random import randint, random
 
@@ -44,9 +44,9 @@ class RandomAgent(Agent_with_Memories):
         )[0]
         return move
 
-    def inform_move(self, position: Tuple[int, int]):
-        super().inform_move(position)
-        self.estrategy.learn_especific(Knowledge.POSITION, position)
+    def inform_move(self, movement: Tuple[int, int]):
+        super().inform_move(movement)
+        self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
     def inform_position(self, position: Tuple[int, int] = None):
         if position:
@@ -86,6 +86,21 @@ class RandomAgent(Agent_with_Memories):
 
     def get_association_proposals(self) -> List:
         return []  # Todo implementar
+
+    def inform_joined_association(
+        self,
+        association_id: int,
+        members: List[int],
+        commitments: Dict[int, Tuple[int]],
+    ):
+        super().inform_joined_association(association_id, members, commitments)
+
+    def inform_broken_association(self, association_id: int):
+        super().inform_broken_association(association_id)
+
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
+        "Devuelve si el agente acepta ser parte de la asociacion o no"
+        pass
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
