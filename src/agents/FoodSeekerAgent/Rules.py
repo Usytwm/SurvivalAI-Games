@@ -1,5 +1,5 @@
 import random
-from typing import Set
+from typing import Callable, Set
 from agents.PacifistAgent.tools import move_away_from_attacker
 from ai.knowledge.knowledge import Fact, Knowledge, Rule
 from environment.actions import Attack
@@ -9,10 +9,13 @@ import heapq
 
 
 class PathFinder:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    def __init__(
+        self,
+        validate_movements: Callable[[int, int], bool],
+    ):
+
         self.obstacles = set()  # A set to store obstacle positions
+        self.validate_movements = validate_movements
 
     def set_obstacles(self, obstacles):
         self.obstacles = set(obstacles)  # Update obstacle positions
@@ -39,8 +42,9 @@ class PathFinder:
                     continue  # Ignore the non-moving option in pathfinding
                 next = (current[0] + move[0], current[1] + move[1])
                 if (
-                    0 <= next[0] < self.width
-                    and 0 <= next[1] < self.height
+                    self.validate_movements(next[0], next[1])
+                    # 0 <= next[0] < self.width
+                    # and 0 <= next[1] < self.height
                     and next not in self.obstacles
                 ):
                     new_cost = current_cost + 1  # Assuming all moves have the same cost
@@ -93,6 +97,7 @@ def to_eat_not_enemies_action(facts: Set[Fact]):
     current_pos = None
     possible_moves = None
     see_objects_info = None
+    geography = None
     for fact in facts:
         if fact.key == Knowledge.SEE_RESOURCES:
             see_resource_info = fact.data
@@ -102,10 +107,12 @@ def to_eat_not_enemies_action(facts: Set[Fact]):
             possible_moves = fact.data
         if fact.key == Knowledge.SEE_OBJECTS:
             see_objects_info = fact.data
+        if fact.key == Knowledge.GEOGRAPHIC_MEMORY:
+            geography = fact.data
     start = current_pos
     goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
     goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
-    finder = PathFinder(10, 10)
+    finder = PathFinder(geography.validate_position)
     obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
     obstacles = [
         (obstacle[0] + current_pos[0], obstacle[1] + current_pos[1])
@@ -187,6 +194,7 @@ def stuck_and_resources_available_condition(facts: Set[Fact]):
     see_objects_info = None
     objects_in_path = []
     see_resource_info = None
+    geography = None
     for fact in facts:
         if fact.key == Knowledge.SEE_RESOURCES:
             see_resource_info = fact.data
@@ -196,11 +204,13 @@ def stuck_and_resources_available_condition(facts: Set[Fact]):
             current_position = fact.data
         if fact.key == Knowledge.SEE_OBJECTS:
             see_objects_info = fact.data
+        if fact.key == Knowledge.GEOGRAPHIC_MEMORY:
+            geography = fact.data
 
     start = current_position
     goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
     goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
-    finder = PathFinder(10, 10)
+    finder = PathFinder(geography.validate_position)
     obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
     obstacles = [
         (obstacle[0] + current_position[0], obstacle[1] + current_position[1])
@@ -231,6 +241,7 @@ def stuck_and_resources_available_action(facts: Set[Fact]):
     get_attacks_currents = []
     strength = 1
     current_id = None
+    geography = None
     for fact in facts:
         if fact.key == Knowledge.SEE_RESOURCES:
             see_resource_info = fact.data
@@ -244,11 +255,13 @@ def stuck_and_resources_available_action(facts: Set[Fact]):
             current_id = fact.data
         if fact.key == Knowledge.RESERVE:
             strength = int(fact.data)
+        if fact.key == Knowledge.GEOGRAPHIC_MEMORY:
+            geography = fact.data
 
     start = current_position
     goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
     goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
-    finder = PathFinder(10, 10)
+    finder = PathFinder(geography.validate_position)
     obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
     obstacles = [
         (obstacle[0] + current_position[0], obstacle[1] + current_position[1])
@@ -294,6 +307,7 @@ def default_move_action(facts: Set[Fact]):
     see_resource_info = None
     current_pos = None
     possible_moves = None
+    geography = None
     for fact in facts:
         if fact.key == Knowledge.SEE_RESOURCES:
             see_resource_info = fact.data
@@ -301,10 +315,12 @@ def default_move_action(facts: Set[Fact]):
             current_pos = fact.data
         if fact.key == Knowledge.POSIBLES_MOVEMENTS:
             possible_moves = fact.data
+        if fact.key == Knowledge.GEOGRAPHIC_MEMORY:
+            geography = fact.data
     start = current_pos
     goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
     goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
-    finder = PathFinder(10, 10)
+    finder = PathFinder(geography.validate_position)
     path = finder.a_star(start, goal)
     if path:
         if len(path) > 1:

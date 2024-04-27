@@ -25,6 +25,9 @@ class Knowledge(Enum):
     AGEENTS = "agents"
     NEXT_MOVE = "next_move"
     PREVPOSSITION = "prevposition"
+    GEOGRAPHIC_MEMORY = "geographic_memory"
+    MEMORY_FOR_AGENTS_SIGHTS = "memory_for_agents_sights"
+    MEMORY_FOR_ATTACKS = "memory_for_attacks"
 
 
 class Fact:

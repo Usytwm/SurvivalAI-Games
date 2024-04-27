@@ -1,6 +1,8 @@
 from random import random
+import sqlite3
 from typing import List, Tuple
 from Interfaces.IAgent import IAgent
+from agents.Agent_with_Memories import Agent_with_Memories
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import Action, Action_Info, Attack
 from environment.sim_object import Object_Info
@@ -12,9 +14,9 @@ from agents.FoodSeekerAgent.Rules import (
 )
 
 
-class FoodSeekerAgent(IAgent):
-    def __init__(self, id):
-        self.id = id
+class FoodSeekerAgent(Agent_with_Memories):
+    def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
+        super().__init__(id, consume, reserves, conn)
         self.color = (0, 255, 0)  # Green
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
@@ -22,6 +24,10 @@ class FoodSeekerAgent(IAgent):
             Fact(Knowledge.AGEENTS, set()),
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
             Fact(Knowledge.ID, id),
+            Fact(Knowledge.RESERVE, reserves),
+            Fact(Knowledge.GEOGRAPHIC_MEMORY, self.geographic_memory),
+            Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
+            Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
         ]
         initial_rules = [
             eat_not_enemy_rule,
@@ -49,26 +55,20 @@ class FoodSeekerAgent(IAgent):
         return move
 
     def inform_move(self, position: Tuple[int, int]):
-        self.position = position
+        super().inform_move(position)
+        # self.position = position
         # Informar al motor de inferencia la nueva posición
         self.estrategy.learn_especific(Knowledge.POSITION, position)
 
-    def inform_position(
-        self, position: Tuple[int, int] = None, reserve: int = None, health: int = None
-    ):
+    def inform_position(self, position: Tuple[int, int] = None):
         if position:
             self.position = position
             self.estrategy.learn_especific(Knowledge.POSITION, position)
-        if reserve:
-            self.reserve = reserve
-            self.estrategy.learn_especific(Knowledge.RESERVE, reserve)
-        if health:
-            self.health = health
-            self.estrategy.learn_especific(Knowledge.HEALTH, health)
 
     def inform_of_attack_received(
         self, attacker_id: int, strength: int, position_attack_received: Tuple[int, int]
     ):
+        super().inform_of_attack_received(attacker_id, strength)
         # Cuando se recibe un ataque, actualizar los hechos y solicitar una decisión
         self.estrategy.learn_especific(
             Knowledge.RECEIVED_ATTACK,
@@ -98,29 +98,34 @@ class FoodSeekerAgent(IAgent):
         return []  # Todo implementar
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
-        # * Aki no dbe hacer nada ya que no ataca, solo busca escapar de los ataques y de los que no son sus aliados
+        super().inform_of_attack_made(victim_id, strength)
+        #! implementar en la estrategia
         # print(f"Attack made on agent {victim_id} with strength {strength}")
         pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
-        # print(f"Received reward of {reward} for defeating agent {victim_id}")
+        super().take_attack_reward(victim_id, reward)
+        #!implementar en la estrategia
         pass
 
     def see_objects(self, info: List[Object_Info]):
+        super().see_objects(info)
         # Actualizar la base de hechos con la información de objetos vistos
         self.estrategy.learn_especific(Knowledge.SEE_OBJECTS, info)
 
     def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
+        super().see_resources(info)
         self.estrategy.learn_especific(Knowledge.SEE_RESOURCES, info)
 
     def see_actions(self, info: List[Action_Info]):
+        super().see_actions(info)
         # Actualizar la base de hechos con acciones vistas
         self.estrategy.learn_especific(Knowledge.SEE_ACTIONS, info)
 
     def feed(self, sugar: int) -> None:
-        self.estrategy.learn_especific(Knowledge.FEED, sugar)
-        # print(f"Received {sugar} units of sugar")
+        super().feed(sugar)
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def burn(self) -> None:
-        self.estrategy.learn_especific(Knowledge.BURN, True)
-        # print("Consuming daily ration of sugar")
+        super().burn()
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)

@@ -67,7 +67,7 @@ class ISimulation(ABC):
         for agent in self.agents.values():
             position = self.map.peek_id(agent.id)
 
-            agent.agent.inform_position(position, agent.reserve)
+            agent.agent.inform_position(position)
             agent.see_objects(self.objects)
             agent.see_resources()
             agent.see_actions()

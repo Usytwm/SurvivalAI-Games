@@ -52,9 +52,7 @@ class IAgent(ABC):
         pass
 
     @abstractmethod
-    def inform_position(
-        self, position: Tuple[int, int], reserve: int = None, health: int = None
-    ) -> None:
+    def inform_position(self, position: Tuple[int, int]) -> None:
         """Informa al agente de su posicion actual"""
         pass
 

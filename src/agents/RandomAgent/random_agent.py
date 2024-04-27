@@ -1,4 +1,6 @@
+import sqlite3
 from typing import List, Tuple
+from agents.Agent_with_Memories import Agent_with_Memories
 from environment.sim_object import Object_Info
 from environment.actions import Action_Info, Action
 from Interfaces.IAgent import IAgent
@@ -13,9 +15,9 @@ from Interfaces.IAgent import IAgent
 from agents.RandomAgent.Rules import move_rule, attack_rule
 
 
-class RandomAgent(IAgent):
-    def __init__(self, id):
-        self.id = id
+class RandomAgent(Agent_with_Memories):
+    def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
+        super().__init__(id, consume, reserves, conn)
         self.color = (255, 255, 0)  # yellowF
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
@@ -23,6 +25,7 @@ class RandomAgent(IAgent):
             Fact(Knowledge.AGEENTS, set()),
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
             Fact(Knowledge.ID, id),
+            Fact(Knowledge.RESERVE, reserves),
         ]
         initial_rules = [move_rule, attack_rule]
 
@@ -42,25 +45,18 @@ class RandomAgent(IAgent):
         return move
 
     def inform_move(self, position: Tuple[int, int]):
-        self.position = position
+        super().inform_move(position)
         self.estrategy.learn_especific(Knowledge.POSITION, position)
 
-    def inform_position(
-        self, position: Tuple[int, int] = None, reserve: int = None, health: int = None
-    ):
+    def inform_position(self, position: Tuple[int, int] = None):
         if position:
             self.position = position
             self.estrategy.learn_especific(Knowledge.POSITION, position)
-        if reserve:
-            self.reserve = reserve
-            self.estrategy.learn_especific(Knowledge.RESERVE, reserve)
-        if health:
-            self.health = health
-            self.estrategy.learn_especific(Knowledge.HEALTH, health)
 
     def inform_of_attack_received(
         self, attacker_id: int, strength: int, position_attack_received: Tuple[int, int]
     ):
+        super().inform_of_attack_received(attacker_id, strength)
         # Cuando se recibe un ataque, actualizar los hechos y solicitar una decisión
         self.estrategy.learn_especific(
             Knowledge.RECEIVED_ATTACK,
@@ -92,90 +88,33 @@ class RandomAgent(IAgent):
         return []  # Todo implementar
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
+        super().inform_of_attack_made(victim_id, strength)
         #! pendiente
         pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
+        super().take_attack_reward(victim_id, reward)
         #! pendiente
         pass
 
     def see_objects(self, info: List[Object_Info]):
+        super().see_objects(info)
+        # Actualizar la base de hechos con la información de objetos vistos
         self.estrategy.learn_especific(Knowledge.SEE_OBJECTS, info)
 
     def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
+        super().see_resources(info)
         self.estrategy.learn_especific(Knowledge.SEE_RESOURCES, info)
 
     def see_actions(self, info: List[Action_Info]):
+        super().see_actions(info)
+        # Actualizar la base de hechos con acciones vistas
         self.estrategy.learn_especific(Knowledge.SEE_ACTIONS, info)
 
     def feed(self, sugar: int) -> None:
-        self.estrategy.learn_especific(Knowledge.FEED, sugar)
+        super().feed(sugar)
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def burn(self) -> None:
-        self.estrategy.learn_especific(Knowledge.BURN, True)
-
-
-# class Random_Agent(IAgent):
-#     def __init__(self, id):
-#         self.id = id
-
-#     def move(self) -> Tuple[int, int]:
-#         directions = [(0, 0), (-1, 0), (0, -1), (1, 0), (0, 1)]
-#         return directions[randint(0, 4)]
-
-#     def inform_move(self, position: Tuple[int]) -> None:
-#         pass
-
-#     def get_attacks(self) -> List[Action]:
-#         attacks = []
-#         for i in range(1, 5):
-#             if random() < 0.5:
-#                 attacks.append(Attack(self.id, i, 1))
-#         return attacks
-
-#     def get_association_proposals(self) -> List:
-#         return []
-
-#     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
-#         print(
-#             f"{self.id} ha realizado un ataque a "
-#             + str(victim_id)
-#             + " con fuerza "
-#             + str(strength)
-#         )
-
-#     def inform_of_received_attack(self, attacker_id: int, strength: int) -> None:
-#         print(
-#             f"{self.id} ha recibido un ataque de "
-#             + str(attacker_id)
-#             + " con fuerza "
-#             + str(strength)
-#         )
-
-#     def take_attack_reward(self, victim_id: int, reward: int):
-#         print(
-#             "He cobrado una recompensa de "
-#             + str(reward)
-#             + " por matar a "
-#             + str(victim_id)
-#         )
-
-#     def see_objects(self, info: List[Object_Info]) -> None:
-#         for obj in info:
-#             print(str(obj.position) + " : " + str(obj.id))
-#         pass
-
-#     def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
-#         pass
-
-#     def see_actions(self, info: List[Action_Info]):
-#         for action in info:
-#             print(str(action.type) + " in " + str(action.start_position))
-
-#         print("End of actions")
-
-#     def feed(self, sugar: int) -> None:
-#         pass
-
-#     def burn(self) -> None:
-#         pass
+        super().burn()
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
