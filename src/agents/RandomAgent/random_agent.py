@@ -1,38 +1,33 @@
 import sqlite3
 from typing import Dict, List, Tuple
-
 from agents.Agent_with_Memories import Agent_with_Memories
+from environment.sim_object import Object_Info
+from environment.actions import Action_Info, Action, Association_Proposal
+from Interfaces.IAgent import IAgent
+from random import randint, random
+
+from typing import List, Tuple
+
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
-from environment.actions import Action, Action_Info, Association_Proposal
+from environment.actions import Action, Action_Info
 from environment.sim_object import Object_Info
 from Interfaces.IAgent import IAgent
-from agents.PacifistAgent.Rules import (
-    move_away_rule,
-    see_objects_rule,
-    see_actions_rule,
-    default_move,
-)
+from agents.RandomAgent.Rules import move_rule, attack_rule
 
 
-class PacifistAgent(Agent_with_Memories):
+class RandomAgent(Agent_with_Memories):
     def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
         super().__init__(id, consume, reserves, conn)
-        self.color = (0, 0, 255)  # blue
+        self.color = (255, 255, 0)  # yellowF
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
             Fact(Knowledge.ENEMIES, set()),
             Fact(Knowledge.AGEENTS, set()),
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
-            Fact(Knowledge.GEOGRAPHIC_MEMORY, self.geographic_memory),
-            Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
-            Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
+            Fact(Knowledge.ID, id),
+            Fact(Knowledge.RESERVE, reserves),
         ]
-        initial_rules = [
-            move_away_rule,
-            see_objects_rule,
-            see_actions_rule,
-            default_move,
-        ]
+        initial_rules = [move_rule, attack_rule]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
@@ -50,8 +45,7 @@ class PacifistAgent(Agent_with_Memories):
         return move
 
     def inform_move(self, movement: Tuple[int, int]):
-        self.position = movement
-        # Informar al motor de inferencia la nueva posición
+        super().inform_move(movement)
         self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
     def inform_position(self, position: Tuple[int, int] = None):
@@ -78,17 +72,17 @@ class PacifistAgent(Agent_with_Memories):
         # decision = self.estrategy.make_decision()
         # return decision
 
-    def inform_move(self, movement: Tuple[int, int]):
-        self.position = movement
-        self.estrategy.learn_especific(Knowledge.POSITION, movement)
+    def inform_move(self, position: Tuple[int, int]):
+        self.position = position
+        self.estrategy.learn_especific(Knowledge.POSITION, position)
 
     def get_attacks(self) -> List[Action]:
-        # * No ataca, solo tiene aliados
-        return []
-        # if randint(0, 100) < 20:  # 20% chance to attack
-        #     target_id = randint(1, 10)  # Random target for example
-        #     return [Attack(self.id, target_id, 1)]
-        # return []
+        decision = self.estrategy.make_decision()
+        filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
+        if len(filtered) == 0:
+            return []
+        attacks = list(map(lambda x: x.data, filtered))[0]
+        return attacks
 
     def get_association_proposals(self) -> List:
         return []  # Todo implementar
@@ -110,13 +104,12 @@ class PacifistAgent(Agent_with_Memories):
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
-        # * Aki no dbe hacer nada ya que no ataca, solo busca escapar de los ataques y de los que no son sus aliados
-        # print(f"Attack made on agent {victim_id} with strength {strength}")
+        #! pendiente
         pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)
-        # print(f"Received reward of {reward} for defeating agent {victim_id}")
+        #! pendiente
         pass
 
     def see_objects(self, info: List[Object_Info]):
@@ -127,7 +120,6 @@ class PacifistAgent(Agent_with_Memories):
     def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
         super().see_resources(info)
         self.estrategy.learn_especific(Knowledge.SEE_RESOURCES, info)
-        # print(f"Seeing resources: {info}")
 
     def see_actions(self, info: List[Action_Info]):
         super().see_actions(info)

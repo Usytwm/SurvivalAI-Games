@@ -1,10 +1,22 @@
 # SurvivalAI-Games
 
-A Python-based Hunger Games simulation leveraging AI for strategy planning, decision-making, and dynamic narratives. Focuses on search algorithms, knowledge systems, and LLMs to model competitive survival tactics and agent interactions. Aims to advance AI research in complex, competitive settings.
+| Nombre                     | Grupo | Github |
+| -------------------------- | ----- | ------ |
+| Brián Ameht Inclán Quesada | C411  |        |
+| Eric Lopez Tornas          | C411  |        |
+| Daviel Bello               | C411  |        |
 
-# Configuración del entorno virtual
+## Descripción
 
-Primero, clona este repositorio en tu máquina local. Luego, navega a la carpeta del proyecto y crea un entorno virtual:
+Davier tira aki la descripcion que no se mucho de como va
+
+Para más detalles sobre el proyecto, puede consultar el reporte en el archivo [informe.pdf](https://github.com/nose-cs/Prisoner-Dilemma/blob/main/docs/report.pdf)
+
+## ¿Cómo ejecutarlo?
+
+Para ejecutar el proyecto necesita tener instalada la versión 3.10 de python o superior.
+
+Pra instalar los paquetes necesarios, primero, clona este repositorio en tu máquina local. Luego, navega a la carpeta del proyecto y crea un entorno virtual:
 
 Para Windows:
 
@@ -18,7 +30,7 @@ Para macOS y Linux:
 python3 -m venv venv
 ```
 
-# Activación del entorno virtual
+### Activación del entorno virtual
 
 Para Windows:
 
@@ -32,7 +44,7 @@ Para macOS y Linux:
 source venv/bin/activate
 ```
 
-# Instalación de dependencias
+### Instalación de dependencias
 
 Finalmente, instala las dependencias del proyecto ejecutando:
 
