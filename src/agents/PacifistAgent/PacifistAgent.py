@@ -46,10 +46,10 @@ class PacifistAgent(Agent_with_Memories):
         )[0]
         return move
 
-    def inform_move(self, position: Tuple[int, int]):
-        self.position = position
+    def inform_move(self, movement: Tuple[int, int]):
+        self.position = movement
         # Informar al motor de inferencia la nueva posición
-        self.estrategy.learn_especific(Knowledge.POSITION, position)
+        self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
     def inform_position(self, position: Tuple[int, int] = None):
         if position:
@@ -75,9 +75,9 @@ class PacifistAgent(Agent_with_Memories):
         # decision = self.estrategy.make_decision()
         # return decision
 
-    def inform_move(self, position: Tuple[int, int]):
-        self.position = position
-        self.estrategy.learn_especific(Knowledge.POSITION, position)
+    def inform_move(self, movement: Tuple[int, int]):
+        self.position = movement
+        self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
     def get_attacks(self) -> List[Action]:
         # * No ataca, solo tiene aliados

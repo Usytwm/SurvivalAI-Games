@@ -5,7 +5,7 @@ from environment.actions import Action, Action_Info, Attack
 from environment.sim_object import Object_Info
 
 
-class DiplomatAgent(IAgent):
+class StrategistAgent(IAgent):
     def __init__(self, id):
         self.id = id
 

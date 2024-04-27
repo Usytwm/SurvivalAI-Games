@@ -20,7 +20,7 @@ class Memory_for_Attacks:
         self.cursor = self.cursor.execute(CREATE_TABLE%(self.table_name))
     
     def add_attack(self, attacker_id : int, victim_id : int, iteration : int, strength : int):
-        return self.cursor.execute(INSERT_ATTACK%(attacker_id, victim_id, iteration, strength))
+        self.cursor = self.cursor.execute(INSERT_ATTACK%(attacker_id, victim_id, iteration, strength))
     
     def add_death(self, dead_id, iteration):
         self.deaths[dead_id] = iteration

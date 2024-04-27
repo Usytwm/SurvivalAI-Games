@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 from environment.sim_object import Object_Info
 from environment.actions import Action_Info, Action, Attack, Association_Proposal
 
@@ -26,7 +26,21 @@ class IAgent(ABC):
         pass
 
     @abstractmethod
-    def inform_move(self, position: Tuple[int, int]) -> None:
+    def consider_association_proposal(self, proposal : Association_Proposal) -> bool:
+        "Devuelve si el agente acepta ser parte de la asociacion o no"
+        pass
+    
+    @abstractmethod
+    def inform_joined_association(self, association_id : int, members : List[int], commitments : Dict[int, Tuple[int, int]]):
+        "Informa al agente que se acaba de unir a una asociacion"
+        pass
+
+    @abstractmethod
+    def inform_broken_association(self, association_id : int):
+        "Informa al agente que se acaba de diluir una asociacion a la que pertenece"
+
+    @abstractmethod
+    def inform_move(self, movement: Tuple[int, int]) -> None:
         """Informa al agente sobre el desplazamiento que realizo (que puede no ser excactamente
         el que el deseaba)"""
         pass

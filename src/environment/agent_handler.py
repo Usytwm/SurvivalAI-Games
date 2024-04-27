@@ -22,7 +22,7 @@ class Agent_Handler(Sim_Object):
         vision: IVision,
         attack_range: IAttackRange,
     ):
-        super().__init__(id, Sim_Object_Type.AGENT)
+        super().__init__(id, Sim_Object_Type.AGENT, reserve)
         self.reserve = reserve
         self.consume = consume
         self.map = map
@@ -52,9 +52,9 @@ class Agent_Handler(Sim_Object):
         move = self.agent.move(possible_moves)
         return move if move in possible_moves else (0, 0)
 
-    def inform_move(self, position: Tuple[int, int]) -> None:
+    def inform_move(self, movement: Tuple[int, int]) -> None:
         "Informs the agent he has moved to the given position"
-        return self.agent.inform_move(position)
+        return self.agent.inform_move(movement)
 
     def get_attacks(self) -> List[Attack]:
         """Get the attacks that the agent wants to make in this turn, and returns only the
@@ -84,6 +84,10 @@ class Agent_Handler(Sim_Object):
         the valid ones"""
         # TODOf Insertar comprobaciones de que la propuesta tiene sentido
         return self.agent.get_association_proposals()
+    
+    def consider_association_proposal(self, proposal : Association_Proposal) -> bool:
+        "Consulta al agente si desea o no ser miembro de la asociacion y retorna su respuesta"
+        return self.agent.consider_association_proposal(proposal)
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         "Informs the agent that an attack that he has requested, has been executed"
@@ -98,6 +102,18 @@ class Agent_Handler(Sim_Object):
             attacker_id, strength, position_attack_recived
         )
         return return_value
+    
+    def inform_joined_association(self, association : Association):
+        "Informa al agente que se ha unido a una asociacion"
+        self.associations[association.id] = association
+        self.free_portion = self.free_portion - association.commitments[self.id][0]
+        self.agent.inform_joined_association(association.id, association.members, association.commitments)
+    
+    def inform_broken_association(self, association_id : int):
+        "Informa al agente que se ha roto una asociacion a la que pertenece"
+        self.free_portion = self.free_portion + self.associations[association_id].commitments[self.id][0]
+        self.associations.pop(association_id)
+        self.agent.inform_broken_association(association_id)
 
     def take_attack_reward(self, victim_id: int, reward: int):
         """Informs the agent of the reward obtained by killing an agent, and actualizes
@@ -128,9 +144,8 @@ class Agent_Handler(Sim_Object):
         self.reserve = self.reserve + sugar
         self.agent.feed(
             sugar
-        )  #!aki se le dice al agente cuanta asucar consumio, pero nunca se inicializa algo que diga dentro del agente cuanta azucar tiene  cuando comienza
-
+        )
     def burn(self) -> None:
         """Dimishes the agent reserves by his diary consume."""
         self.reserve = self.reserve - self.consume
-        self.agent.burn()  #! aki el agente no sabe cuanto consume, que sentido tiene ste metodo
+        self.agent.burn()

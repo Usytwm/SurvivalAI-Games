@@ -1,7 +1,7 @@
 from enum import Enum
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
-from environment.actions import Action, Action_Type, Attack, Association_Proposal
+from environment.actions import Action, Action_Type, Attack, Association_Proposal, Association_Destruction
 from environment.association import Association
 from typing import List, Dict, Set, Tuple
 from random import randint
@@ -126,6 +126,7 @@ class ISimulation(ABC):
             crop = self.map.feed(agent_id)
             self.__feed_single_agent__(agent_id, crop)
             agent.burn()
+            self.objects[agent_id].resources = agent.resources
 
         for agent in list(self.agents.values()):
             if agent.IsDead:
@@ -149,9 +150,19 @@ class ISimulation(ABC):
             agent.feed(taxes_excented)
 
     def __remove_agent__(self, id: int):
+        #Por ahora, elimino todas las asociaciones a las que pertenezca un agente que haya muerto
+        associations_affected = list(self.agents[id].associations.keys())
+        for association_id in associations_affected:
+            self.__remove_association__(association_id)
         self.agents.pop(id)
         self.objects.pop(id)
         self.map.pop_id(id)
+    
+    def __remove_association__(self, association_id : int):
+        for agent_id in self.associations[association_id].members:
+            self.map.add_action(Association_Destruction(agent_id, association_id))
+            self.agents[agent_id].inform_broken_association(association_id)
+        self.associations.pop(association_id)
 
     @abstractmethod
     def display(self):
