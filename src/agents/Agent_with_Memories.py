@@ -1,5 +1,5 @@
 import sqlite3
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Set
 from Interfaces.IAgent import IAgent
 from environment.actions import Action_Info, Attack, Association_Creation
 from environment.sim_object import Object_Info, Agent_Info
@@ -94,12 +94,9 @@ class Agent_with_Memories(IAgent):
         self.attacks_received[self.iteration].append((attacker_id, strength))
 
     def inform_joined_association(
-        self,
-        association_id: int,
-        members: List[int],
-        commitments: Dict[int, Tuple[int]],
+        self, association_id: int, members: Set[int], commitments: Dict[int, Tuple[int]]
     ):
-        association = Association(association_id, members, commitments)
+        association = Association(members, commitments)
         self.associations[association_id] = association
 
     def inform_broken_association(self, association_id: int):

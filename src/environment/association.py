@@ -1,15 +1,20 @@
 from typing import List, Tuple, Dict, Set
 class Association:
-    def __init__(self, id : int, members : Set[int], commitments : Dict[int, Tuple[int, int]]):
+    def __init__(self, members : Set[int], commitments : Dict[int, Tuple[int, int]]):
         """Una asociacion tiene un identificador, un conjunto con los ids de los agentes miembros
         y un diccionario que a cada agente hace corresponder sus commitments.
         Los commitments son una tupla que tiene como primer elemento el porciento de sus ganancias
         que el jugador debe entregar a la recaudacion; mientras que el segundo representa que
         porciento de la recaudacion le corresponde al jugador
         """
-        self.id = id
-        self.members = set(members)
+        self.id = Association.build_id(members)
+        self.members = members
         self.commitments = commitments
+    
+    def build_id(members : Set[int]):
+        members_list = list(members)
+        members_list.sort()
+        return hash(tuple(members_list))
     
     def feed(self, earner_id : int, earnings : int) -> Dict[int, int]:
         """Este metodo, dado el id de un agente y las ganancias que este acaba de obtener,
