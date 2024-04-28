@@ -55,12 +55,6 @@ class ISimulation(ABC):
         else:
             raise ValueError("Invalid view option")
         association_proposals = self.__get_association_proposals__()
-        #print("Existen las siguientes asociaciones:")
-        #for association in self.associations.values():
-        #    print(association.members)
-        for agent in self.agents.values():
-            print(agent.partners)
-        input()
         attacks = self.__get_attacks__()
         self.__execute_association_proposals__(association_proposals)
         self.__execute_attacks__(attacks)
