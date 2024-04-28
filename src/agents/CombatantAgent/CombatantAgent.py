@@ -5,12 +5,19 @@ from agents.Agent_with_Memories import Agent_with_Memories
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import Action, Action_Info, Association_Proposal, Attack
 from environment.sim_object import Object_Info
+from agents.CombatantAgent.Rules import (
+    eat_not_agents_rule,
+    attack_enemy_in_vision,
+    attack_not_enemy_in_vision,
+    recived_attacker,
+    default_move,
+)
 
 
 class CombatantAgent(Agent_with_Memories):
     def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
         super().__init__(id, consume, reserves, conn)
-        self.color = (0, 255, 0)  # Green
+        self.color = (255, 0, 0)  # Red
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
             Fact(Knowledge.ENEMIES, set()),
@@ -22,12 +29,17 @@ class CombatantAgent(Agent_with_Memories):
             Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
             Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
         ]
-        initial_rules = []
+        initial_rules = [
+            eat_not_agents_rule,
+            attack_enemy_in_vision,
+            attack_not_enemy_in_vision,
+            recived_attacker,
+            default_move,
+        ]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
     def move(self, possible_moves: List[Tuple[int, int]]):
-        #! Actualizar los movimientos posibles
         self.estrategy.learn_especific(Knowledge.POSIBLES_MOVEMENTS, possible_moves)
         # Solicitar una decisión de movimiento
         decision = self.estrategy.make_decision()
@@ -44,8 +56,6 @@ class CombatantAgent(Agent_with_Memories):
 
     def inform_move(self, movement: Tuple[int, int]):
         super().inform_move(movement)
-        # self.position = position
-        # Informar al motor de inferencia la nueva posición
         self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
     def inform_position(self, position: Tuple[int, int] = None):
@@ -71,7 +81,6 @@ class CombatantAgent(Agent_with_Memories):
         self.estrategy.learn_especific(Knowledge.ENEMIES, enemy)
 
     def get_attacks(self) -> List[Action]:
-        #! Implementar en la estrategia
         decision = self.estrategy.make_decision()
         filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
         if len(filtered) == 0:
@@ -95,19 +104,13 @@ class CombatantAgent(Agent_with_Memories):
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Devuelve si el agente acepta ser parte de la asociacion o no"
-        #!implementar
-        pass
+        return False
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
-        #! implementar en la estrategia
-        # print(f"Attack made on agent {victim_id} with strength {strength}")
-        pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)
-        #!implementar en la estrategia
-        pass
 
     def see_objects(self, info: List[Object_Info]):
         super().see_objects(info)

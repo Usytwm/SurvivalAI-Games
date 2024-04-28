@@ -1,6 +1,7 @@
 import random
 import sqlite3
 from Interfaces.ISimulation import ViewOption
+from agents.CombatantAgent.CombatantAgent import CombatantAgent
 from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
@@ -40,6 +41,9 @@ def create_agents(num_agents, positions, map):
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
                     RandomAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    CombatantAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
                 ]

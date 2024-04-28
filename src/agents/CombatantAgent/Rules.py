@@ -2,6 +2,7 @@ import random
 from typing import Set
 from agents.PacifistAgent.tools import move_away_from_attacker
 from ai.knowledge.knowledge import Fact, Knowledge, Rule
+from ai.search.bfs import BFS
 from ai.search.pathFinder_with_Astar import PathFinder
 from environment.actions import Attack
 from environment.sim_object import Sim_Object_Type
@@ -129,9 +130,6 @@ def to_attack_enemy_action(facts: Set[Fact]):
 
 # *Hay agentes en mi campo de vision y ninguno es mi enemigo
 def to_attack_not_enemy_condition(facts: Set[Fact]):
-    has_enemies = any(
-        fact.key == Knowledge.ENEMIES and len(fact.data) > 0 for fact in facts
-    )
     see_objects_info = None
     enemies_info = None
 
@@ -151,7 +149,7 @@ def to_attack_not_enemy_condition(facts: Set[Fact]):
         if obj.type.value == Sim_Object_Type.AGENT.value
     )
 
-    return has_enemies and has_agents and not_enemy
+    return has_agents and not_enemy
 
 
 # *OK
@@ -186,104 +184,62 @@ def to_attack_not_enemy_action(facts: Set[Fact]):
     ]
 
 
-def stuck_and_resources_available_condition(facts: Set[Fact]):
-    prev_position = None
-    current_position = None
-    see_objects_info = None
-    objects_in_path = []
-    see_resource_info = None
+# * Hay un agente en mi campo de vision que me ataca
+def recived_attacker_condition(facts: Set[Fact]):
+    return any(fact.key == Knowledge.RECEIVED_ATTACK and fact.data for fact in facts)
+
+
+# *OK
+def recived_attacker_action(facts: Set[Fact]):
     geography = None
+    current_pos = None
+    possible_moves = None
+    see_objects_info = None
+    atack_data = None
+    attacker_id, strength, attacker_pos = None, None, None
+    reserve = None
+    current_id = None
     for fact in facts:
-        if fact.key == Knowledge.SEE_RESOURCES:
-            see_resource_info = fact.data
-        if fact.key == Knowledge.PREVPOSSITION:
-            prev_position = fact.data
-        if fact.key == Knowledge.POSITION:
-            current_position = fact.data
-        if fact.key == Knowledge.SEE_OBJECTS:
-            see_objects_info = fact.data
         if fact.key == Knowledge.GEOGRAPHIC_MEMORY:
             geography = fact.data
-
-    start = current_position
-    goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
-    goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
-    finder = PathFinder(geography.validate_position)
-    obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
-    obstacles = [
-        (obstacle[0] + current_position[0], obstacle[1] + current_position[1])
-        for obstacle in obstacles
-    ]
-    finder.set_obstacles(obstacles)
-    path = finder.a_star(start, goal)
-    if path:
-        for position in path:
-            for j in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-                for obj in see_objects_info:
-                    position_in_path = (position[0] + j[0], position[1] + j[1])
-                    position_object = (
-                        obj.position[0] + current_position[0],
-                        obj.position[1] + current_position[1],
-                    )
-                    if position_in_path == position_object:
-                        objects_in_path.append(obj)
-
-    return prev_position == current_position and len(objects_in_path) > 0
-
-
-def stuck_and_resources_available_action(facts: Set[Fact]):
-    current_position = None
-    see_objects_info = None
-    objects_in_path = []
-    see_resource_info = None
-    get_attacks_currents = []
-    strength = 1
-    current_id = None
-    geography = None
-    for fact in facts:
-        if fact.key == Knowledge.SEE_RESOURCES:
-            see_resource_info = fact.data
-        if fact.key == Knowledge.POSITION:
-            current_position = fact.data
-        if fact.key == Knowledge.SEE_OBJECTS:
-            see_objects_info = fact.data
-        # if fact.key == Knowledge.GETATTACKS:
-        #     get_attacks_currents = fact.data
         if fact.key == Knowledge.ID:
             current_id = fact.data
+        if fact.key == Knowledge.RECEIVED_ATTACK:
+            atack_data = (
+                fact.data
+            )  # Assuming data is a tuple with attacker's position as third element
+            attacker_id, strength, attacker_pos = atack_data
+        if fact.key == Knowledge.POSITION:
+            current_pos = fact.data
+        if fact.key == Knowledge.POSIBLES_MOVEMENTS:
+            possible_moves = fact.data
+        if fact.key == Knowledge.SEE_OBJECTS:
+            see_objects_info = fact.data
         if fact.key == Knowledge.RESERVE:
-            strength = int(fact.data)
-        if fact.key == Knowledge.GEOGRAPHIC_MEMORY:
-            geography = fact.data
+            reserve = int(fact.data)
 
-    start = current_position
-    goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
-    goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
-    finder = PathFinder(geography.validate_position)
-    obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
-    obstacles = [
-        (obstacle[0] + current_position[0], obstacle[1] + current_position[1])
-        for obstacle in obstacles
-    ]
-    finder.set_obstacles(obstacles)
-    path = finder.a_star(start, goal)
-    if path:
-        for position in path:
-            for j in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-                for obj in see_objects_info:
-                    position_in_path = (position[0] + j[0], position[1] + j[1])
-                    position_object = (
-                        obj.position[0] + current_position[0],
-                        obj.position[1] + current_position[1],
-                    )
-                    if position_in_path == position_object:
-                        objects_in_path.append(obj)
-
-    for obj in objects_in_path:
-        attack = Attack(current_id, obj.id, random.randint(0, strength // 2))
-        get_attacks_currents.append(attack)
-
-    return (Fact(Knowledge.GETATTACKS, get_attacks_currents),)
+    attack_strength = strength * 2 if reserve > strength * 3 else reserve - strength
+    if attack_strength < 0:
+        bfs = BFS(geography.validate_position)
+        obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
+        obstacles = [
+            (obstacle[0] + current_pos[0], obstacle[1] + current_pos[1])
+            for obstacle in obstacles
+        ]
+        bfs.set_obstacles(obstacles)
+        path = bfs.bfs_path(current_pos, attacker_pos, possible_moves)
+        relative_pos = (path[0] - current_pos[0], path[1] - current_pos[1])
+        for fact in facts:
+            if fact.key == Knowledge.RECEIVED_ATTACK:
+                fact.data = None
+        if path:
+            return [Fact(Knowledge.NEXT_MOVE, relative_pos)]
+    else:
+        attack = Attack(current_id, attacker_id, attack_strength)
+        for fact in facts:
+            if fact.key == Knowledge.RECEIVED_ATTACK:
+                fact.data = None
+        return [Fact(Knowledge.GETATTACKS, [attack])]
 
 
 def default_move_condition(facts: Set[Fact]):
@@ -334,6 +290,16 @@ def default_move_action(facts: Set[Fact]):
 eat_not_agents_rule = Rule(
     to_eat_not_view_agents_condition, to_eat_not_view_agents_action
 )
+
+attack_enemy_in_vision = Rule(to_attack_enemy_condition, to_attack_enemy_action)
+
+attack_not_enemy_in_vision = Rule(
+    to_attack_not_enemy_condition, to_attack_not_enemy_action
+)
+
+recived_attacker = Rule(recived_attacker_condition, recived_attacker_action)
+
+default_move = Rule(default_move_condition, default_move_action)
 
 
 #! This rule is not used in the current implementation
