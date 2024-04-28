@@ -32,6 +32,7 @@ class RandomAgent(Agent_with_Memories):
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
     def move(self, possible_moves: List[Tuple[int, int]]):
+        super().move(possible_moves)
         # Actualizar los movimientos posibles
         self.estrategy.learn_especific(Knowledge.POSIBLES_MOVEMENTS, possible_moves)
         # Solicitar una decisión de movimiento
