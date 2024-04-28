@@ -9,6 +9,7 @@ from agents.CombatantAgent.Rules import (
     eat_not_agents_rule,
     attack_enemy_in_vision,
     attack_not_enemy_in_vision,
+    move_not_enemy,
     recived_attacker,
     default_move,
 )
@@ -33,6 +34,7 @@ class CombatantAgent(Agent_with_Memories):
             eat_not_agents_rule,
             attack_enemy_in_vision,
             attack_not_enemy_in_vision,
+            move_not_enemy,
             recived_attacker,
             default_move,
         ]

@@ -78,11 +78,11 @@ def create_simulation(
     return SimpleSimulation(map, agents, view)
 
 
-simulation = create_simulation(20, 20, 10)
+simulation = create_simulation(20, 20, 100)
 
 try:
     while True:
-        simulation.step(sleep_time=0.01)  # Actualiza el estado del simulador
+        simulation.step(sleep_time=0.001)  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:

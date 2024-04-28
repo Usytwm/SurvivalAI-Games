@@ -4,9 +4,7 @@ from agents.PacifistAgent.tools import move_away_from_attacker
 from ai.knowledge.knowledge import Fact, Knowledge, Rule
 from ai.search.pathFinder_with_Astar import PathFinder
 from environment.actions import Attack
-from environment.sim_object import Sim_Object_Type
-
-import heapq
+from environment.sim_object import Agent_Info, Sim_Object_Type
 
 
 def to_eat_not_enemies_condition(facts: Set[Fact]):
@@ -115,10 +113,16 @@ def to_eat_enemy_action(facts: Set[Fact]):
         if fact.key == Knowledge.RESERVE:
             strength = int(fact.data)
 
-    strength_to_attack = strength / len(enemies_info) if len(enemies_info) > 0 else 1
+    strength_to_attack = (
+        strength / len([obj for obj in see_objects_info if obj.id in enemies_info])
+        if len(enemies_info) > 0
+        else 1
+    )
 
     for obj in see_objects_info:
-        if obj.type.value == Sim_Object_Type.AGENT.value:
+        if obj.type.value == Sim_Object_Type.AGENT.value and isinstance(
+            obj, Agent_Info
+        ):
             if obj.id in enemies_info:
                 attack = Attack(
                     current_id, obj.id, random.randint(0, strength_to_attack // 2)
@@ -204,7 +208,11 @@ def stuck_and_resources_available_action(facts: Set[Fact]):
     goal_relative = max(see_resource_info, key=lambda x: x[1])[0]
     goal = (start[0] + goal_relative[0], start[1] + goal_relative[1])
     finder = PathFinder(geography.validate_position)
-    obstacles = [obj.position for obj in see_objects_info if obj.type.value == 1]
+    obstacles = [
+        obj.position
+        for obj in see_objects_info
+        if obj.type.value == 1 and isinstance(obj, Agent_Info)
+    ]
     obstacles = [
         (obstacle[0] + current_position[0], obstacle[1] + current_position[1])
         for obstacle in obstacles
@@ -224,8 +232,9 @@ def stuck_and_resources_available_action(facts: Set[Fact]):
                         objects_in_path.append(obj)
 
     for obj in objects_in_path:
-        attack = Attack(current_id, obj.id, random.randint(0, strength // 2))
-        get_attacks_currents.append(attack)
+        if isinstance(obj, Agent_Info):
+            attack = Attack(current_id, obj.id, random.randint(0, strength // 2))
+            get_attacks_currents.append(attack)
 
     return (Fact(Knowledge.GETATTACKS, get_attacks_currents),)
 
