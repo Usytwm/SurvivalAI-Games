@@ -222,61 +222,6 @@ def to_attack_not_enemy_action(facts: Set[Fact]):
     ]
 
 
-# # *Hay agentes en mi campo de vision y ninguno es mi enemigo, me muevo
-# def to_attack_not_enemy_condition(facts: Set[Fact]):
-#     see_objects_info = None
-#     enemies_info = None
-
-#     for fact in facts:
-#         if fact.key == Knowledge.SEE_OBJECTS:
-#             see_objects_info = fact.data
-#         if fact.key == Knowledge.ENEMIES:
-#             enemies_info = fact.data
-
-#     has_agents = any(
-#         obj.type.value == Sim_Object_Type.AGENT.value for obj in see_objects_info
-#     )
-
-#     not_enemy = all(
-#         obj.id not in enemies_info
-#         for obj in see_objects_info
-#         if obj.type.value == Sim_Object_Type.AGENT.value
-#     )
-
-#     return has_agents and not_enemy
-
-
-# # *OK
-# def to_attack_not_enemy_action(facts: Set[Fact]):
-#     see_objects_info = None
-#     current_id = None
-#     agents_ = None
-#     strength = 1
-#     getattacs = []
-#     for fact in facts:
-#         if fact.key == Knowledge.SEE_OBJECTS:
-#             see_objects_info = fact.data
-#         if fact.key == Knowledge.ID:
-#             current_id = fact.data
-#         if fact.key == Knowledge.RESERVE:
-#             strength = int(fact.data)
-
-#     agents_ = [
-#         obj
-#         for obj in see_objects_info
-#         if obj.type.value == Sim_Object_Type.AGENT.value and isinstance(obj, Agent_Info)
-#     ]
-#     strength_to_attack = strength / len(agents_) if len(agents_) > 0 else 1
-
-#     for obj in agents_:
-#         attack = Attack(current_id, obj.id, random.randint(0, strength_to_attack // 4))
-#         getattacs.append(attack)
-
-#     return [
-#         Fact(Knowledge.GETATTACKS, getattacs),
-#     ]
-
-
 # * Hay un agente en mi campo de vision que me ataca
 def recived_attacker_condition(facts: Set[Fact]):
     return any(fact.key == Knowledge.RECEIVED_ATTACK and fact.data for fact in facts)

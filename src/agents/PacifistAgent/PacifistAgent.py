@@ -117,8 +117,7 @@ class PacifistAgent(Agent_with_Memories):
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)
-        # print(f"Received reward of {reward} for defeating agent {victim_id}")
-        pass
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def see_objects(self, info: List[Object_Info]):
         super().see_objects(info)

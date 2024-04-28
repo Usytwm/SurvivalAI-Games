@@ -10,6 +10,7 @@ class Knowledge(Enum):
     HEALTH = "health"
     GETATTACKS = "getattacks"
     ASSOCIATION_PROPOSALS = "association_proposals"
+    ASSOCIATION = "association"
     ATTACK_MADE = "attack_made"
     RECEIVED_ATTACK = "received_attack"
     ATTACK_REWARD = "attack_reward"

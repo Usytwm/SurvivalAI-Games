@@ -29,6 +29,7 @@ class CombatantAgent(Agent_with_Memories):
             Fact(Knowledge.GEOGRAPHIC_MEMORY, self.geographic_memory),
             Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
             Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
+            Fact(Knowledge.ASSOCIATION, self.associations),
         ]
         initial_rules = [
             eat_not_agents_rule,
@@ -100,9 +101,11 @@ class CombatantAgent(Agent_with_Memories):
         commitments: Dict[int, Tuple[int]],
     ):
         super().inform_joined_association(association_id, members, commitments)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
 
     def inform_broken_association(self, association_id: int):
         super().inform_broken_association(association_id)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Devuelve si el agente acepta ser parte de la asociacion o no"
@@ -113,6 +116,7 @@ class CombatantAgent(Agent_with_Memories):
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def see_objects(self, info: List[Object_Info]):
         super().see_objects(info)

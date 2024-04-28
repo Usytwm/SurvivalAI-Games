@@ -73,10 +73,6 @@ class RandomAgent(Agent_with_Memories):
         # decision = self.estrategy.make_decision()
         # return decision
 
-    def inform_move(self, position: Tuple[int, int]):
-        self.position = position
-        self.estrategy.learn_especific(Knowledge.POSITION, position)
-
     def get_attacks(self) -> List[Action]:
         decision = self.estrategy.make_decision()
         filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
@@ -101,17 +97,14 @@ class RandomAgent(Agent_with_Memories):
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Devuelve si el agente acepta ser parte de la asociacion o no"
-        pass
+        return random.choice([True, False])
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
-        #! pendiente
-        pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)
-        #! pendiente
-        pass
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def see_objects(self, info: List[Object_Info]):
         super().see_objects(info)

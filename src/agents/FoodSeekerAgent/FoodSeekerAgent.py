@@ -116,8 +116,7 @@ class FoodSeekerAgent(Agent_with_Memories):
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)
-        #!implementar en la estrategia
-        pass
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def see_objects(self, info: List[Object_Info]):
         super().see_objects(info)
