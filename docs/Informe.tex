@@ -134,11 +134,28 @@ Nuestra clase \textit{BFS} incluye métodos para configurar los obstáculos y ca
 
 
 
-\subsubsection{Monte Carlo Tree Search (MCTS)}
-El Monte Carlo Tree Search es un algoritmo de búsqueda heurística utilizado para la toma de decisiones en juegos de perfecta información. Combina la exploración aleatoria de árboles con la simulación para evaluar los movimientos potenciales.
+\subsubsection{Monte Carlo Tree Search (MCTS) (Trabajo en proceso)}
+El Monte Carlo Tree Search (MCTS) es un algoritmo de búsqueda heurística ampliamente utilizado en la toma de decisiones en juegos y problemas de optimización combinatoria. A diferencia de otros enfoques, como la búsqueda en profundidad, MCTS no requiere un conocimiento completo del espacio de búsqueda y es especialmente útil en entornos con una gran cantidad de acciones posibles y una complejidad elevada.\\
 
-\paragraph{Funcionamiento y Ejemplos}
-Descripción del funcionamiento y ejemplos...
+Este método se basa en una búsqueda inteligente de árboles que equilibra la exploración y la explotación. Utiliza el concepto de muestreo aleatorio mediante simulaciones, conocidas como "playouts", para evaluar las diferentes opciones disponibles. A medida que se realizan más playouts, el algoritmo acumula estadísticas sobre las acciones tomadas.\\
+
+En nuestra implementación, aplicamos MCTS para guiar al agente en la selección de acciones óptimas en un entorno simulado. Consideramos el limitado conocimiento del usuario sobre la simulación para adaptar la exploración del árbol de búsqueda y priorizar aquellas acciones que parecen más prometedoras según las heurísticas de comportamiento implementadas en los agentes.\\
+
+\paragraph{Funcionamiento de MCTS}
+Cada vez que un agente emplea MCTS en la toma de decisiones, se crea un objeto MCTS que representa el árbol de búsqueda del agente en ese turno. La raíz de este árbol refleja el estado de la simulación justo antes de que el agente tome una decisión. El algoritmo de MCTS sigue un ciclo de cuatro pasos:\\
+
+\begin{itemize}
+\item \textbf{Selección}: Desde el nodo raíz R, se busca un nodo hoja L que represente un escenario de la simulación desde el cual no se ha tomado ninguna decisión. 
+\item \textbf{Expansión}: A menos que el nodo L sea terminal (es decir, el agente gana o pierde), se expande el árbol de búsqueda creando uno o más nodos secundarios. Estos nodos representan movimientos válidos desde la posición de juego definida por L.
+\item \textbf{Simulación}: Se realiza una reproducción aleatoria del juego desde el nodo C, elegido durante la fase de expansión. Esta simulación proporciona una estimación del valor de ese nodo y ayuda a evaluar la calidad de las acciones disponibles.
+\item \textbf{Actualización}: El resultado de la simulación se utiliza para actualizar la información en los nodos de la ruta desde C hasta R, lo que permite al algoritmo ajustar sus estimaciones y mejorar la toma de decisiones futuras.
+\end{itemize}
+
+\paragraph{Implementación}
+En nuestra implementación de MCTS, aprovechamos la información observada por el agente y su conocimiento previo de la simulación, como los agentes que ha visto cercanos o el recuento global de muertes, para construir una representación simplificada del escenario.
+
+\paragraph{Ejemplos}
+Ejemplos...
 
 
 
