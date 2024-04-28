@@ -1,6 +1,7 @@
 import random
 import sqlite3
 from Interfaces.ISimulation import ViewOption
+from agents.CombatantAgent.CombatantAgent import CombatantAgent
 from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
@@ -33,13 +34,16 @@ def create_agents(num_agents, positions, map):
             map,
             random.choice(
                 [
-                    PacifistAgent(
-                        agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    ),
+                    # PacifistAgent(
+                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    # ),
                     FoodSeekerAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
                     RandomAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    CombatantAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
                 ]
@@ -74,11 +78,11 @@ def create_simulation(
     return SimpleSimulation(map, agents, view)
 
 
-simulation = create_simulation(20, 20, 10)
+simulation = create_simulation(20, 20, 100)
 
 try:
     while True:
-        simulation.step(sleep_time=0.01)  # Actualiza el estado del simulador
+        simulation.step(sleep_time=0.001)  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:

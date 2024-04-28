@@ -20,7 +20,13 @@ class BFS:
         self,
         posicion_inicial: Tuple[int, int],
         posicion_atacante: Tuple[int, int],
-        posibles_movimientos: List[Tuple[int, int]],
+        posibles_movimientos: List[Tuple[int, int]] = [
+            (0, 1),
+            (1, 0),
+            (0, -1),
+            (-1, 0),
+            (0, 0),
+        ],
         full_path: bool = False,
     ) -> List[Tuple[int, int]]:
         """

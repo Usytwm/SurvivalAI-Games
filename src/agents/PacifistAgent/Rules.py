@@ -5,7 +5,7 @@ from typing import List, Set, Tuple
 from ai.knowledge.knowledge import Fact, Knowledge, Rule
 from ai.search.bfs import BFS
 from environment.actions import Action_Info, Action_Type
-from environment.sim_object import Sim_Object_Type
+from environment.sim_object import Agent_Info, Sim_Object_Type
 from agents.PacifistAgent.tools import move_away_from_attacker
 
 
@@ -40,14 +40,20 @@ def see_objects_action(facts: Set[Fact]):
             if obj.id in enemies_info:
                 bfs = BFS(geography.validate_position)
                 obstacles = [
-                    obj.position for obj in see_objects_info if obj.type.value == 1
+                    obj.position
+                    for obj in see_objects_info
+                    if obj.type.value == 1 and isinstance(obj, Agent_Info)
                 ]
                 obstacles = [
                     (obstacle[0] + current_pos[0], obstacle[1] + current_pos[1])
                     for obstacle in obstacles
                 ]
                 bfs.set_obstacles(obstacles)
-                path = bfs.bfs_path(current_pos, obj.position, possible_moves)
+                goal_position = (
+                    obj.position[0] + current_pos[0],
+                    obj.position[1] + current_pos[1],
+                )
+                path = bfs.bfs_path(current_pos, goal_position)
                 relative_pos = (path[0] - current_pos[0], path[1] - current_pos[1])
                 if path:
                     return [Fact(Knowledge.NEXT_MOVE, relative_pos)]
@@ -96,7 +102,11 @@ def see_actions_action(facts: Set[Fact]):
                     for obstacle in obstacles
                 ]
                 bfs.set_obstacles(obstacles)
-                path = bfs.bfs_path(current_pos, action.start_position, possible_moves)
+                goal_position = (
+                    action.position[0] + current_pos[0],
+                    action.position[1] + current_pos[1],
+                )
+                path = bfs.bfs_path(current_pos, goal_position)
                 relative_pos = (path[0] - current_pos[0], path[1] - current_pos[1])
                 if path:
                     return [Fact(Knowledge.NEXT_MOVE, relative_pos)]
@@ -136,7 +146,7 @@ def move_away_from_attacker_action(facts: Set[Fact]):
         for obstacle in obstacles
     ]
     bfs.set_obstacles(obstacles)
-    path = bfs.bfs_path(current_pos, attacker_pos, possible_moves)
+    path = bfs.bfs_path(current_pos, attacker_pos)
     relative_pos = (path[0] - current_pos[0], path[1] - current_pos[1])
     for fact in facts:
         if fact.key == Knowledge.RECEIVED_ATTACK:

@@ -11,7 +11,12 @@
 
 from typing import Dict, Tuple, List, Set
 from Interfaces.ISimulation import ISimulation, ViewOption
-from environment.actions import Action, Association_Proposal, Attack, Association_Creation
+from environment.actions import (
+    Action,
+    Association_Proposal,
+    Attack,
+    Association_Creation,
+)
 from environment.graph_of_attacks import Graph_of_Attacks, Component_of_Attacks_Graph
 from environment.association import Association
 import sys
@@ -24,22 +29,23 @@ from environment.map import Map
 
 class Display:
     def __init__(
-        self, map: Map, agent_len: int, cell_size=None, max_width=800, max_height=600
+        self, map: Map, agent_len: int, cell_size=None, max_width=900, max_height=600
     ):
         pygame.init()
         self.map = map
-        self.cell_size = (
-            cell_size
-            if cell_size is not None
-            else min(
-                max_width // self.map.width,
-                (max_height - 30 * agent_len) // self.map.height,
-            )
-        )
+        if cell_size is not None:
+            self.cell_size = cell_size
+        else:
+            max_cell_width = max_width // self.map.width
+            max_cell_height = max_height // self.map.height
+            self.cell_size = min(max_cell_width, max_cell_height)
+
+        # Calcular las dimensiones de la pantalla basadas en el tamaño de la celda y las dimensiones del mapa
         self.screen_width = self.map.width * self.cell_size
-        self.screen_height = (
-            self.map.height * self.cell_size + 30 * agent_len
-        )  # 100 pixels for messages area
+        self.screen_height = self.map.height * self.cell_size
+        # self.screen_height = (
+        #     self.map.height * self.cell_size + 30 * agent_len
+        # )  # 100 pixels for messages area
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         self.font = pygame.font.Font(None, 24)
         pygame.display.set_caption("Simulation")
@@ -51,21 +57,6 @@ class Display:
         if content:
             agent = agents.get(content, None)
             return agent.agent.color
-        elif map.resources.get(position, 0) > 0:
-            percentage = map.resource_percentage(position)
-            return [
-                int(
-                    terrain_color[i]
-                    + (resource_color[i] - terrain_color[i]) * percentage
-                )
-                for i in range(3)
-            ]
-        else:
-            return terrain_color
-
-        content = map.peek_from_position(position)
-        if isinstance(content, Agent):  # Asumiendo que los agentes son de clase Agent
-            return content.color
         elif map.resources.get(position, 0) > 0:
             percentage = map.resource_percentage(position)
             return [
@@ -197,13 +188,26 @@ class SimpleSimulation(ISimulation):
             for proposal in propositions:
                 accepted = True
                 for destinatary_id in proposal.destinataries_ids:
-                    accepted = self.agents[destinatary_id].consider_association_proposal(proposal)
+                    accepted = self.agents[
+                        destinatary_id
+                    ].consider_association_proposal(proposal)
                 if accepted:
-                    association = Association(set(proposal.destinataries_ids), proposal.commitments)
+                    association = Association(
+                        set(proposal.destinataries_ids), proposal.commitments
+                    )
                     self.associations[association.id] = association
                     for destinatary_id in proposal.destinataries_ids:
-                        self.agents[destinatary_id].inform_joined_association(association)
-                        self.map.add_action(Association_Creation(destinatary_id, association.id, association.members, association.commitments))
+                        self.agents[destinatary_id].inform_joined_association(
+                            association
+                        )
+                        self.map.add_action(
+                            Association_Creation(
+                                destinatary_id,
+                                association.id,
+                                association.members,
+                                association.commitments,
+                            )
+                        )
 
     def display(self):
         for event in pygame.event.get():

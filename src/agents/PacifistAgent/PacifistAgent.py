@@ -50,6 +50,7 @@ class PacifistAgent(Agent_with_Memories):
         return move
 
     def inform_move(self, movement: Tuple[int, int]):
+        super().inform_move(movement)
         self.position = movement
         # Informar al motor de inferencia la nueva posición
         self.estrategy.learn_especific(Knowledge.POSITION, movement)
