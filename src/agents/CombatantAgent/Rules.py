@@ -213,7 +213,7 @@ def to_attack_not_enemy_action(facts: Set[Fact]):
     strength_to_attack = strength / len(agents_) if len(agents_) > 0 else 1
 
     for obj in agents_:
-        attack = Attack(current_id, obj.id, random.randint(0, strength_to_attack // 4))
+        attack = Attack(current_id, obj.id, random.randint(0, strength_to_attack // 2))
         getattacs.append(attack)
 
     return [
