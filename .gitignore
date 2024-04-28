@@ -9,6 +9,7 @@ __pycache__/
 docs/*
 # Pero no ignores los archivos .pdf en la carpeta 'docst'
 !docs/*.pdf
+!docs/images
 
 
 docs/*
