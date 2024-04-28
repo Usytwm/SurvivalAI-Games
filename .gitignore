@@ -6,15 +6,14 @@ __pycache__/
 # C extensions
 *.so
 # Ignora todos los archivos en la carpeta 'docst'
-docs/*
-# Pero no ignores los archivos .pdf en la carpeta 'docst'
-!docs/*.pdf
-!docs/images
+# docs/*
+# # Pero no ignores los archivos .pdf en la carpeta 'docst'
+# !docs/*.pdf
+# !docs/images
 
 
-docs/*
 
-!docs/*.pdf
+
 # Distribution / packaging
 .Python
 build/
