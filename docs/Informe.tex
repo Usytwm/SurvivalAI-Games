@@ -36,6 +36,27 @@
 \section{Implementación}
 \subsection{Modelo de la simulación}
 \subsection{Agentes}
+En nuestra simulación de supervivencia, utilizamos varios tipos de agentes, cada uno con estrategias y objetivos específicos que influyen en su comportamiento dentro del juego.Todos tienen un sistema experto que emula el conocimiento y la toma de decisiones del agente,
+basandoce en la información que se le proporciona en el entorno de juego. Estas desiciones se toman en dependencia de las regls que se definan en el sistema experto, más explicado adelante. A continuación, describimos los tipos de agentes que utilizamos en nuestra simulación:
+
+\subsubsection{Agente Aleatorio (RandomAgent)}
+El \textit{RandomAgent} actúa sin una estrategia fija, moviéndose de manera aleatoria en el tablero. Este agente no busca activamente comida ni evita el combate, lo que lo hace impredecible y a menudo vulnerable a ataques.
+
+\subsubsection{Agente Pacífico (PeacefulAgent)}
+El \textit{PeacefulAgent} busca evitar conflictos a toda costa. Su estrategia principal es alejarse de los agentes de combate y buscar rutas que lo mantengan distante de posibles amenazas. Este agente también intenta encontrar recursos, pero prioriza su seguridad sobre la acumulación de los mismos.
+
+\subsubsection{Agente de Combate (CombatAgent)}
+El \textit{CombatAgent} está diseñado para la confrontación. Su objetivo es localizar y atacar a otros agentes. Utiliza un algoritmo de búsqueda, como BFS o A*, para planificar su ruta hacia el agente más cercano o estratégicamente importante. Es agresivo y busca maximizar el daño a los oponentes mientras minimiza su propia exposición al peligro.
+
+\subsubsection{Agente Inteligente (SmartAgent)}
+El \textit{SmartAgent} utiliza algoritmos avanzados de toma de decisiones y aprendizaje automático para adaptar su comportamiento basado en la dinámica del juego. Este agente evalúa constantemente el estado del juego, tomando decisiones informadas sobre cuándo recolectar recursos, combatir, o retirarse basado en las probabilidades de éxito y supervivencia.
+
+\subsubsection{Agente Buscador de Comida (FoodSeekerAgent)}
+El \textit{FoodSeekerAgent} se centra principalmente en la búsqueda de recursos alimenticios. Utiliza algoritmos de búsqueda para encontrar el camino más eficiente hacia las áreas con alta densidad de recursos. Aunque evita el combate, está diseñado para tomar rutas óptimas que balanceen la adquisición de comida y la evasión de amenazas.
+
+\paragraph{Ejemplo de Implementación del Agente Buscador de Comida}
+En el siguiente ejemplo, ilustramos cómo un \textit{FoodSeekerAgent} opera en un tablero de \(10 \times 10\) buscando la ruta más segura hacia áreas ricas en recursos. La posición inicial del agente es \( (0, 8) \) y se mueve hacia \( (2, 9) \), identificada como la región con mayor disponibilidad de comida, evitando encuentros hostiles.
+
 \subsection{Base de conocimiento y toma de decisiones}
 Este sistema se basa en una estructura modular que integra hechos y reglas dentro de un motor de inferencia para gestionar y tomar decisiones basado en conocimientos. Está diseñado para funcionar en entornos donde las decisiones se toman a partir de un conjunto de datos dinámico y posiblemente en tiempo real. Los componentes clave son:
 
@@ -95,8 +116,8 @@ La implementación de BFS comienza con la inserción del nodo de origen en una c
 \end{itemize}
 
 \paragraph{Ejemplo de Uso}
-En el siguiente ejemplo, mostramos un agente del tipo $PacifistAgent$ en la posicion \( (5, 6) \), que en nuestra simulación representa al agente que tiene una estrategia pacifica, evade los ataques e intenta sobrevivir.
-En este caso, tenemos un tablero de \(7 \times 7\). Definimos la posición inicial del agente $CombatantAgent$ como \( (3, 3) \). La salida del algoritmo proporcionará la secuencia de movimientos para llegar a la posición segura más lejana posible, evitando al atacante, evidenciamos en las siguientes imagenes como
+En el siguiente ejemplo, mostramos un agente del tipo $PacifistAgent$ \( (azul) \) en la posicion \( (5, 6) \), que en nuestra simulación representa al agente que tiene una estrategia pacifica, evade los ataques e intenta sobrevivir.
+En este caso, tenemos un tablero de \(7 \times 7\). Definimos la posición inicial del agente $CombatantAgent$ \( (rojo) \) como \( (3, 3) \). La salida del algoritmo proporcionará la secuencia de movimientos para llegar a la posición segura más lejana posible, evitando al atacante, evidenciamos en las siguientes imagenes como
 la secuencia de movimientos incluye como primer movimiento el de alejarce del atacante hacia la casilla \( (6, 6) \), luego en el siguiente movimiento, este se queda en esa misma posicion ya que de entre las posibles es la mas lejana al atacante
 
 
