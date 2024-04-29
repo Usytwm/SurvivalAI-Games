@@ -40,22 +40,113 @@ En nuestra simulación de supervivencia, utilizamos varios tipos de agentes, cad
 basandoce en la información que se le proporciona en el entorno de juego. Estas desiciones se toman en dependencia de las regls que se definan en el sistema experto, más explicado adelante. A continuación, describimos los tipos de agentes que utilizamos en nuestra simulación:
 
 \subsubsection{Agente Aleatorio (RandomAgent)}
-El \textit{RandomAgent} actúa sin una estrategia fija, moviéndose de manera aleatoria en el tablero. Este agente no busca activamente comida ni evita el combate, lo que lo hace impredecible y a menudo vulnerable a ataques.
+El \textit{RandomAgent} es un tipo de agente diseñado para tomar decisiones de manera aleatoria dentro de un entorno simulado. Este agente es una extensión de \textit{Agent\_with\_Memories}, lo que implica que puede recordar interacciones pasadas y datos del entorno para influir en sus decisiones futuras. Utiliza un sistema de estrategia basado en hechos y reglas para manejar su comportamiento en la simulación.
 
-\subsubsection{Agente Pacífico (PeacefulAgent)}
-El \textit{PeacefulAgent} busca evitar conflictos a toda costa. Su estrategia principal es alejarse de los agentes de combate y buscar rutas que lo mantengan distante de posibles amenazas. Este agente también intenta encontrar recursos, pero prioriza su seguridad sobre la acumulación de los mismos.
+\paragraph{Funcionalidad del \textit{RandomAgent}}
+\begin{itemize}
+    \item \textbf{Inicialización}: Al crearse, se le asignan varios hechos iniciales como alianzas, enemigos, movimientos posibles, y recursos, entre otros. Estos hechos forman la base de su toma de decisiones.
+    \item \textbf{Movimiento}: El agente decide su próximo movimiento de forma aleatoria entre los movimientos posibles disponibles, basándose en la estrategia actual.
+    \item \textbf{Ataque}: Puede decidir atacar a otros agentes en su entorno si los ve. La decisión de atacar y la selección del objetivo son aleatorias, y el ataque se divide equitativamente entre los agentes visibles.
+    \item \textbf{Asociaciones}: El agente puede recibir propuestas para unirse a asociaciones y decide aleatoriamente si unirse o no.
+    \item \textbf{Interacción con el entorno}: Recibe y procesa información sobre objetos, recursos y acciones de otros agentes dentro de su entorno.
+\end{itemize}
 
-\subsubsection{Agente de Combate (CombatAgent)}
-El \textit{CombatAgent} está diseñado para la confrontación. Su objetivo es localizar y atacar a otros agentes. Utiliza un algoritmo de búsqueda, como BFS o A*, para planificar su ruta hacia el agente más cercano o estratégicamente importante. Es agresivo y busca maximizar el daño a los oponentes mientras minimiza su propia exposición al peligro.
+\paragraph{Reglas Definidas}
+\begin{enumerate}
+    \item \textbf{Regla de Movimiento (\textit{move\_rule})}:
+          \begin{itemize}
+              \item \textbf{Condición}: Se activa si hay movimientos posibles disponibles.
+              \item \textbf{Acción}: Elige un movimiento aleatoriamente de los posibles y lo establece como el próximo movimiento.
+          \end{itemize}
+    \item \textbf{Regla de Ataque (\textit{attack\_rule})}:
+          \begin{itemize}
+              \item \textbf{Condición}: Se activa si hay otros agentes visibles en el entorno y decide aleatoriamente si realizar un ataque.
+              \item \textbf{Acción}: Si decide atacar, distribuye los recursos de ataque disponibles equitativamente entre los agentes visibles y selecciona un subconjunto aleatorio de estos para atacar.
+          \end{itemize}
+\end{enumerate}
+
+Estas reglas permiten al \textit{RandomAgent} operar en un entorno dinámico donde las decisiones no siguen un patrón predecible, lo que puede ser útil para simular comportamientos impredecibles o para probar la robustez de otros agentes dentro de la simulación.
+
+\subsubsection{Agente Pacífico (PacifistAgent)}
+El \textit{PacifistAgent} es un agente diseñado para evitar conflictos y minimizar las interacciones hostiles dentro de la simulación del juego de supervivencia. Este agente sigue una estrategia de no agresión, priorizando la evasión y la preservación por encima de la confrontación. A continuación, se describen sus funcionalidades y las reglas específicas que guían su comportamiento en el entorno simulado.
+
+\paragraph{Funcionalidades del \textit{PacifistAgent}}
+\begin{itemize}
+    \item \textbf{Inicialización}: Al inicio, el agente configura hechos iniciales como alianzas, enemigos, y otros agentes en el entorno. Establece su memoria geográfica y de ataques, lo cual influye en su toma de decisiones estratégica.
+    \item \textbf{Decisiones de Movimiento}: Basa sus movimientos en un conjunto de reglas evaluadas continuamente para elegir rutas que maximicen la distancia de las amenazas.
+    \item \textbf{Reacción a Ataques}: Actualiza su conocimiento sobre enemigos y modifica su ruta al recibir ataques para mantenerse lo más distante posible del atacante.
+    \item \textbf{Interacción Social}: Puede recibir propuestas de asociación y decide si participar basándose en su estrategia de no confrontación.
+    \item \textbf{Observación del Entorno}: Continuamente actualiza su base de conocimientos con información sobre objetos y acciones observadas para tomar decisiones informadas.
+\end{itemize}
+
+\paragraph{Reglas del \textit{PacifistAgent}}
+\begin{enumerate}
+    \item \textbf{Regla para Moverse Lejos del Atacante (\textit{move\_away\_rule})}:
+          \begin{itemize}
+              \item \textbf{Condición}: Activada al recibir un ataque.
+              \item \textbf{Acción}: Calcula y ejecuta un movimiento que incrementa la distancia entre él y el atacante.
+          \end{itemize}
+    \item \textbf{Regla para Observar Objetos (\textit{see\_objects\_rule})}:
+          \begin{itemize}
+              \item \textbf{Condición}: Activada cuando hay objetos visibles que pueden representar una amenaza.
+              \item \textbf{Acción}: Evalúa y ajusta la ruta para evitar los objetos identificados como amenazas.
+          \end{itemize}
+    \item \textbf{Regla para Observar Acciones (\textit{see\_actions\_rule})}:
+          \begin{itemize}
+              \item \textbf{Condición}: Activada al observar acciones que pueden necesitar una respuesta evasiva.
+              \item \textbf{Acción}: Analiza las acciones y decide la mejor ruta de evasión.
+          \end{itemize}
+    \item \textbf{Movimiento por Defecto (\textit{default\_move})}:
+          \begin{itemize}
+              \item \textbf{Condición}: Activada cuando no hay amenazas inmediatas detectadas.
+              \item \textbf{Acción}: Selecciona un movimiento al azar de las opciones disponibles.
+          \end{itemize}
+\end{enumerate}
+
+Estas reglas permiten al \textit{PacifistAgent} operar en un entorno dinámico y potencialmente hostil de manera que evita conflictos, lo cual es crucial para su supervivencia en el juego.
+
+\subsubsection{Agente de Combate (CombatantAgent)}
+El \textit{CombatantAgent} está diseñado para operar en entornos altamente hostiles y está enfocado en la confrontación directa. Utiliza estrategias complejas para maximizar su eficacia en el combate, respondiendo agresivamente a cualquier amenaza percibida.
+
+\paragraph{Funcionalidades}
+\begin{itemize}
+    \item Inicializa con una configuración detallada de conocimientos que guiarán sus decisiones tácticas y estratégicas en el campo de batalla.
+    \item Responde dinámicamente a los ataques, eligiendo la mejor acción basada en la evaluación continua del entorno.
+    \item Observa y analiza constantemente el entorno para adaptar sus estrategias y movimientos.
+\end{itemize}
+
+\paragraph{Reglas Definidas}
+\begin{enumerate}
+    \item \textbf{Ataque a Enemigos Visibles}: Lanza ataques coordinados contra enemigos detectados dentro de su rango visual.
+    \item \textbf{Movimiento Táctico}: Se mueve estratégicamente para posicionar mejor o evitar ataques.
+    \item \textbf{Reacción a Ataques Recibidos}: Define la estrategia de respuesta, ya sea evasiva o de contraataque, basada en la naturaleza del ataque recibido.
+    \item \textbf{Movimiento por Defecto}: Realiza un movimiento predeterminado cuando no hay decisiones claras de combate o movimiento.
+\end{enumerate}
+
+Estas reglas le permiten al \textit{CombatantAgent} manejar situaciones de combate con un enfoque estratégico y táctico, asegurando que cada acción tomada maximice su potencial de supervivencia y éxito en el combate.
 
 \subsubsection{Agente Inteligente (SmartAgent)}
 El \textit{SmartAgent} utiliza algoritmos avanzados de toma de decisiones y aprendizaje automático para adaptar su comportamiento basado en la dinámica del juego. Este agente evalúa constantemente el estado del juego, tomando decisiones informadas sobre cuándo recolectar recursos, combatir, o retirarse basado en las probabilidades de éxito y supervivencia.
 
 \subsubsection{Agente Buscador de Comida (FoodSeekerAgent)}
-El \textit{FoodSeekerAgent} se centra principalmente en la búsqueda de recursos alimenticios. Utiliza algoritmos de búsqueda para encontrar el camino más eficiente hacia las áreas con alta densidad de recursos. Aunque evita el combate, está diseñado para tomar rutas óptimas que balanceen la adquisición de comida y la evasión de amenazas.
+El \textit{FoodSeekerAgent} es un agente programado para enfocarse intensamente en la localización y recolección de recursos alimenticios dentro de la simulación. Evita el combate en la medida de lo posible, priorizando la acumulación de recursos para garantizar su supervivencia.
 
-\paragraph{Ejemplo de Implementación del Agente Buscador de Comida}
-En el siguiente ejemplo, ilustramos cómo un \textit{FoodSeekerAgent} opera en un tablero de \(10 \times 10\) buscando la ruta más segura hacia áreas ricas en recursos. La posición inicial del agente es \( (0, 8) \) y se mueve hacia \( (2, 9) \), identificada como la región con mayor disponibilidad de comida, evitando encuentros hostiles.
+\paragraph{Funcionalidades}
+\begin{itemize}
+    \item Configura hechos iniciales que incluyen la memoria geográfica y táctica, cruciales para la navegación y las decisiones estratégicas.
+    \item Se especializa en la eficiente localización y consumo de recursos, utilizando avanzados algoritmos de búsqueda para optimizar sus rutas.
+    \item Prefiere evitar conflictos, eligiendo caminos que minimicen el contacto con otros agentes agresivos.
+\end{itemize}
+
+\paragraph{Reglas Definidas}
+\begin{enumerate}
+    \item \textbf{Comer sin Enemigos}: Optimiza el movimiento hacia los recursos cuando no hay amenazas cercanas.
+    \item \textbf{Comer con Enemigos}: Decide entre aprovechar los recursos o moverse a una posición más segura si hay enemigos cerca.
+    \item \textbf{Movimiento por Defecto}: Realiza un movimiento estándar cuando no se detectan recursos o amenazas inmediatas.
+    \item \textbf{Situaciones de Atasco y Recursos Disponibles}: Resuelve bloqueos en su ruta para continuar hacia los recursos.
+\end{enumerate}
+
+Estas reglas permiten al \textit{FoodSeekerAgent} operar eficazmente en un entorno donde la obtención de recursos es crucial para la supervivencia.
 
 \subsection{Base de conocimiento y toma de decisiones}
 Este sistema se basa en una estructura modular que integra hechos y reglas dentro de un motor de inferencia para gestionar y tomar decisiones basado en conocimientos. Está diseñado para funcionar en entornos donde las decisiones se toman a partir de un conjunto de datos dinámico y posiblemente en tiempo real. Los componentes clave son:

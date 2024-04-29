@@ -9,24 +9,31 @@
 \contentsline {subsection}{\numberline {3.1}Modelo de la simulación}{3}{}%
 \contentsline {subsection}{\numberline {3.2}Agentes}{3}{}%
 \contentsline {subsubsection}{\numberline {3.2.1}Agente Aleatorio (RandomAgent)}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.2}Agente Pacífico (PeacefulAgent)}{3}{}%
-\contentsline {subsubsection}{\numberline {3.2.3}Agente de Combate (CombatAgent)}{4}{}%
-\contentsline {subsubsection}{\numberline {3.2.4}Agente Inteligente (SmartAgent)}{4}{}%
-\contentsline {subsubsection}{\numberline {3.2.5}Agente Buscador de Comida (FoodSeekerAgent)}{4}{}%
-\contentsline {paragraph}{Ejemplo de Implementación del Agente Buscador de Comida}{4}{}%
-\contentsline {subsection}{\numberline {3.3}Base de conocimiento y toma de decisiones}{4}{}%
-\contentsline {subsection}{\numberline {3.4}Algoritmos de búsqueda}{5}{}%
-\contentsline {subsubsection}{\numberline {3.4.1}Algoritmo A*}{6}{}%
-\contentsline {paragraph}{Detalles del Funcionamiento}{6}{}%
-\contentsline {paragraph}{Ejemplo de Uso}{6}{}%
-\contentsline {paragraph}{Implementación}{7}{}%
-\contentsline {subsubsection}{\numberline {3.4.2}Búsqueda en Amplitud (BFS)}{7}{}%
-\contentsline {paragraph}{Funcionamiento de BFS}{7}{}%
-\contentsline {paragraph}{Ejemplo de Uso}{8}{}%
-\contentsline {paragraph}{Implementación}{8}{}%
-\contentsline {subsubsection}{\numberline {3.4.3}Monte Carlo Tree Search (MCTS)}{8}{}%
-\contentsline {paragraph}{Funcionamiento y Ejemplos}{9}{}%
-\contentsline {subsection}{\numberline {3.5}LLM}{9}{}%
-\contentsline {subsection}{\numberline {3.6}Interfaz de la simulación}{9}{}%
-\contentsline {section}{\numberline {4}Análisis de la simulación}{9}{}%
-\contentsline {section}{\numberline {5}Conclusiones}{9}{}%
+\contentsline {paragraph}{Funcionalidad del \textit {RandomAgent}}{3}{}%
+\contentsline {paragraph}{Reglas Definidas}{4}{}%
+\contentsline {subsubsection}{\numberline {3.2.2}Agente Pacífico (PacifistAgent)}{4}{}%
+\contentsline {paragraph}{Funcionalidades del \textit {PacifistAgent}}{5}{}%
+\contentsline {paragraph}{Reglas del \textit {PacifistAgent}}{5}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}Agente de Combate (CombatantAgent)}{6}{}%
+\contentsline {paragraph}{Funcionalidades}{6}{}%
+\contentsline {paragraph}{Reglas Definidas}{6}{}%
+\contentsline {subsubsection}{\numberline {3.2.4}Agente Inteligente (SmartAgent)}{7}{}%
+\contentsline {subsubsection}{\numberline {3.2.5}Agente Buscador de Comida (FoodSeekerAgent)}{7}{}%
+\contentsline {paragraph}{Funcionalidades}{7}{}%
+\contentsline {paragraph}{Reglas Definidas}{7}{}%
+\contentsline {subsection}{\numberline {3.3}Base de conocimiento y toma de decisiones}{8}{}%
+\contentsline {subsection}{\numberline {3.4}Algoritmos de búsqueda}{9}{}%
+\contentsline {subsubsection}{\numberline {3.4.1}Algoritmo A*}{9}{}%
+\contentsline {paragraph}{Detalles del Funcionamiento}{9}{}%
+\contentsline {paragraph}{Ejemplo de Uso}{10}{}%
+\contentsline {paragraph}{Implementación}{10}{}%
+\contentsline {subsubsection}{\numberline {3.4.2}Búsqueda en Amplitud (BFS)}{10}{}%
+\contentsline {paragraph}{Funcionamiento de BFS}{11}{}%
+\contentsline {paragraph}{Ejemplo de Uso}{11}{}%
+\contentsline {paragraph}{Implementación}{12}{}%
+\contentsline {subsubsection}{\numberline {3.4.3}Monte Carlo Tree Search (MCTS)}{12}{}%
+\contentsline {paragraph}{Funcionamiento y Ejemplos}{12}{}%
+\contentsline {subsection}{\numberline {3.5}LLM}{12}{}%
+\contentsline {subsection}{\numberline {3.6}Interfaz de la simulación}{13}{}%
+\contentsline {section}{\numberline {4}Análisis de la simulación}{13}{}%
+\contentsline {section}{\numberline {5}Conclusiones}{13}{}%
