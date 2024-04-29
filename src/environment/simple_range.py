@@ -7,8 +7,10 @@ from environment.actions import Action_Info, Association_Creation, Action_Type
 from environment.map import Map
 from environment.sim_object import Sim_Object, Object_Info, Agent_Info, Sim_Object_Type
 
+
 class SimpleWalking(IMovement):
     "You can walk north, south, east or west as long as is a valid not an occupied square"
+
     def moves(self, map: Map, id: int) -> List[Tuple[int, int]]:
         current_X, current_Y = map.peek_id(id)
         possible_movements = [(0, 0)]
@@ -23,11 +25,12 @@ class SimpleWalking(IMovement):
                 continue
         return possible_movements
 
+
 class SquareRange(IRange):
-    def __init__(self, radius : int):
+    def __init__(self, radius: int):
         self.radius = radius
-    
-    def get_range(self, map : Map, id : int) -> List[Tuple[int, int]]:
+
+    def get_range(self, map: Map, id: int) -> List[Tuple[int, int]]:
         current_X, current_Y = map.peek_id(id)
         return_range = []
         upper_row = max(0, current_X - self.radius)
@@ -39,35 +42,40 @@ class SquareRange(IRange):
                 return_range.append((row, column))
         return return_range
 
+
 class SquareVision(IVision):
-    def __init__(self, radius : int):
+    def __init__(self, radius: int):
         self.range = SquareRange(radius)
 
-    def see_objects(self, map: Map, id: int, objects : Dict[int, Sim_Object]) -> List[Object_Info]:
+    def see_objects(
+        self, map: Map, id: int, objects: Dict[int, Sim_Object]
+    ) -> List[Object_Info]:
         current_X, current_Y = map.peek_id(id)
         vision = []
         for row, column in self.range.get_range(map, id):
             if (row == current_X) and (column == current_Y):
                 continue
             try:
-                #O sea si no hay nada en una posicion la pasamos como None
+                # O sea si no hay nada en una posicion la pasamos como None
                 id = map.peek_from_position((row, column))
                 position = (row - current_X, column - current_Y)
                 type = objects[id].type
                 if type.value == Sim_Object_Type.AGENT.value:
-                    vision.append(Agent_Info(position, id, objects[id].resources))
+                    vision.append(Agent_Info(position, id, objects[id].reserve))
                 vision.append(Object_Info(position, id, objects[id].type))
             except:
                 continue
         return vision
-    
+
     def see_resources(self, map: Map, id: int) -> List[Tuple[Tuple[int, int], int]]:
         current_X, current_Y = map.peek_id(id)
         vision = []
         for row, column in self.range.get_range(map, id):
-            vision.append(((row - current_X, column - current_Y), map.resources[(row, column)]))
+            vision.append(
+                ((row - current_X, column - current_Y), map.resources[(row, column)])
+            )
         return vision
-    
+
     def see_actions(self, map: Map, id: int) -> List[Action_Info]:
         current_X, current_Y = map.peek_id(id)
         vision = []
@@ -82,15 +90,23 @@ class SquareVision(IVision):
                         case Action_Type.ASSOCIATION_DESTRUCTION.value:
                             vision.append(act)
                         case _:
-                            vision.append(Action_Info((row - current_X, column - current_Y), act.type, act.actor_id, act.destinataries_ids))
+                            vision.append(
+                                Action_Info(
+                                    (row - current_X, column - current_Y),
+                                    act.type,
+                                    act.actor_id,
+                                    act.destinataries_ids,
+                                )
+                            )
             except Exception as ex:
                 continue
         return vision
 
+
 class SquareAttackRange(IAttackRange):
-    def __init__(self, radius : int):
+    def __init__(self, radius: int):
         self.range = SquareRange(radius)
-    
+
     def possible_victims(self, map: Map, id: int) -> List[int]:
         current_X, current_Y = map.peek_id(id)
         victims = []

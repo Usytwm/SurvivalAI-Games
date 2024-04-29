@@ -284,6 +284,36 @@ def default_move_action(facts: Set[Fact]):
     return [Fact(Knowledge.NEXT_MOVE, random.choice(possible_moves))]
 
 
+def association_proposal_condition(facts: Set[Fact]):
+    # Example condition: High resource availability and presence of other non-hostile agents
+    is_resource_rich = any(
+        fact.key == Knowledge.SEE_RESOURCES and len(fact.data) > 0 for fact in facts
+    )
+    potential_partners = any(
+        fact.key == Knowledge.AGEENTS and len(fact.data) > 0 for fact in facts
+    )
+    return is_resource_rich and potential_partners
+
+
+def association_proposal_action(facts: Set[Fact]):
+    proposals = []
+    current_id = [fact.data for fact in facts if fact.key == Knowledge.ID][0]
+    nearby_agents = [fact.data for fact in facts if fact.key == Knowledge.AGEENTS]
+
+    for agent in nearby_agents:
+        # Assume agent data includes ID and current resource level
+        if agent["resources"] < 8:  # Looking for agents who might need help
+            proposals.append(
+                current_id, agent["id"], terms="Share resources for mutual benefit"
+            )
+
+    return [Fact(Knowledge.ASSOCIATION_PROPOSALS, proposals)]
+
+
+association_proposal_rule = Rule(
+    association_proposal_condition, association_proposal_action
+)
+
 eat_not_enemy_rule = Rule(to_eat_not_enemies_condition, to_eat_not_enemies_action)
 eat_enemy_rule = Rule(to_eat_enemy_condition, to_eat_enemy_action)
 stuck_and_resources_available_rule = Rule(

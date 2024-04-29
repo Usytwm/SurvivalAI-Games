@@ -9,7 +9,10 @@ class Knowledge(Enum):
     RESERVE = "reserve"
     HEALTH = "health"
     GETATTACKS = "getattacks"
+    GETASSOCIATIONPROPOSALS = "getassociationproposals"
     ASSOCIATION_PROPOSALS = "association_proposals"
+    CONSIDER_ASSOCIATION_PROPOSAL = "consider_association_proposal"
+    ASSOSIATION_MEMORY = "association_memory"
     ASSOCIATION = "association"
     ATTACK_MADE = "attack_made"
     RECEIVED_ATTACK = "received_attack"
@@ -121,9 +124,9 @@ class Estrategy(BaseKnowledge):
         return None
 
     def remove_knowledge(self, key: Knowledge):
-        for fact in self.engine.facts:
-            if fact.key == key:
-                self.engine.remove_fact(fact)
+        to_remove = [fact for fact in self.engine.facts if fact.key == key]
+        for fact in to_remove:
+            self.engine.remove_fact(fact)
 
     def remove_all_knowledge(self):
         self.engine.facts = []

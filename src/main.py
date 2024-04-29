@@ -37,12 +37,12 @@ def create_agents(num_agents, positions, map):
                     # PacifistAgent(
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
-                    FoodSeekerAgent(
-                        agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    ),
-                    RandomAgent(
-                        agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    ),
+                    # FoodSeekerAgent(
+                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    # ),
+                    # RandomAgent(
+                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    # ),
                     CombatantAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
@@ -82,7 +82,7 @@ simulation = create_simulation(20, 20, 100)
 
 try:
     while True:
-        simulation.step(sleep_time=0.01)  # Actualiza el estado del simulador
+        simulation.step(sleep_time=0.0001)  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:

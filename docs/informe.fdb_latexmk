@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1714394678.76294 "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" "Informe.pdf" "Informe" 1714394680.01875 0
+["pdflatex"] 1714394767.87832 "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" "Informe.pdf" "Informe" 1714394769.18902 0
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1714343340 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbi1095.pk" 1714332417 38336 411a921d543acf963f5bb68ed7ee0497 ""
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1095.pk" 1714332063 28976 1ee0db8dafbafeb780d3eb3c9a0d89a8 ""
@@ -74,10 +74,10 @@
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/graphics/trig.sty" 1665067579 4023 293ea1c16429fc0c4cf605f4da1791a9 ""
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1708427688 30006 3d512c0edd558928ddea1690180ef77e ""
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/tools/longtable.sty" 1700599895 12935 94a3291359b5f73ff1b19345a6983105 ""
-  "Informe.aux" 1714394679 4873 5b768595dd7ce64018b7851686235047 "pdflatex"
-  "Informe.tex" 1714394679 48889 3556068af1e6f27e38e96d7b3ef0603f ""
-  "Informe.toc" 1714394679 2627 8ea431b22aad2d895dd79ed60b83c70b "pdflatex"
-  "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" 1714394679 48889 3556068af1e6f27e38e96d7b3ef0603f ""
+  "Informe.aux" 1714394768 4873 5b768595dd7ce64018b7851686235047 "pdflatex"
+  "Informe.tex" 1714394765 48889 3556068af1e6f27e38e96d7b3ef0603f ""
+  "Informe.toc" 1714394768 2627 8ea431b22aad2d895dd79ed60b83c70b "pdflatex"
+  "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" 1714394765 48889 3556068af1e6f27e38e96d7b3ef0603f ""
   "images/image1.png" 1714342193 4035 f6a889b9b1734fe7cb9cadb4628a5bff ""
   "images/image2.png" 1714342311 3829 37c464816fd11eec7f91a80c4a60ecc7 ""
   "images/image3.png" 1714342349 3724 e930428f55ef0e978068a532484412e0 ""

@@ -12,7 +12,12 @@ from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import Action, Action_Info
 from environment.sim_object import Object_Info
 from Interfaces.IAgent import IAgent
-from agents.RandomAgent.Rules import move_rule, attack_rule
+from agents.RandomAgent.Rules import (
+    move_rule,
+    attack_rule,
+    association_propose_rule,
+    recived_association_propose_rule,
+)
 
 
 class RandomAgent(Agent_with_Memories):
@@ -26,8 +31,16 @@ class RandomAgent(Agent_with_Memories):
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
             Fact(Knowledge.ID, id),
             Fact(Knowledge.RESERVE, reserves),
+            Fact(Knowledge.ASSOCIATION, self.associations),
+            Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False),
+            Fact(Knowledge.ASSOSIATION_MEMORY, self.memory_for_associations),
         ]
-        initial_rules = [move_rule, attack_rule]
+        initial_rules = [
+            move_rule,
+            attack_rule,
+            association_propose_rule,
+            recived_association_propose_rule,
+        ]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
@@ -82,7 +95,14 @@ class RandomAgent(Agent_with_Memories):
         return attacks
 
     def get_association_proposals(self) -> List:
-        return []  # Todo implementar
+        decision = self.estrategy.make_decision()
+        filtered = list(
+            filter(lambda x: x.key == Knowledge.GETASSOCIATIONPROPOSALS, decision)
+        )
+        if len(filtered) == 0:
+            return []
+        association_Proposal = list(map(lambda x: x.data, filtered))[0]
+        return association_Proposal
 
     def inform_joined_association(
         self,
@@ -91,13 +111,24 @@ class RandomAgent(Agent_with_Memories):
         commitments: Dict[int, Tuple[int]],
     ):
         super().inform_joined_association(association_id, members, commitments)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
 
     def inform_broken_association(self, association_id: int):
         super().inform_broken_association(association_id)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Devuelve si el agente acepta ser parte de la asociacion o no"
-        return random.choice([True, False])
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION_PROPOSALS, proposal)
+        desicion = self.estrategy.make_decision()
+        filtered = list(
+            filter(lambda x: x.key == Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, desicion)
+        )
+        self.estrategy.remove_knowledge(Knowledge.ASSOCIATION_PROPOSALS)
+        if len(filtered) == 0:
+            return False
+        self.estrategy.learn_especific(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False)
+        return list(map(lambda x: x.data, filtered))[0]
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
