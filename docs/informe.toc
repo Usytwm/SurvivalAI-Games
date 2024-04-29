@@ -7,35 +7,34 @@
 \contentsline {subsection}{\numberline {2.4}Posibles mejoras}{4}{}%
 \contentsline {section}{\numberline {3}Implementación}{5}{}%
 \contentsline {subsection}{\numberline {3.1}Modelo de la simulación}{5}{}%
-\contentsline {subsection}{\numberline {3.2}Agentes}{5}{}%
-\contentsline {subsubsection}{\numberline {3.2.1}Agente Aleatorio (RandomAgent)}{5}{}%
-\contentsline {paragraph}{Funcionalidad del \textit {RandomAgent}}{5}{}%
-\contentsline {paragraph}{Reglas Definidas}{6}{}%
-\contentsline {subsubsection}{\numberline {3.2.2}Agente Pacífico (PacifistAgent)}{7}{}%
-\contentsline {paragraph}{Funcionalidades del \textit {PacifistAgent}}{7}{}%
-\contentsline {paragraph}{Reglas del \textit {PacifistAgent}}{7}{}%
-\contentsline {subsubsection}{\numberline {3.2.3}Agente de Combate (CombatantAgent)}{8}{}%
-\contentsline {paragraph}{Funcionalidades}{8}{}%
-\contentsline {paragraph}{Reglas Definidas}{8}{}%
-\contentsline {subsubsection}{\numberline {3.2.4}Agente Inteligente (SmartAgent)}{9}{}%
-\contentsline {subsubsection}{\numberline {3.2.5}Agente Buscador de Comida (FoodSeekerAgent)}{9}{}%
-\contentsline {paragraph}{Funcionalidades}{9}{}%
-\contentsline {paragraph}{Reglas Definidas}{10}{}%
-\contentsline {subsection}{\numberline {3.3}Base de conocimiento y toma de decisiones}{10}{}%
-\contentsline {subsection}{\numberline {3.4}Algoritmos de búsqueda}{11}{}%
-\contentsline {subsubsection}{\numberline {3.4.1}Algoritmo A*}{11}{}%
-\contentsline {paragraph}{Detalles del Funcionamiento}{12}{}%
-\contentsline {paragraph}{Ejemplo de Uso}{12}{}%
-\contentsline {paragraph}{Implementación}{12}{}%
-\contentsline {subsubsection}{\numberline {3.4.2}Búsqueda en Amplitud (BFS)}{13}{}%
-\contentsline {paragraph}{Funcionamiento de BFS}{13}{}%
-\contentsline {paragraph}{Ejemplo de Uso}{13}{}%
-\contentsline {paragraph}{Implementación}{14}{}%
-\contentsline {subsubsection}{\numberline {3.4.3}Monte Carlo Tree Search (MCTS) (Trabajo en proceso)}{14}{}%
-\contentsline {paragraph}{Funcionamiento de MCTS}{15}{}%
-\contentsline {paragraph}{Implementación}{15}{}%
-\contentsline {paragraph}{Ejemplos}{15}{}%
-\contentsline {subsection}{\numberline {3.5}LLM}{15}{}%
-\contentsline {subsection}{\numberline {3.6}Interfaz de la simulación}{16}{}%
-\contentsline {section}{\numberline {4}Análisis de la simulación}{16}{}%
-\contentsline {section}{\numberline {5}Conclusiones}{16}{}%
+\contentsline {subsection}{\numberline {3.2}Agentes}{11}{}%
+\contentsline {subsubsection}{\numberline {3.2.1}Agente Aleatorio (RandomAgent)}{12}{}%
+\contentsline {paragraph}{Funcionalidad del \textit {RandomAgent}}{12}{}%
+\contentsline {paragraph}{Reglas Definidas}{12}{}%
+\contentsline {subsubsection}{\numberline {3.2.2}Agente Pacífico (PacifistAgent)}{13}{}%
+\contentsline {paragraph}{Funcionalidades del \textit {PacifistAgent}}{13}{}%
+\contentsline {paragraph}{Reglas del \textit {PacifistAgent}}{14}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}Agente de Combate (CombatantAgent)}{14}{}%
+\contentsline {paragraph}{Funcionalidades}{15}{}%
+\contentsline {paragraph}{Reglas Definidas}{15}{}%
+\contentsline {subsubsection}{\numberline {3.2.4}Agente Inteligente (SmartAgent)}{15}{}%
+\contentsline {subsubsection}{\numberline {3.2.5}Agente Buscador de Comida (FoodSeekerAgent)}{15}{}%
+\contentsline {paragraph}{Funcionalidades}{16}{}%
+\contentsline {paragraph}{Reglas Definidas}{16}{}%
+\contentsline {subsection}{\numberline {3.3}Base de conocimiento y toma de decisiones}{16}{}%
+\contentsline {subsection}{\numberline {3.4}Algoritmos de búsqueda}{17}{}%
+\contentsline {subsubsection}{\numberline {3.4.1}Algoritmo A*}{18}{}%
+\contentsline {paragraph}{Detalles del Funcionamiento}{18}{}%
+\contentsline {paragraph}{Ejemplo de Uso}{18}{}%
+\contentsline {paragraph}{Implementación}{19}{}%
+\contentsline {subsubsection}{\numberline {3.4.2}Búsqueda en Amplitud (BFS)}{19}{}%
+\contentsline {paragraph}{Funcionamiento de BFS}{19}{}%
+\contentsline {paragraph}{Ejemplo de Uso}{20}{}%
+\contentsline {paragraph}{Implementación}{20}{}%
+\contentsline {subsubsection}{\numberline {3.4.3}Monte Carlo Tree Search (MCTS) (Trabajo en proceso)}{20}{}%
+\contentsline {paragraph}{Funcionamiento de MCTS}{21}{}%
+\contentsline {paragraph}{Implementación}{22}{}%
+\contentsline {paragraph}{Ejemplos}{22}{}%
+\contentsline {subsection}{\numberline {3.5}LLM}{22}{}%
+\contentsline {section}{\numberline {4}Análisis de la simulación}{22}{}%
+\contentsline {section}{\numberline {5}Conclusiones}{22}{}%
