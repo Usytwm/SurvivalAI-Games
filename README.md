@@ -16,44 +16,30 @@ Para más detalles sobre el proyecto, puede consultar el reporte en el archivo [
 
 Para ejecutar el proyecto necesita tener instalada la versión 3.10 de python o superior.
 
-Pra instalar los paquetes necesarios, primero, clona este repositorio en tu máquina local. Luego, navega a la carpeta del proyecto y crea un entorno virtual:
+### Configuración inicial
 
-Para Windows:
-
-```bash
-python -m venv venv
-```
-
-Para macOS y Linux:
+Clona este repositorio en tu máquina local y navega a la carpeta del proyecto. Para configurar el entorno y las dependencias automáticamente, puedes utilizar `make`:
 
 ```bash
-python3 -m venv venv
+make setup
 ```
 
-### Activación del entorno virtual
+Este comando configurará un entorno virtual y instalará todas las dependencias necesarias listadas en requirements.txt.
 
-Para Windows:
+### Ejecutar el proyecto
+
+Para iniciar el juego, simplemente ejecuta el siguiente comando:
 
 ```bash
-.\venv\Scripts\activate
+make run
 ```
 
-Para macOS y Linux:
+### Actualizar dependencias
+
+Si necesitas actualizar el archivo requirements.txt con las nuevas dependencias del proyecto, puedes ejecutar:
 
 ```bash
-source venv/bin/activate
+make freeze
 ```
 
-### Instalación de dependencias
-
-Finalmente, instala las dependencias del proyecto ejecutando:
-
-```bash
-pip install -r requirements.txt
-```
-
-Para llevar las bibliotecas del entorno al `requirements.txt`, haz lo siguiente:
-
-```bash
-pip freeze > requirements.txt
-```
+Esto actualizará el archivo requirements.txt con las bibliotecas actuales del entorno.
