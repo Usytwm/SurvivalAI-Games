@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1714358949.06524 "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/informe.tex" "informe.pdf" "informe" 1714358949.96101 0
+["pdflatex"] 1714359762.41377 "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/informe.tex" "informe.pdf" "informe" 1714359763.18576 0
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1714343340 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbi1095.pk" 1714332417 38336 411a921d543acf963f5bb68ed7ee0497 ""
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1095.pk" 1714332063 28976 1ee0db8dafbafeb780d3eb3c9a0d89a8 ""
@@ -73,7 +73,7 @@
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/graphics/trig.sty" 1665067579 4023 293ea1c16429fc0c4cf605f4da1791a9 ""
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1708427688 30006 3d512c0edd558928ddea1690180ef77e ""
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/tools/longtable.sty" 1700599895 12935 94a3291359b5f73ff1b19345a6983105 ""
-  "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/informe.tex" 1714358943 21397 960a36d5c8bc2e022a9309b9d860cdc8 ""
+  "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/informe.tex" 1714359759 29861 251141d0f7cc9755e94d5f5252bbdcf2 ""
   "images/image1.png" 1714342193 4035 f6a889b9b1734fe7cb9cadb4628a5bff ""
   "images/image2.png" 1714342311 3829 37c464816fd11eec7f91a80c4a60ecc7 ""
   "images/image3.png" 1714342349 3724 e930428f55ef0e978068a532484412e0 ""
@@ -81,9 +81,9 @@
   "images/image6.png" 1714346103 3578 d05ee18fea080875a58617bc44fb59f4 ""
   "images/image7.png" 1714346155 3284 a8ca5c0030d76d306f76551082458ab7 ""
   "images/image8.png" 1714346234 3611 b41b1aa99816297b4c2d82c311936601 ""
-  "informe.aux" 1714358949 4782 8bdb8ec38d3347db55500e3efefd8b1e "pdflatex"
-  "informe.tex" 1714358943 21397 960a36d5c8bc2e022a9309b9d860cdc8 ""
-  "informe.toc" 1714358949 2577 41cb839b6c7ac97b84b13816756e2481 "pdflatex"
+  "informe.aux" 1714359763 4980 2db90a18956cfe4eed343d80b7cc533c "pdflatex"
+  "informe.tex" 1714359759 29861 251141d0f7cc9755e94d5f5252bbdcf2 ""
+  "informe.toc" 1714359763 2693 38fdf065abd3cec5a55a030633d58e2f "pdflatex"
   (generated)
   "informe.aux"
   "informe.log"
