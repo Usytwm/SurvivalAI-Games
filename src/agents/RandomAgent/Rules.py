@@ -86,7 +86,9 @@ def get_attacks_action(facts: Set[Fact]):
 
 
 def recived_proposal_condition(facts: Set[Fact]):
-    return any(fact.key == Knowledge.ASSOCIATION_PROPOSALS for fact in facts)
+    return any(
+        fact.key == Knowledge.ASSOCIATION_PROPOSALS and fact.data for fact in facts
+    )
 
 
 def recived_proposal_action(facts: Set[Fact]):

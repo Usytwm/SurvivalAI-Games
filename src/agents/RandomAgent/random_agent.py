@@ -124,6 +124,7 @@ class RandomAgent(Agent_with_Memories):
         filtered = list(
             filter(lambda x: x.key == Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, desicion)
         )
+        self.estrategy.remove_knowledge(Knowledge.ASSOCIATION_PROPOSALS)
         if len(filtered) == 0:
             return False
         self.estrategy.learn_especific(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False)

@@ -12,6 +12,8 @@ from agents.CombatantAgent.Rules import (
     move_not_enemy,
     recived_attacker,
     default_move,
+    association_proposal_rule,
+    recived_association_proposal_rule,
 )
 
 
@@ -39,6 +41,8 @@ class CombatantAgent(Agent_with_Memories):
             move_not_enemy,
             recived_attacker,
             default_move,
+            association_proposal_rule,
+            recived_association_proposal_rule,
         ]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
@@ -122,6 +126,7 @@ class CombatantAgent(Agent_with_Memories):
         filtered = list(
             filter(lambda x: x.key == Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, desicion)
         )
+        self.estrategy.remove_knowledge(Knowledge.ASSOCIATION_PROPOSALS)
         if len(filtered) == 0:
             return False
         return list(map(lambda x: x.data, filtered))[0]
