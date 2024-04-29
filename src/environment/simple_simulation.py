@@ -109,6 +109,9 @@ class SimpleSimulation(ISimulation):
             self.messages.pop(0)
         self.messages.append(message)
 
+    def __has_ended__(self) -> bool:
+        return self.num_of_turns_without_agents_losing_resources > 100
+
     def __get_moves__(self) -> Dict[int, Tuple[int, int]]:
         moves = {}
         destinations: Dict[Tuple[int, int], List[int]] = {}

@@ -33,6 +33,7 @@ class Agent_Handler(Sim_Object):
         self.associations: Dict[int, Association] = {}
         self.free_portion = 1
         self.partners: Dict[int, int] = {}
+        self.last_turn_reserves = 0
         #partners contiene para cada aliado, cuantas asociaciones este agente comparte con tal aliado
         #de manera que podemos saber si sigue siendo aliado tras eliminar una de esas asociaciones
         #o no
@@ -160,3 +161,9 @@ class Agent_Handler(Sim_Object):
         """Dimishes the agent reserves by his diary consume."""
         self.reserve = self.reserve - self.consume
         self.agent.burn()
+
+    def resources_balance_of_this_iteration(self) -> int:
+        """Este metodo retorna la variacion de azucar para el agente en esta iteracion"""
+        answer = self.reserve - self.last_turn_reserves
+        self.last_turn_reserves = self.reserve
+        return answer

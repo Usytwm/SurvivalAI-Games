@@ -34,7 +34,7 @@ class ISimulation(ABC):
             {}
         )  # Por ahora los unicos objetos que consideramos en la sim son agentes
         self.associations: Dict[int, Association] = {}
-
+        self.num_of_turns_without_agents_losing_resources = 0
         for position, (id, agent) in agents:
             self.map.insert(position, id)
             self.agents[id] = agent
@@ -62,6 +62,7 @@ class ISimulation(ABC):
         self.__execute_moves__(moves)
         self.__feed_agents__()
         self.map.grow()
+        self.__verify_if_all_agents_gained_resources__()
 
     def __actualize_agents_vision__(self):
         "Passes to all the agents the info about what they can see"
@@ -74,6 +75,11 @@ class ISimulation(ABC):
             agent.see_actions()
         self.map.clear_actions()
 
+    @abstractmethod
+    def __has_ended__(self) -> bool:
+        """Returns whether the simulation has ended or not"""
+        pass
+    
     @abstractmethod
     def __get_moves__(self) -> Dict[int, Tuple[int, int]]:
         """Get the moves from all players. Returns a dictionary corresponding a destiny for each
@@ -186,6 +192,14 @@ class ISimulation(ABC):
             self.map.add_action(Association_Destruction(agent_id, association_id))
             self.agents[agent_id].inform_broken_association(association_id)
         self.associations.pop(association_id)
+
+    def __verify_if_all_agents_gained_resources__(self):
+        for agent_handler in self.agents.values():
+            agent_handler : Agent_Handler = agent_handler
+            if agent_handler.resources_balance_of_this_iteration() < 0:
+                self.num_of_turns_without_agents_losing_resources = 0
+                return
+        self.num_of_turns_without_agents_losing_resources += 1
 
     @abstractmethod
     def display(self):
