@@ -26,6 +26,8 @@ class RandomAgent(Agent_with_Memories):
             Fact(Knowledge.NEXT_MOVE, (0, 0)),
             Fact(Knowledge.ID, id),
             Fact(Knowledge.RESERVE, reserves),
+            Fact(Knowledge.ASSOCIATION, self.associations),
+            Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False),
         ]
         initial_rules = [move_rule, attack_rule]
 
@@ -82,7 +84,14 @@ class RandomAgent(Agent_with_Memories):
         return attacks
 
     def get_association_proposals(self) -> List:
-        return []  # Todo implementar
+        decision = self.estrategy.make_decision()
+        filtered = list(
+            filter(lambda x: x.key == Knowledge.GETASSOCIATIONPROPOSALS, decision)
+        )
+        if len(filtered) == 0:
+            return []
+        association_Proposal = list(map(lambda x: x.data, filtered))[0]
+        return association_Proposal
 
     def inform_joined_association(
         self,
@@ -91,13 +100,22 @@ class RandomAgent(Agent_with_Memories):
         commitments: Dict[int, Tuple[int]],
     ):
         super().inform_joined_association(association_id, members, commitments)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
 
     def inform_broken_association(self, association_id: int):
         super().inform_broken_association(association_id)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Devuelve si el agente acepta ser parte de la asociacion o no"
-        return random.choice([True, False])
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION_PROPOSALS, proposal)
+        desicion = self.estrategy.make_decision()
+        filtered = list(
+            filter(lambda x: x.key == Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, desicion)
+        )
+        if len(filtered) == 0:
+            return False
+        return list(map(lambda x: x.data, filtered))[0]
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
