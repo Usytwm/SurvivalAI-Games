@@ -1,5 +1,5 @@
 import sqlite3
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
 CREATE_TABLE = """CREATE TABLE %s (agent_id INTEGER, row INTEGER, column INTEGER,
 iteration INTEGER, resources INTEGER)"""
@@ -36,6 +36,7 @@ class Memory_for_Agents_Sights:
         self.cursor = conn.cursor()
         self.table_name = "agents_sights_" + str(self.id)
         self.cursor = self.cursor.execute(CREATE_TABLE % (self.table_name))
+        self.agents_seen = set()
 
     def add_appearence(
         self, other_id: int, row: int, column: int, iteration: int, resources: int
@@ -47,6 +48,8 @@ class Memory_for_Agents_Sights:
             INSERT_APPEARENCE
             % (self.table_name, other_id, row, column, iteration, resources)
         )
+        if other_id is not None:
+            self.agents_seen.add(other_id)
 
     def add_empty_sight(self, position: Tuple[int, int], iteration: int):
         """Anhade a la base de datos la observacion de que una posicion se encuentra vacia"""
@@ -125,6 +128,19 @@ class Memory_for_Agents_Sights:
             (iteration, (id, resources))
             for id, row, column, iteration, resources in observations
         ]
+        return answer
+
+    def get_last_observation_of_each_agent(
+        self,
+    ) -> Dict[int, Tuple[Tuple[int, int], int, int]]:
+        """Devuelve la ultima observacion que se tuvo de cada agente como un diccionario donde al
+        id del agente se le hace corresponder la observacion\n
+        Cada observacion aparec expresada como una tupla cuyo primer componente es la posicion donde
+        se encontraba el agente, el segundo la iteracion en que se produjo la observacion y el
+        tercero es la cantidad de azucar que llevaba con sigo"""
+        answer = {}
+        for agent_id in self.agents_seen:
+            answer[agent_id] = self.get_last_info_from_agent(agent_id)
         return answer
 
 
