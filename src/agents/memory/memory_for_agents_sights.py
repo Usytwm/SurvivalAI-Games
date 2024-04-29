@@ -29,7 +29,7 @@ class Memory_for_Agents_Sights:
 
     def __init__(self, id, conn: sqlite3.Connection):
         """Para instanciar esta clase necesitamos el id del agente cuya memoria sera controlada
-        por la instancia\n. En este metodo ademas creamos la tabla asociada a este agente
+        por la instancia.\n En este metodo ademas creamos la tabla asociada a este agente
         y por ello en el momento de instanciar necesitamos la conexion donde se creara esa tabla
         """
         self.id = id

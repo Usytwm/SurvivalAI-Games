@@ -280,6 +280,30 @@ def recived_attacker_action(facts: Set[Fact]):
         return [Fact(Knowledge.GETATTACKS, [attack])]
 
 
+def association_proposal_condition(facts: Set[Fact]):
+    # Evaluar condiciones de asociación
+    enemies_nearby = sum(
+        1 for fact in facts if fact.key == Knowledge.ENEMIES and fact.data
+    )
+    low_resources = any(fact.key == Knowledge.RESERVE for fact in facts)
+    low_health = any(fact.key == Knowledge.HEALTH for fact in facts)
+    strategic_position = any(fact.key == Knowledge.POSITION for fact in facts)
+
+    return enemies_nearby > 1 and (low_resources or low_health or strategic_position)
+
+
+def association_proposal_action(facts: Set[Fact]):
+    # Identificar potenciales aliados y crear propuestas de asociación
+    potential_allies = [fact.data for fact in facts if fact.key == Knowledge.AGEENTS]
+    proposals = [(ally) for ally in potential_allies]
+    return [Fact(Knowledge.ASSOCIATION_PROPOSALS, proposals)]
+
+
+association_proposal_rule = Rule(
+    association_proposal_condition, association_proposal_action
+)
+
+
 def default_move_condition(facts: Set[Fact]):
     has_see_resource = any(
         fact.key == Knowledge.SEE_RESOURCES and len(fact.data) > 0 for fact in facts

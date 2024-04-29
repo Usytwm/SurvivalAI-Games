@@ -128,9 +128,6 @@ class FoodSeekerAgent(Agent_with_Memories):
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
-        #! implementar en la estrategia
-        # print(f"Attack made on agent {victim_id} with strength {strength}")
-        pass
 
     def take_attack_reward(self, victim_id: int, reward: int):
         super().take_attack_reward(victim_id, reward)

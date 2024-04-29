@@ -12,7 +12,12 @@ from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import Action, Action_Info
 from environment.sim_object import Object_Info
 from Interfaces.IAgent import IAgent
-from agents.RandomAgent.Rules import move_rule, attack_rule
+from agents.RandomAgent.Rules import (
+    move_rule,
+    attack_rule,
+    association_propose_rule,
+    recived_association_propose_rule,
+)
 
 
 class RandomAgent(Agent_with_Memories):
@@ -28,8 +33,14 @@ class RandomAgent(Agent_with_Memories):
             Fact(Knowledge.RESERVE, reserves),
             Fact(Knowledge.ASSOCIATION, self.associations),
             Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False),
+            Fact(Knowledge.ASSOSIATION_MEMORY, self.memory_for_associations),
         ]
-        initial_rules = [move_rule, attack_rule]
+        initial_rules = [
+            move_rule,
+            attack_rule,
+            association_propose_rule,
+            recived_association_propose_rule,
+        ]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
@@ -115,6 +126,7 @@ class RandomAgent(Agent_with_Memories):
         )
         if len(filtered) == 0:
             return False
+        self.estrategy.learn_especific(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False)
         return list(map(lambda x: x.data, filtered))[0]
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:

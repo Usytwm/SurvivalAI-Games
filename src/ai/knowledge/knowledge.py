@@ -12,6 +12,7 @@ class Knowledge(Enum):
     GETASSOCIATIONPROPOSALS = "getassociationproposals"
     ASSOCIATION_PROPOSALS = "association_proposals"
     CONSIDER_ASSOCIATION_PROPOSAL = "consider_association_proposal"
+    ASSOSIATION_MEMORY = "association_memory"
     ASSOCIATION = "association"
     ATTACK_MADE = "attack_made"
     RECEIVED_ATTACK = "received_attack"
