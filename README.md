@@ -6,9 +6,9 @@
 | Eric Lopez Tornas          | C411  | [@EricTornas](https://github.com/EricTornas) |
 | Davier Sanchez Bello       | C411  | [@DavierSB](https://github.com/DavierSB)     |
 
-## Descripción
+## Descripción del Proyecto
 
-Davier tira aki la descripcion que no se mucho de como va
+Basado en el modelo clásico SugarScapes de "Growing Artificial Societies", este proyecto explora la formación de agrupaciones y la violencia en sociedades simuladas mediante inteligencia artificial. Nuestro enfoque está en cómo factores como rango de visión, movilidad, herencia de riqueza y ubicación geográfica impactan la supervivencia de agentes en un entorno donde los recursos son limitados y desigualmente distribuidos. Investigamos diversas estrategias de supervivencia y asociación para entender mejor las dinámicas de poder y supervivencia en contextos competitivos, reflejando situaciones de la vida real donde la cooperación y el conflicto juegan roles cruciales.
 
 Para más detalles sobre el proyecto, puede consultar el reporte en el archivo [informe.pdf](https://github.com/Usytwm/SurvivalAI-Games/blob/main/docs/informe.pdf)
 
