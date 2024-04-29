@@ -1,7 +1,7 @@
 PWD d:\Escuela\Projects\IA y Simulacion\SurvivalAI-Games\docs
 INPUT C:\Users\gisam\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT d:\Escuela\Projects\IA y Simulacion\SurvivalAI-Games\docs\informe.tex
-OUTPUT informe.log
+INPUT d:\Escuela\Projects\IA y Simulacion\SurvivalAI-Games\docs\Informe.tex
+OUTPUT Informe.log
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\base\article.cls
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\base\size11.clo
@@ -60,10 +60,10 @@ INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\float\float.sty
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\float\float.sty
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\l3backend\l3backend-pdftex.def
-INPUT .\informe.aux
-INPUT .\informe.aux
-INPUT informe.aux
-OUTPUT informe.aux
+INPUT .\Informe.aux
+INPUT .\Informe.aux
+INPUT Informe.aux
+OUTPUT Informe.aux
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\context\base\mkii\supp-pdf.mkii
@@ -98,25 +98,25 @@ INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\tex\latex\amsfonts\umsb.fd
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
-OUTPUT informe.pdf
+OUTPUT Informe.pdf
 INPUT C:\Users\gisam\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecrm1440.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecbx1440.tfm
-INPUT .\informe.toc
-INPUT .\informe.toc
-INPUT informe.toc
+INPUT .\Informe.toc
+INPUT .\Informe.toc
+INPUT Informe.toc
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecbx1095.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmmi10.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmsy10.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmex10.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
-OUTPUT informe.toc
+OUTPUT Informe.toc
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecbx1200.tfm
-INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecti1095.tfm
-INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecbi1095.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecrm0800.tfm
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecrm0600.tfm
+INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecti1095.tfm
+INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecbi1095.tfm
 INPUT .\images\image1.png
 INPUT .\images\image1.png
 INPUT .\images\image1.png
@@ -166,7 +166,7 @@ INPUT .\images\image8.png
 INPUT .\images\image8.png
 INPUT .\images\image8.png
 INPUT .\images\image8.png
-INPUT informe.aux
+INPUT Informe.aux
 INPUT C:\Users\gisam\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecbi1095.pk
 INPUT C:\Users\gisam\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecbi1095.pk
 INPUT C:\Users\gisam\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecti1095.pk
@@ -185,6 +185,8 @@ INPUT C:\Users\gisam\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecr
 INPUT C:\Users\gisam\AppData\Local\MiKTeX\fonts\pk\ljfour\jknappen\ec\dpi600\ecrm1728.pk
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi10.pfb
+INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
+INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmmi8.pfb
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmr10.pfb
 INPUT C:\Users\gisam\AppData\Local\Programs\MiKTeX\fonts\type1\public\amsfonts\cm\cmsy10.pfb
