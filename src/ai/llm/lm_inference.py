@@ -1,4 +1,5 @@
-from openai import OpenAI
+import google.generativeai as genai
+import os
 import re
 
 class LLMInterface:
@@ -9,15 +10,17 @@ class LLMInterface:
     def __init__(self) -> None:
         self.connect()
     
-    def connect(self, base_url: str = "http://localhost:1234/v1", api_key: str = "lm-studio") -> bool:
+    def connect(self) -> bool:
         try:
-            self.client = OpenAI(base_url=base_url, api_key=api_key)
-            return True
+            """Inicializa la clase y configura la API"""
+            os.environ['API_KEY'] = "" #! Reemplaza con tu clave de API
+            genai.configure(api_key=os.environ['API_KEY'])
+            self.model = genai.GenerativeModel('gemini-pro')
         except:
             print("Error al acceder al modelo desde el programa xd")
             return False
 
-    def create_Agent(self, character_resume: str):
+    def create_Agent(self, character_resume: str, characters):
         """
         Creates an agent based on a description provided by the user.
         Analyzes the description and generates a 4-tuple of integers representing the character's life, consumption, movement, and vision.
@@ -60,38 +63,54 @@ class LLMInterface:
                 * Power: (Integer representing the Movement)
                 * Vision: (Integer representing the Vision)
         """
+        
+        prompt_comparation = f"""
+            Prompt:
 
+            Given a list of character types and their descriptions, find the character type that best matches the user's description.
+
+            User's Description:
+            "{character_resume}"
+
+            Character Types and Descriptions:
+            {characters}
+
+            You should analyze the user's description and compare it with the descriptions of the character types to find the best match. If the user's description shares similarities with multiple character types, in {characters}.
+
+            Direct Output:
+            - Character Type: [Type of Character]
+        """
+        
         # Request for resumes to the model
-        completation = self.client.chat.completions.create(
-            model="local-model",
-            messages=[
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": character_resume},
-            ],
-            temperature=1.0,
+        response_values = self.model.generate_content(
+            system_content
         )
-
-        # Get the response from the model
-        response = completation.choices[0].message.content
-        #print(response)
+        response_type = self.model.generate_content(
+            prompt_comparation
+        )
+        print(response_type.text)
+        
+        # Get the response_values from the model
+        
+        print(response_values.text)
         patron = r':\s*(\d+)'
-        answer = re.findall(patron, response)
-        #print(answer)
-        return answer
+        answer = re.findall(patron, response_values.text)
+        answer = [int(value) for value in answer]
+        return answer, response_type.text
     
-    def create_Map(self, world_description: str):
+    def create_Map(self, world_description: str, world_dimensions: tuple[int, int , int]):
         """
         Generates a map based on a description provided by the user.
         Determines the appropriate width and height for the map based on its size description (small, medium, or large).
         
         Parameters:
         - world_description: Map description provided by the user.
+        - world_dimensions: The first, second, and third elements of the tuple represent the values small, medium, large respectively.
         
         Returns:
         - A list of integers representing the width and height of the map.
         """
-        print(world_description)
-
+        small, medium, big = world_dimensions
         system_content = f"""
         Prompt:
     
@@ -101,24 +120,21 @@ class LLMInterface:
         
         | Size | Dimensions |
         |---|---|
-        | Small | 10x10 units |
-        | Medium | 20x20 units |
-        | Large | 30x30 units |
+        | Small | {small}x{small} units |
+        | Medium | {medium}x{medium} units |
+        | Large | {big}x{big} units |
     
         User's map description:
         {world_description}
         (e.g., "A small grassy plain" 
                 direct output:
-                    width: 10
-                    heigth: 10
+                    width: {small}
+                    heigth: {small}
         )
-        (e.g., "A small country" 
+        (e.g., "A country" 
             good  direct output:
-                    width: 30
-                    heigth: 30
-            good  direct output:
-                    width: 10
-                    heigth: 10
+                    width: {big}
+                    heigth: {big}
             bad   direct output:
                     " Given the description \"It's a small country,\" the appropriate width for the map is 50 units and the appropriate height is 50 units."
         )
@@ -128,19 +144,13 @@ class LLMInterface:
             *heigth: (Integer representing the height of the map)
         """
     
-        completation = self.client.chat.completions.create(
-            model="local-model",
-            messages=[
-                {"role": "system", "content": system_content},
-                {"role": "user", "content": world_description},
-            ],
-            temperature=1.0,
+        response_values = self.model.generate_content(
+            system_content
         )
-    
-        response = completation.choices[0].message.content
-        #print(response)
+        print(response_values.text)
         patron = r':\s*(\d+)'
-        answer = re.findall(patron, response)
+        answer = re.findall(patron, response_values.text)
+        answer = [int(value) for value in answer]
         return answer
     
     def create_History(self, character_list: str, messages):
@@ -160,27 +170,22 @@ class LLMInterface:
                 In the game, characters report their actions with their numerical ID, which consists of an integer. Below is a list of characters. Each item in the list contains the character's ID, their first name, and a brief description of them.
                 Character List:
                 {character_list}
+                "The latest actions of the characters"
+                +"\n"
+                + {messages}
 
         """
-        completion = self.client.chat.completions.create(
-            model="local-model",
-            messages=[
-                {
-                    "role": "system",
-                    "content": prompt
-                   
-                },
-                    {"role": "user", "content": "The latest actions of the characters"
-                                                +"\n"
-                                                + messages
-                     },
-            ],
-            temperature=1.0,
+        response = self.model.generate_content(
+            prompt,
+            generation_config=genai.types.GenerationConfig(
+            # Only one candidate for now.
+            candidate_count=1,
+            stop_sequences=['x'],
+            max_output_tokens=300,
+            temperature=1.0)
         )
-        # Get the response from the model
-        response = completion.choices[0].message.content
-
-        return response
+        # Get the response_values from the model
+        return response.text
 
 
 
