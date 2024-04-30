@@ -110,7 +110,10 @@ class SimpleSimulation(ISimulation):
         self.messages.append(message)
 
     def __has_ended__(self) -> bool:
-        return self.num_of_turns_without_agents_losing_resources > 100
+        return self.num_of_turns_without_agents_losing_resources > 100 or self.stoped
+
+    def __agents_in_simulation__(self) -> list:
+        return self.agents
 
     def __get_moves__(self) -> Dict[int, Tuple[int, int]]:
         moves = {}
@@ -163,7 +166,7 @@ class SimpleSimulation(ISimulation):
 
         for actor_id, attacks_dict in graph.edges.items():
             for victim_id, attack_strength in attacks_dict.items():
-                print(str(actor_id) + " attacks " + str(victim_id))
+                # print(str(actor_id) + " attacks " + str(victim_id))
                 self.agents[actor_id].inform_of_attack_made(
                     victim_id, attack_strength
                 )  # el costo de realizar el ataque
@@ -242,13 +245,14 @@ class SimpleSimulation(ISimulation):
         self.messages = []  # Limpia los mensajes después de mostrarlos
 
     def display_terminal(self):
-        print("____________________")
-        for row in range(0, self.map.height):
-            line = ""
-            for column in range(0, self.map.width):
-                content = self.map.peek_from_position((row, column))
-                content = content if content else " "
-                line = line + str(content) + " "
-            line = line + "|"
-            print(line)
-        print("____________________")
+        pass
+        # print("____________________")
+        # for row in range(0, self.map.height):
+        #     line = ""
+        #     for column in range(0, self.map.width):
+        #         content = self.map.peek_from_position((row, column))
+        #         content = content if content else " "
+        #         line = line + str(content) + " "
+        #     line = line + "|"
+        #     print(line)
+        # print("____________________")

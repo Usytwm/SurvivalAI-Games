@@ -1,7 +1,13 @@
 from enum import Enum
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
-from environment.actions import Action, Action_Type, Attack, Association_Proposal, Association_Destruction
+from environment.actions import (
+    Action,
+    Action_Type,
+    Attack,
+    Association_Proposal,
+    Association_Destruction,
+)
 from environment.association import Association
 from typing import List, Dict, Set, Tuple
 from random import randint
@@ -27,6 +33,7 @@ class ISimulation(ABC):
         El handler de cada agente debe tener asociado el mapa global.
         - Una funcion priority que compara dos agentes, para determinar cual va primero
         """
+        self.stoped = False
         self.map = map
         self.agents: Dict[int, Agent_Handler] = {}
         self.view = view
@@ -63,6 +70,7 @@ class ISimulation(ABC):
         self.__feed_agents__()
         self.map.grow()
         self.__verify_if_all_agents_gained_resources__()
+        return self.__agents_in_simulation__()
 
     def __actualize_agents_vision__(self):
         "Passes to all the agents the info about what they can see"
@@ -75,11 +83,19 @@ class ISimulation(ABC):
             agent.see_actions()
         self.map.clear_actions()
 
+    def stop(self):
+        self.stoped = True
+
     @abstractmethod
     def __has_ended__(self) -> bool:
         """Returns whether the simulation has ended or not"""
         pass
-    
+
+    @abstractmethod
+    def __agents_in_simulation__(self) -> list:
+        """Returns the agents that are still in the simulation"""
+        pass
+
     @abstractmethod
     def __get_moves__(self) -> Dict[int, Tuple[int, int]]:
         """Get the moves from all players. Returns a dictionary corresponding a destiny for each
@@ -97,7 +113,11 @@ class ISimulation(ABC):
         acciones relacionadas con Asociaciones que realizara en este turno."""
         association_proposals = {}
         for id, agent in self.agents.items():
-            association_proposals[id] = [proposal for proposal in agent.get_association_proposals() if self.__validate_association_proposal__(proposal)]
+            association_proposals[id] = [
+                proposal
+                for proposal in agent.get_association_proposals()
+                if self.__validate_association_proposal__(proposal)
+            ]
         return association_proposals
 
     def __get_attacks__(self) -> Dict[int, List[Attack]]:
@@ -111,8 +131,8 @@ class ISimulation(ABC):
     def __validate_action__(self, action: Action) -> bool:
         # Por Ahora
         return True
-    
-    def __validate_association_proposal__(self, proposal : Association_Proposal) -> bool:
+
+    def __validate_association_proposal__(self, proposal: Association_Proposal) -> bool:
         """Por ahora solo verifico que todos los miembros esten vivos, tengan suficiente
         free_portion para cumplir con sus commitments y no exista ya una asociacion con
         exactamente los mismos miembros"""
@@ -123,7 +143,7 @@ class ISimulation(ABC):
         for member_id in proposal.members:
             if not member_id in self.agents:
                 return False
-            if (self.agents[member_id].free_portion < proposal.commitments[member_id][0]):
+            if self.agents[member_id].free_portion < proposal.commitments[member_id][0]:
                 return False
             total_earnings += proposal.commitments[member_id][1]
         if total_earnings > 1:
@@ -149,7 +169,7 @@ class ISimulation(ABC):
         his consume from his reserve"""
         for agent_id, agent in self.agents.items():
             crop = self.map.feed(agent_id)
-            #print("Repartiendo los " + str(crop) + " de la cosecha del agente " + str(agent_id) + ":")
+            # print("Repartiendo los " + str(crop) + " de la cosecha del agente " + str(agent_id) + ":")
             self.__feed_single_agent__(agent_id, crop)
             agent.burn()
             self.objects[agent_id].resources = agent.resources
@@ -169,24 +189,24 @@ class ISimulation(ABC):
                         self.agents[ally_id].take_attack_reward(victim_id, portion)
                     else:
                         self.agents[ally_id].feed(portion)
-                    #print(str(ally_id) + " receives " + str(portion))
+                    # print(str(ally_id) + " receives " + str(portion))
         taxes_excented = int(agent.free_portion * sugar)
         if victim_id:
             agent.take_attack_reward(victim_id, taxes_excented)
         else:
             agent.feed(taxes_excented)
-        #print("agent " + str(id) + " receives the excedent " + str(taxes_excented))
+        # print("agent " + str(id) + " receives the excedent " + str(taxes_excented))
 
     def __remove_agent__(self, id: int):
-        #Por ahora, elimino todas las asociaciones a las que pertenezca un agente que haya muerto
+        # Por ahora, elimino todas las asociaciones a las que pertenezca un agente que haya muerto
         associations_affected = list(self.agents[id].associations.keys())
         for association_id in associations_affected:
             self.__remove_association__(association_id)
         self.agents.pop(id)
         self.objects.pop(id)
         self.map.pop_id(id)
-    
-    def __remove_association__(self, association_id : int):
+
+    def __remove_association__(self, association_id: int):
         members = self.associations[association_id].members
         for agent_id in members:
             self.map.add_action(Association_Destruction(agent_id, association_id))
@@ -195,7 +215,7 @@ class ISimulation(ABC):
 
     def __verify_if_all_agents_gained_resources__(self):
         for agent_handler in self.agents.values():
-            agent_handler : Agent_Handler = agent_handler
+            agent_handler: Agent_Handler = agent_handler
             if agent_handler.resources_balance_of_this_iteration() < 0:
                 self.num_of_turns_without_agents_losing_resources = 0
                 return

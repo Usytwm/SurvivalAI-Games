@@ -1,6 +1,10 @@
 run:
-	@echo "Ejecutando el juego de supervivencia..."
+	@echo "Ejecutando juego de supervivencia..."
 	@venv\Scripts\activate && python src/main.py
+
+sim:
+	@echo "Ejecutando pruebas simulaciones..."
+	@venv\Scripts\activate && python src/statistics_main.py
 
 setup:
 	@echo "Configurando el entorno virtual y instalando dependencias..."

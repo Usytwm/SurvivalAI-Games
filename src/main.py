@@ -1,5 +1,8 @@
 import random
 import sqlite3
+import threading
+
+from httpcore import TimeoutException
 from Interfaces.ISimulation import ViewOption
 from agents.CombatantAgent.CombatantAgent import CombatantAgent
 from agents.RandomAgent.random_agent import RandomAgent
@@ -12,6 +15,10 @@ from environment.agent_handler import Agent_Handler
 from environment.simple_range import SimpleWalking, SquareVision, SquareAttackRange
 from random import randint
 import pygame
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import google.generativeai as genai
 
 
 def create_agents(num_agents, positions, map):
@@ -25,7 +32,7 @@ def create_agents(num_agents, positions, map):
             ]  # Usar la última posición si no hay suficientes posiciones definidas
 
         agent_id = i + 1
-        reserves = 3
+        reserves = random.randint(1, 100)
         consume = 1
         handler = Agent_Handler(
             agent_id,  # ID único del agente
@@ -37,12 +44,12 @@ def create_agents(num_agents, positions, map):
                     # PacifistAgent(
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
-                    # FoodSeekerAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
-                    # RandomAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
+                    FoodSeekerAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    RandomAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
                     CombatantAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
@@ -57,7 +64,7 @@ def create_agents(num_agents, positions, map):
 
 
 def create_simulation(
-    width_map, height_map, num_of_agents, view: ViewOption = ViewOption.PYGAME
+    width_map, height_map, num_of_agents, view: ViewOption = ViewOption.TERMINAL
 ):
     resources = {}
     for i in range(width_map):
@@ -78,12 +85,28 @@ def create_simulation(
     return SimpleSimulation(map, agents, view)
 
 
-simulation = create_simulation(20, 20, 100)
+simulation = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
+winerr_agents = []
 
+
+def stop_simulation():
+    simulation.stop()
+
+
+# Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
+timer = threading.Timer(20, stop_simulation)
+timer.start()  # Inicia el temporizador
 try:
     while not simulation.__has_ended__():
-        simulation.step(sleep_time=0.0001)  # Actualiza el estado del simulador
+        winerr_agents = simulation.step(
+            sleep_time=0.0001
+        )  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:
     pygame.quit()
+    print("Simulación terminada")
+    print(
+        f"Agentes ganadores {[(agent_id,type(handler.agent).__name__) for agent_id, handler in winerr_agents.items()]}"
+    )
+    timer.cancel()

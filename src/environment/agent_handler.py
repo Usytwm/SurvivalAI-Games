@@ -24,6 +24,8 @@ class Agent_Handler(Sim_Object):
     ):
         super().__init__(id, Sim_Object_Type.AGENT, reserve)
         self.reserve = reserve
+        self.initial_reserve = reserve
+        self.associations_count = 0
         self.consume = consume
         self.map = map
         self.agent = agent
@@ -34,9 +36,9 @@ class Agent_Handler(Sim_Object):
         self.free_portion = 1
         self.partners: Dict[int, int] = {}
         self.last_turn_reserves = 0
-        #partners contiene para cada aliado, cuantas asociaciones este agente comparte con tal aliado
-        #de manera que podemos saber si sigue siendo aliado tras eliminar una de esas asociaciones
-        #o no
+        # partners contiene para cada aliado, cuantas asociaciones este agente comparte con tal aliado
+        # de manera que podemos saber si sigue siendo aliado tras eliminar una de esas asociaciones
+        # o no
 
     @property
     def IsDead(self):
@@ -88,8 +90,8 @@ class Agent_Handler(Sim_Object):
         the valid ones"""
         # TODOf Insertar comprobaciones de que la propuesta tiene sentido
         return self.agent.get_association_proposals()
-    
-    def consider_association_proposal(self, proposal : Association_Proposal) -> bool:
+
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Consulta al agente si desea o no ser miembro de la asociacion y retorna su respuesta"
         return self.agent.consider_association_proposal(proposal)
 
@@ -106,19 +108,25 @@ class Agent_Handler(Sim_Object):
             attacker_id, strength, position_attack_recived
         )
         return return_value
-    
-    def inform_joined_association(self, association : Association):
+
+    def inform_joined_association(self, association: Association):
         "Informa al agente que se ha unido a una asociacion"
         self.associations[association.id] = association
         self.free_portion = self.free_portion - association.commitments[self.id][0]
         for agent_id in association.members:
             if agent_id != self.id:
                 self.partners[agent_id] = self.partners.get(agent_id, 0) + 1
-        self.agent.inform_joined_association(association.id, association.members, association.commitments)
-    
-    def inform_broken_association(self, association_id : int):
+        self.agent.inform_joined_association(
+            association.id, association.members, association.commitments
+        )
+        self.associations_count += 1
+
+    def inform_broken_association(self, association_id: int):
         "Informa al agente que se ha roto una asociacion a la que pertenece"
-        self.free_portion = self.free_portion + self.associations[association_id].commitments[self.id][0]
+        self.free_portion = (
+            self.free_portion
+            + self.associations[association_id].commitments[self.id][0]
+        )
         for agent_id in self.associations[association_id].members:
             if agent_id != self.id:
                 self.partners[agent_id] -= 1
@@ -154,9 +162,8 @@ class Agent_Handler(Sim_Object):
     def feed(self, sugar: int) -> None:
         """Increaes the agent reserves with the amount of sugar given, and informs the agent"""
         self.reserve = self.reserve + sugar
-        self.agent.feed(
-            sugar
-        )
+        self.agent.feed(sugar)
+
     def burn(self) -> None:
         """Dimishes the agent reserves by his diary consume."""
         self.reserve = self.reserve - self.consume
