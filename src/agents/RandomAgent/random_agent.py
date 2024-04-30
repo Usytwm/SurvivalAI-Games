@@ -6,7 +6,7 @@ from environment.actions import Action_Info, Action, Association_Proposal, Attac
 from Interfaces.IAgent import IAgent
 from Interfaces.IMovement import IMovement
 from Interfaces.IAttack_Range import IAttackRange
-from random import randint, random
+import random
 
 from typing import List, Tuple
 
@@ -17,7 +17,7 @@ class RandomAgent(Agent_with_Memories):
         self.color = (255, 255, 0)  # yellowF
 
     def move(self):
-        return self.movement.pure_moves()[randint(0, len(self.movement.pure_moves()) -1)]
+        return self.movement.pure_moves()[random.randint(0, len(self.movement.pure_moves()) -1)]
 
     def inform_move(self, movement: Tuple[int, int]):
         super().inform_move(movement)
@@ -35,21 +35,22 @@ class RandomAgent(Agent_with_Memories):
         atacarlo o no lanzando una moneda al aire"""
         attacks = []
         for victim_id, (victim_position, iteration, victim_resources) in self.memory_for_agents_sights.get_last_observation_of_each_agent().items():
-            if (iteration + 1 == self.iteration) and (self.attack_range.victim_within_range(self.position, victim_position)) and (random() < 0.5):
-                strength = randint(0, self.reserves)
+            if (iteration + 1 == self.iteration) and (self.attack_range.victim_within_range(self.position, victim_position)) and (random.random() < 0.5):
+                strength = random.randint(0, self.reserves)
                 attacks.append(Attack(self.id, victim_id, strength))
         return attacks
 
     def get_association_proposals(self) -> List:
-        return []
-        decision = self.estrategy.make_decision()
-        filtered = list(
-            filter(lambda x: x.key == Knowledge.GETASSOCIATIONPROPOSALS, decision)
-        )
-        if len(filtered) == 0:
-            return []
-        association_Proposal = list(map(lambda x: x.data, filtered))[0]
-        return association_Proposal
+        """Se asocia a una cantidad random de agentes"""
+        num_of_associations = min(int(1/random.random()) - 1, 5)
+        associations = []
+        for i in range(0, num_of_associations):
+            num_of_members = min(min((1 + int(1/random.random()), 5)), len(self.memory_for_agents_sights.agents_seen))
+            seen_agents = list(self.memory_for_agents_sights.agents_seen)
+            members = random.sample(seen_agents, num_of_members)
+            commitments = {id : (0.2, 1/num_of_members) for id in members}
+            associations.append(Association_Proposal(self.id, members, commitments))
+        return associations
 
     def inform_joined_association(self, association_id: int, members: List[int], commitments: Dict[int, Tuple[int]]):
         super().inform_joined_association(association_id, members, commitments)
@@ -59,7 +60,7 @@ class RandomAgent(Agent_with_Memories):
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         "Devuelve si el agente acepta ser parte de la asociacion o no"
-        return random() < 0.25
+        return random.random() < 0.25
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         super().inform_of_attack_made(victim_id, strength)
