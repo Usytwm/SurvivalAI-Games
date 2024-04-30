@@ -199,10 +199,12 @@ class SimpleSimulation(ISimulation):
                         set(proposal.destinataries_ids), proposal.commitments
                     )
                     self.associations[association.id] = association
+                    msg = "CREATED_AND_ASSOCIATION_BETWEEN_"
                     for destinatary_id in proposal.destinataries_ids:
                         self.agents[destinatary_id].inform_joined_association(
                             association
                         )
+                        msg += str(destinatary_id) + " "
                         self.map.add_action(
                             Association_Creation(
                                 destinatary_id,
@@ -211,6 +213,7 @@ class SimpleSimulation(ISimulation):
                                 association.commitments,
                             )
                         )
+                    print(msg)
 
     def display(self):
         for event in pygame.event.get():

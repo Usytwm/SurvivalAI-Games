@@ -6,39 +6,12 @@ from agents.Agent_with_Memories import Agent_with_Memories
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import Action, Action_Info, Association_Proposal, Attack
 from environment.sim_object import Object_Info
-from agents.FoodSeekerAgent.Rules import (
-    eat_not_enemy_rule,
-    eat_enemy_rule,
-    default_move_rule,
-    stuck_and_resources_available_rule,
-)
 
 
 class FoodSeekerAgent(Agent_with_Memories):
     def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
         super().__init__(id, consume, reserves, conn)
         self.color = (0, 255, 0)  # Green
-        initial_facts = [
-            Fact(Knowledge.ALLIES, set()),
-            Fact(Knowledge.ENEMIES, set()),
-            Fact(Knowledge.AGEENTS, set()),
-            Fact(Knowledge.NEXT_MOVE, (0, 0)),
-            Fact(Knowledge.ID, id),
-            Fact(Knowledge.RESERVE, reserves),
-            Fact(Knowledge.GEOGRAPHIC_MEMORY, self.geographic_memory),
-            Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
-            Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
-            Fact(Knowledge.ASSOCIATION, self.associations),
-            Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False),
-        ]
-        initial_rules = [
-            eat_not_enemy_rule,
-            eat_enemy_rule,
-            stuck_and_resources_available_rule,
-            default_move_rule,
-        ]
-
-        self.estrategy = Estrategy(initial_facts, initial_rules)
 
     def move(self, possible_moves: List[Tuple[int, int]]):
         # Actualizar los movimientos posibles

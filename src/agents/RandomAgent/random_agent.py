@@ -46,8 +46,9 @@ class RandomAgent(Agent_with_Memories):
         associations = []
         for i in range(0, num_of_associations):
             num_of_members = min(min((1 + int(1/random.random()), 5)), len(self.memory_for_agents_sights.agents_seen))
-            seen_agents = list(self.memory_for_agents_sights.agents_seen)
-            members = random.sample(seen_agents, num_of_members)
+            seen_agents = list(self.memory_for_agents_sights.agents_seen.keys())
+            members = random.sample(seen_agents, num_of_members - 1)
+            members.append(self.id)
             commitments = {id : (0.2, 1/num_of_members) for id in members}
             associations.append(Association_Proposal(self.id, members, commitments))
         return associations

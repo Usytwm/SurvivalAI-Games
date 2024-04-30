@@ -34,6 +34,7 @@ class Agent_with_Memories(IAgent):
         self.associations: Dict[int, Association] = {}
         self.movement = movement #De esta manera el agente conoce cual es su rango de movimiento y sus movimientos validos
         self.attack_range = attack_range #igualmente con el rango de ataque
+        self.allys = set()
 
     # En IAgent deberiamos cambiar el nombre del parametro position por movement
     def inform_move(self, movement: Tuple[int, int]) -> None:
@@ -102,6 +103,8 @@ class Agent_with_Memories(IAgent):
     ):
         association = Association(members, commitments)
         self.associations[association_id] = association
+        for member_id in association.members:
+            self.allys.add(member_id)
 
     def inform_broken_association(self, association_id: int):
         self.associations.pop(association_id)

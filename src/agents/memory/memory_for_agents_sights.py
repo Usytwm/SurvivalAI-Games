@@ -36,7 +36,7 @@ class Memory_for_Agents_Sights:
         self.cursor = conn.cursor()
         self.table_name = "agents_sights_" + str(self.id)
         self.cursor = self.cursor.execute(CREATE_TABLE % (self.table_name))
-        self.agents_seen = set()
+        self.agents_seen = {} #para cada agente guarda cuantas veces ha sido vistp
 
     def add_appearence(
         self, other_id: int, row: int, column: int, iteration: int, resources: int
@@ -49,7 +49,7 @@ class Memory_for_Agents_Sights:
             % (self.table_name, other_id, row, column, iteration, resources)
         )
         if other_id is not None:
-            self.agents_seen.add(other_id)
+            self.agents_seen[other_id] = self.agents_seen.get(other_id, 0) + 1
 
     def add_empty_sight(self, position: Tuple[int, int], iteration: int):
         """Anhade a la base de datos la observacion de que una posicion se encuentra vacia"""
