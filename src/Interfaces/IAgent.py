@@ -7,7 +7,7 @@ from environment.actions import Action_Info, Action, Attack, Association_Proposa
 class IAgent(ABC):
 
     @abstractmethod
-    def move(self, possible_moves: List[Tuple[int, int]]) -> Tuple[int, int]:
+    def move(self) -> Tuple[int, int]:
         """Devuelve el movimiento que desea realizar el agente este turno. El movimiento es
         expresado como una tupla que representa el movimiento en la posicion horizontal y en la
         vertical respectivamente, por ejemplo (-1, 3) representa que se movio una fila hacia

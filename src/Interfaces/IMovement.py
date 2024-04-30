@@ -12,3 +12,8 @@ class IMovement(ABC):
         representado con la tupla (2, 0)
         """
         pass
+
+    def pure_moves(self) -> List[Tuple[int, int]]:
+        """Devuelve todas los posibles movimientos que puede realizar el agente, sin tener
+        en cuenta si lo llevaran a una posicion invalida u ocupada del mapa"""
+        pass

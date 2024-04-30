@@ -14,7 +14,7 @@ class SimpleWalking(IMovement):
     def moves(self, map: Map, id: int) -> List[Tuple[int, int]]:
         current_X, current_Y = map.peek_id(id)
         possible_movements = [(0, 0)]
-        for tpl_x, tpl_y in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        for tpl_x, tpl_y in self.pure_moves():
             x = current_X + tpl_x
             y = current_Y + tpl_y
             try:
@@ -24,6 +24,9 @@ class SimpleWalking(IMovement):
             except:
                 continue
         return possible_movements
+    
+    def pure_moves(self) -> List[Tuple[int]]:
+        return [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 
 class SquareRange(IRange):

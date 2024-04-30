@@ -1,6 +1,7 @@
 import sqlite3
 from typing import List, Tuple, Dict, Set
 from Interfaces.IAgent import IAgent
+from Interfaces.IMovement import IMovement
 from environment.actions import Action_Info, Attack, Association_Creation
 from environment.sim_object import Object_Info, Agent_Info
 from ai.knowledge.knowledge import Knowledge
@@ -15,7 +16,7 @@ from agents.memory.associations_memory import Associations_Memory
 
 
 class Agent_with_Memories(IAgent):
-    def __init__(self, id: int, consume: int, reserves, conn: sqlite3.Connection):
+    def __init__(self, id: int, consume: int, reserves, conn: sqlite3.Connection, movement : IMovement):
         self.id = id
         self.consume = consume
         self.reserves = reserves
@@ -30,6 +31,7 @@ class Agent_with_Memories(IAgent):
         self.attacks_received: Dict[int, Tuple[int, int]] = {}
         self.memory_for_associations = Associations_Memory(id, conn)
         self.associations: Dict[int, Association] = {}
+        self.movement = movement #De esta manera el agente conoce cual es su rango de movimiento y sus movimientos validos
 
     # En IAgent deberiamos cambiar el nombre del parametro position por movement
     def inform_move(self, movement: Tuple[int, int]) -> None:
