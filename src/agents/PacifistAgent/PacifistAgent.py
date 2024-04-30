@@ -47,10 +47,13 @@ class PacifistAgent(Agent_with_Memories):
         #Cada agente violento incrementa el riesgo de una posicion en el inverso de su distancia
         #a esa posicion, multiplicado por su peligrosidad
         new_position = (self.position[0] + movement[0], self.position[1] + movement[1])
-        try:
-            sugar = self.geographic_memory.get_last_info_of_sugar_in_position(new_position[0], new_position[1])[1]
-        except:
-            sugar = 0 #si no sabemos cuanta azucar hay asumimos 0, eso no esta bien pero bueno
+        if movement == (0, 0):
+            sugar = 0
+        else:
+            try:
+                sugar = self.geographic_memory.get_last_info_of_sugar_in_position(new_position[0], new_position[1])[1]
+            except:
+                sugar = 0 #si no sabemos cuanta azucar hay asumimos 0, eso no esta bien pero bueno
         risk = 0
         for id in self.memory_for_agents_sights.agents_seen:
             peligrosity, position = peligrosities[id]

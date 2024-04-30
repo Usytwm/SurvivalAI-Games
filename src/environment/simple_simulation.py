@@ -25,6 +25,7 @@ import pygame
 from Interfaces.ISimulation import ISimulation
 from environment.agent_handler import Agent_Handler
 from environment.map import Map
+import random
 
 
 class Display:
@@ -127,8 +128,11 @@ class SimpleSimulation(ISimulation):
 
         for destiny, travellers in destinations.items():
             if len(travellers) > 1:
+                #Si muchos coinciden en querer visitar la misma casilla, se la damos a uno d ellos al azar
+                lucky_one = travellers.pop(random.randint(0, len(travellers) - 1))
+                moves[lucky_one] = destiny
                 for id in travellers:
-                    moves[id] = self.map.peek_id(id)  # o sea, no se mueve
+                    moves[id] = self.map.peek_id(id)
             else:
                 moves[travellers[0]] = destiny
 
@@ -191,7 +195,7 @@ class SimpleSimulation(ISimulation):
             for proposal in propositions:
                 accepted = True
                 for destinatary_id in proposal.destinataries_ids:
-                    accepted = self.agents[
+                    accepted = accepted and self.agents[
                         destinatary_id
                     ].consider_association_proposal(proposal)
                 if accepted:

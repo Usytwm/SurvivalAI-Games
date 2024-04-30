@@ -43,9 +43,9 @@ def create_agents(num_agents, positions, map):
                      RandomAgent(
                          agent_id, consume, reserves, sqlite3.connect(":memory:"), SimpleWalking(), SquareAttackRange(3)
                      ),
-                    #CombatantAgent(
-                    #    agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    #),
+                    CombatantAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:"), SimpleWalking(), SquareAttackRange(3)
+                    ),
                 ]
             ),  # Objeto del mapa  # Crear una instancia de PacifistAgent con el ID único
             SimpleWalking(),  # Instancia de SimpleWalking

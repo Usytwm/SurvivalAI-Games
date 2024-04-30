@@ -26,7 +26,7 @@ class SimpleWalking(IMovement):
         return possible_movements
     
     def pure_moves(self) -> List[Tuple[int]]:
-        return [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        return [(0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)]
 
 
 class SquareRange(IRange):

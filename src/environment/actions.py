@@ -21,7 +21,7 @@ class Action:
 
 class Attack(Action):
     def __init__(self, actor_id: int, destinatary_id: int, strength: int):
-        super().__init__(self, Action_Type.ATTACK, [destinatary_id])
+        super().__init__(Action_Type.ATTACK, actor_id, [destinatary_id])
         self.type = Action_Type.ATTACK
         self.strength = strength
 

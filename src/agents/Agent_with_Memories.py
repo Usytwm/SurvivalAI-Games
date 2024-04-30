@@ -92,11 +92,13 @@ class Agent_with_Memories(IAgent):
         if not self.iteration in self.attacks_made:
             self.attacks_made[self.iteration] = []
         self.attacks_made[self.iteration].append((victim_id, strength))
+        self.reserves -= strength
 
     def inform_of_attack_received(self, attacker_id: int, strength: int) -> None:
         if not self.iteration in self.attacks_received:
             self.attacks_received[self.iteration] = []
         self.attacks_received[self.iteration].append((attacker_id, strength))
+        self.reserves -= strength
 
     def inform_joined_association(
         self, association_id: int, members: Set[int], commitments: Dict[int, Tuple[int]]

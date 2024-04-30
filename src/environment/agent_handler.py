@@ -8,7 +8,7 @@ from map import Map
 from sim_object import Sim_Object, Sim_Object_Type
 from actions import Action_Info, Action, Attack, Association_Proposal
 from association import Association
-
+from agents.CombatantAgent.CombatantAgent import CombatantAgent
 
 class Agent_Handler(Sim_Object):
     def __init__(
