@@ -41,7 +41,7 @@ def create_agents(num_agents, positions, map):
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
                      RandomAgent(
-                         agent_id, consume, reserves, sqlite3.connect(":memory:"), SimpleWalking()
+                         agent_id, consume, reserves, sqlite3.connect(":memory:"), SimpleWalking(), SquareAttackRange(3)
                      ),
                     #CombatantAgent(
                     #    agent_id, consume, reserves, sqlite3.connect(":memory:")

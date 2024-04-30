@@ -44,6 +44,9 @@ class SquareRange(IRange):
             for column in range(leftmost_column, rightmost_column + 1):
                 return_range.append((row, column))
         return return_range
+    
+    def within_range(self, start_position: Tuple[int], goal_position: Tuple[int]) -> bool:
+        return ((abs(start_position[0] - goal_position[0]) <= self.radius) and (abs(start_position[1] - goal_position[1]) <= 1))
 
 
 class SquareVision(IVision):
@@ -123,3 +126,6 @@ class SquareAttackRange(IAttackRange):
             except Exception as ex:
                 continue
         return victims
+    
+    def victim_within_range(self, actual_position: int, victim_position: int) -> bool:
+        return self.range.within_range(actual_position, victim_position)

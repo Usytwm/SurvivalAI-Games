@@ -11,3 +11,9 @@ class IRange(ABC):
         Returns a list of tuples of positions and an info related to such positions
         """
         pass
+
+    @abstractmethod
+    def within_range(self, start_position : Tuple[int, int], goal_position : Tuple[int, int]) -> bool:
+        """Dada una posicion de partida y una posicion objetivo determina si esta ultima esta
+        al alcance"""
+        pass
