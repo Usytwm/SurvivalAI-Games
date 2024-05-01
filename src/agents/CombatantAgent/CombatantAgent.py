@@ -70,17 +70,11 @@ class CombatantAgent(Agent_with_Memories):
                 self.current_victim_position, _, self.current_victim_sugar = self.memory_for_agents_sights.get_last_info_from_agent(self.current_victim)
         return min(possible_moves, key= self.__distance_to_current_victim__)
 
-
     def inform_move(self, movement: Tuple[int, int]):
         super().inform_move(movement)
 
     def inform_position(self, position: Tuple[int, int] = None):
         pass
-
-    def inform_of_attack_received(
-        self, attacker_id: int, strength: int, position_attack_received: Tuple[int, int]
-    ):
-        super().inform_of_attack_received(attacker_id, strength)
 
     def get_attacks(self) -> List[Action]:
         if not self.current_victim:
@@ -90,37 +84,5 @@ class CombatantAgent(Agent_with_Memories):
     def get_association_proposals(self) -> List:
         return []
 
-    def inform_joined_association(
-        self,
-        association_id: int,
-        members: List[int],
-        commitments: Dict[int, Tuple[int]],
-    ):
-        super().inform_joined_association(association_id, members, commitments)
-
-    def inform_broken_association(self, association_id: int):
-        super().inform_broken_association(association_id)
-
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
         return False
-
-    def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
-        super().inform_of_attack_made(victim_id, strength)
-
-    def take_attack_reward(self, victim_id: int, reward: int):
-        super().take_attack_reward(victim_id, reward)
-
-    def see_objects(self, info: List[Object_Info]):
-        super().see_objects(info)
-
-    def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
-        super().see_resources(info)
-
-    def see_actions(self, info: List[Action_Info]):
-        super().see_actions(info)
-
-    def feed(self, sugar: int) -> None:
-        super().feed(sugar)
-
-    def burn(self) -> None:
-        super().burn()

@@ -54,7 +54,7 @@ class IAgent(ABC):
 
     @abstractmethod
     def inform_of_attack_received(
-        self, attacker_id: int, strength: int, position_attack_recived: Tuple[int, int]
+        self, attacker_id: int, strength: int
     ) -> None:
         "Informa al agente de un ataque recibido"
         pass

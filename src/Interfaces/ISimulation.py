@@ -90,7 +90,9 @@ class ISimulation(ABC):
         "Move each agent to its destination"
         for id, destiny in moves.items():
             self.map.move(id, destiny)
-            self.agents[id].inform_move(destiny)
+            actual_pos = self.map.peek_id(id)
+            movement = (destiny[0] - actual_pos[0], destiny[1] - actual_pos[1])
+            self.agents[id].inform_move(movement)
 
     def __get_association_proposals__(self) -> Dict[int, List[Association_Proposal]]:
         """Devuelve un diccionario donde a cada id de agente le hace corresponder la lista de

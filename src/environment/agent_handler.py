@@ -95,16 +95,14 @@ class Agent_Handler(Sim_Object):
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
         "Informs the agent that an attack that he has requested, has been executed"
-        self.reserve -= strength
+        self.reserve -= strength*0.2
+        self.reserve = int(self.reserve)
         return self.agent.inform_of_attack_made(victim_id, strength)
 
     def inform_of_attack_received(self, attacker_id: int, strength: int) -> None:
         "Informs the agent of an attack he has received"
         self.reserve -= strength
-        position_attack_recived = self.map.peek_id(attacker_id)
-        return_value = self.agent.inform_of_attack_received(
-            attacker_id, strength, position_attack_recived
-        )
+        return_value = self.agent.inform_of_attack_received(attacker_id, strength)
         return return_value
     
     def inform_joined_association(self, association : Association):
