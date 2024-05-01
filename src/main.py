@@ -82,10 +82,10 @@ def create_simulation(
             positions.add(new_position)
     positions = list(positions)
     agents = create_agents(num_of_agents, positions, map)
-    return SimpleSimulation(map, agents, view)
+    return SimpleSimulation(map, agents, view), [agent for _, (_, agent) in agents]
 
 
-simulation = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
+simulation, _ = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
 winerr_agents = []
 
 

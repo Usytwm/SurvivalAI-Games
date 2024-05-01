@@ -25,6 +25,7 @@ class Agent_Handler(Sim_Object):
         super().__init__(id, Sim_Object_Type.AGENT, reserve)
         self.reserve = reserve
         self.initial_reserve = reserve
+        self.num_of_attacks = 0
         self.associations_count = 0
         self.consume = consume
         self.map = map
@@ -83,12 +84,13 @@ class Agent_Handler(Sim_Object):
         if sum_of_attacks > self.reserve:
             # Si hizo mas ataques de los que puede pagar, no le aceptamos ninguno
             confirmed_attacks = []
+
+        self.num_of_attacks += len(confirmed_attacks)
         return confirmed_attacks
 
     def get_association_proposals(self) -> List[Association_Proposal]:
         """Get the association proposals the agent wants to make in this turn and returns only
         the valid ones"""
-        # TODOf Insertar comprobaciones de que la propuesta tiene sentido
         return self.agent.get_association_proposals()
 
     def consider_association_proposal(self, proposal: Association_Proposal) -> bool:

@@ -311,6 +311,102 @@ Para la función de comentarista, alimentamos al LLM con las últimas acciones o
 
 
 \section{Análisis de la simulación}
+\subsection{Parámetros de la Simulación}
+Cada simulación se ha configurado con distintos parámetros iniciales que afectan directamente el comportamiento y la supervivencia de los agentes. Los parámetros considerados incluyen el rango de visión, la capacidad de movimiento, la riqueza heredada, el nivel de consumo y la ubicación inicial de los agentes en el ambiente simulado.
+Se han generado diversas gráficas para ilustrar los impactos de los parámetros mencionados. A continuación se describe cada una de ellas:
+
+\subsection{Frecuencia de Victorias por Tipo de Agente}
+Esta gráfica categoriza a los agentes según su tipo y muestra la frecuencia con la que cada tipo logra ganar en las simulaciones. Esto ayuda a identificar qué tipos de agentes son más exitosos en el entorno simulado y bajo qué condiciones.
+
+\subsubsection{Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Figure_1.png}
+    \caption{Distribución de victorias entre diferentes tipos de agentes.}
+\end{figure}
+
+\subsubsection{Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/agent_wins_num_simulations10000_size(20x20)_agents_count100.png}
+    \caption{Distribución de victorias entre diferentes tipos de agentes.}
+\end{figure}
+
+\subsection{Correlación entre Número de Asociaciones y Victorias}
+Explora la relación entre el número de asociaciones formadas por los agentes y su éxito en la simulación. Este análisis puede revelar si trabajar en equipo o formar alianzas contribuye significativamente a la supervivencia y el éxito de los agentes.
+
+\subsubsection{Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Figure_2.png}
+    \caption{Impacto de las asociaciones en las victorias de los agentes. La correlación de -0.98 indica una fuerte relación negativa entre el número de asociaciones y las victorias, sugiriendo que menos asociaciones podrían estar asociadas con un mayor número de victorias.}
+\end{figure}
+
+% \subsubsection{Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{images/Figure_2.png}
+%     \caption{Impacto de las asociaciones en las victorias de los agentes. correlacion:-0.99}
+% \end{figure}
+
+\subsection{Cambio en las Reservas por Tipo de Agente}
+Esta gráfica muestra el cambio en las reservas de recursos de los agentes a lo largo de la simulación, proporcionando una visión de cómo los agentes gestionan sus recursos en respuesta a las condiciones del entorno.
+
+\subsubsection{Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Figure_4.png}
+    \caption{Dinámica de cambio en las reservas de recursos de los agentes.}
+\end{figure}
+
+\subsubsection{Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/reserves_change_num_simulations10000_size(20x20)_agents_count100.png}
+    \caption{Dinámica de cambio en las reservas de recursos de los agentes.}
+\end{figure}
+
+
+\subsection{Porcentaje de Ganadores con y sin Asociaciones}
+
+Detalla el porcentaje de agentes que han ganado con o sin estar en asociaciones, ilustrando la efectividad de las estrategias individuales versus colaborativas.
+\subsubsection{Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/Figure_5.png}
+    \caption{Comparativa de la eficacia de las estrategias individuales y colaborativas. Los agentes sin asociaciones representan el 63.56\% de los ganadores, mientras que aquellos con asociaciones constituyen el 36.44\%.}
+
+\end{figure}
+
+\subsubsection{Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/association_metrics_num_simulations10000_size(20x20)_agents_count100.png}
+    \caption{Comparativa de la eficacia de las estrategias individuales y colaborativas. Los agentes sin asociaciones representan el 81.4\% de los ganadores, mientras que aquellos con asociaciones constituyen el 18.6\%.}
+
+\end{figure}
+
+% \subsection{Influencia de los Recursos Iniciales en las Victorias}
+% Esta gráfica muestra cómo la cantidad de recursos iniciales disponibles para cada tipo de agente influye en su capacidad para acumular victorias a lo largo de las simulaciones. Los recursos iniciales son un indicador crítico de la supervivencia inicial y pueden proporcionar ventajas significativas en las etapas tempranas de la simulación.
+
+% \subsubsection{Configuración con 1,000 simulaciones y 200 agentes}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{images/Figure_5.png}
+%     \caption{1,000 simulaciones con 200 agentes: Correlación entre recursos iniciales y victorias por tipo de agente.}
+% \end{figure}
+
+% \subsubsection{Configuración con 10,000 simulaciones y 500 agentes}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{images/image1.png}
+%     \caption{10,000 simulaciones con 500 agentes: Correlación entre recursos iniciales y victorias por tipo de agente.}
+% \end{figure}
+\subsection{Implicaciones de los Resultados}
+Los resultados obtenidos de las simulaciones proporcionan insights valiosos sobre cómo distintos factores y estrategias afectan la dinámica de supervivencia y éxito en un ambiente controlado pero complejo. Estas observaciones pueden extrapolarse para entender mejor los comportamientos en sistemas sociales más amplios y en situaciones de recursos limitados.
+
 \section{Conclusiones}
+En esta sección, se resumen las principales conclusiones derivadas del análisis de la simulación, destacando las estrategias más efectivas y las implicaciones para futuras investigaciones
+
 
 \end{document}

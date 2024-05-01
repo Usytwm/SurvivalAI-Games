@@ -40,7 +40,7 @@ def run_multiple_simulations(
         food_Seeker_victories[i] = 0
         combat_agent_victories[i] = 0
         pacifist_agent_victories[i] = 0
-        simulation = create_simulation(
+        simulation, inital_agents = create_simulation(
             map_width, map_height, num_agents, view=ViewOption.TERMINAL
         )
         winner_agents = []
@@ -70,6 +70,7 @@ def run_multiple_simulations(
                     "AssociationsCount": handler.associations_count,
                     "FinalReserves": handler.reserve,
                     "Victories": 1,
+                    "NumOfAttacks": handler.num_of_attacks,
                 }
             )
             if type(handler.agent).__name__ == "RandomAgent":
@@ -85,7 +86,43 @@ def run_multiple_simulations(
 
 
 def plot_and_save(num_simulations, map_width, map_height, num_agents):
-    # * OK
+    # ulitmo
+    def analyze_resources_vs_victories(df):
+        # Sumamos las victorias para cada tipo de agente y calculamos la media de sus recursos iniciales
+        summary_df = (
+            df.groupby("AgentType")
+            .agg({"InitialReserves": "mean", "Victories": "sum"})
+            .reset_index()
+        )
+
+        palette = sns.color_palette("hsv", len(summary_df["AgentType"].unique()))
+
+        plt.figure(figsize=(10, 6))
+        sns.scatterplot(
+            data=summary_df,
+            x="InitialReserves",
+            y="Victories",
+            hue="AgentType",
+            palette=palette,
+            s=100,
+        )
+        plt.title(
+            "Influencia de los Recursos Iniciales en las Victorias por Tipo de Agente"
+        )
+        plt.xlabel("Recursos Iniciales Medios")
+        plt.ylabel("Victorias Totales")
+        plt.legend(title="Tipo de Agente")
+        plt.grid(True)
+        filename = "resources_vs_victories_by_type.png"
+        save_plot(filename)
+        plt.show()
+
+        # Calcular y mostrar correlación
+        correlation = summary_df["InitialReserves"].corr(summary_df["Victories"])
+        print(
+            f"Correlación entre recursos iniciales y victorias por tipo de agente: {correlation}"
+        )
+
     def analyze_agent_wins(df):
         win_counts = df["AgentType"].value_counts()
         plt.figure(figsize=(10, 6))
@@ -253,6 +290,7 @@ def plot_and_save(num_simulations, map_width, map_height, num_agents):
         num_simulations, map_width, map_height, num_agents
     )
     # Ejecución de análisis
+    analyze_resources_vs_victories(results_df)
     win_counts = analyze_agent_wins(results_df)
     analyze_associations_correlation(results_df)
     plot_victories_by_type_and_simulation(
@@ -265,4 +303,4 @@ def plot_and_save(num_simulations, map_width, map_height, num_agents):
     calculate_association_metrics(results_df)
 
 
-plot_and_save(10000, 20, 20, 100)
+plot_and_save(100, 20, 20, 100)
