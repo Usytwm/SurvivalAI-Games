@@ -14,7 +14,7 @@ Para más detalles sobre el proyecto, puede consultar el reporte en el archivo [
 
 ## ¿Cómo ejecutarlo?
 
-Para ejecutar el proyecto necesita tener instalada la versión 3.10 de python o superior.
+Para ejecutar el proyecto necesita tener instalada la versión 3.11 de python o superior.
 
 ### Configuración inicial
 
