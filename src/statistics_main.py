@@ -265,4 +265,4 @@ def plot_and_save(num_simulations, map_width, map_height, num_agents):
     calculate_association_metrics(results_df)
 
 
-plot_and_save(10, 20, 20, 100)
+plot_and_save(10000, 20, 20, 100)
