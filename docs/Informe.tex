@@ -332,6 +332,15 @@ Esta gráfica categoriza a los agentes según su tipo y muestra la frecuencia co
     \caption{Distribución de victorias entre diferentes tipos de agentes.}
 \end{figure}
 
+Notemos que al incluir al agente pacifico, este tiene una mayor probabilidad de ganar, esto se debe a que en su configuración se ha establecido que este evita el combate y prioriza la evasión y la preservación por encima de la confrontación.
+
+\subsubsection{Configuración con 500 simulaciones y 400 agentes en un terreno de 40 x 40}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/agent_wins_num_simulations500_size(40x40)_agents_count500.png}
+    \caption{Distribución de victorias entre diferentes tipos de agentes.}
+\end{figure}
+
 \subsection{Correlación entre Número de Asociaciones y Victorias}
 Explora la relación entre el número de asociaciones formadas por los agentes y su éxito en la simulación. Este análisis puede revelar si trabajar en equipo o formar alianzas contribuye significativamente a la supervivencia y el éxito de los agentes.
 
@@ -366,6 +375,13 @@ Esta gráfica muestra el cambio en las reservas de recursos de los agentes a lo 
     \caption{Dinámica de cambio en las reservas de recursos de los agentes.}
 \end{figure}
 
+\subsubsection{Configuración con 500 simulaciones y 400 agentes en un terreno de 40 x 40}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/reserves_change_num_simulations500_size40x40_agents_count500.png}
+    \caption{Dinámica de cambio en las reservas de recursos de los agentes.}
+\end{figure}
+
 
 \subsection{Porcentaje de Ganadores con y sin Asociaciones}
 
@@ -383,6 +399,14 @@ Detalla el porcentaje de agentes que han ganado con o sin estar en asociaciones,
     \centering
     \includegraphics[width=0.8\textwidth]{images/association_metrics_num_simulations10000_size20x20_agents_count100.png}
     \caption{Comparativa de la eficacia de las estrategias individuales y colaborativas. Los agentes sin asociaciones representan el 81.4\% de los ganadores, mientras que aquellos con asociaciones constituyen el 18.6\%.}
+
+\end{figure}
+
+\subsubsection{Configuración con 500 simulaciones y 400 agentes en un terreno de 40 x 40}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/association_metrics_num_simulations500_size40x40_agents_count500.png}
+    \caption{Comparativa de la eficacia de las estrategias individuales y colaborativas. Los agentes sin asociaciones representan el 97.9\% de los ganadores, mientras que aquellos con asociaciones constituyen el 2.1\%.}
 
 \end{figure}
 
