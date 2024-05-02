@@ -105,8 +105,6 @@ class SimpleSimulation(ISimulation):
         self.messages = []  # Almacenar mensajes para la simulación
 
     def add_message(self, message: str):
-        if len(self.messages) > 10:  # Limitar el número de mensajes almacenados
-            self.messages.pop(0)
         self.messages.append(message)
 
     def __has_ended__(self) -> bool:
@@ -166,7 +164,9 @@ class SimpleSimulation(ISimulation):
 
         for actor_id, attacks_dict in graph.edges.items():
             for victim_id, attack_strength in attacks_dict.items():
-                # print(str(actor_id) + " attacks " + str(victim_id))
+                self.add_message(
+                    f"Agent {actor_id} attacks Agent {victim_id} with strength {attack_strength}"
+                )
                 self.agents[actor_id].inform_of_attack_made(
                     victim_id, attack_strength
                 )  # el costo de realizar el ataque
@@ -175,6 +175,7 @@ class SimpleSimulation(ISimulation):
                 )  # el danho que realiza
                 if self.agents[victim_id].IsDead:
                     deads.add(victim_id)
+                    self.add_message(f"Agent {victim_id} is dead")
                 if not victim_id in attackers:
                     attackers[victim_id] = {}
                 attackers[victim_id][actor_id] = attack_strength
@@ -197,6 +198,10 @@ class SimpleSimulation(ISimulation):
                     accepted = self.agents[
                         destinatary_id
                     ].consider_association_proposal(proposal)
+                    if accepted and destinatary_id != proposer_id:
+                        self.add_message(
+                            f"Agent {destinatary_id} has accepted the proposal from Agent {proposer_id}"
+                        )
                 if accepted:
                     association = Association(
                         set(proposal.destinataries_ids), proposal.commitments
@@ -238,11 +243,10 @@ class SimpleSimulation(ISimulation):
                     self._display.font,
                     self.map,
                 )
-        for id, agent in self.agents.items():
-            self.messages.append(f"Agent {id} has {agent.reserve} sugar")
+        # for id, agent in self.agents.items():
+        #     self.messages.append(f"Agent {id} has {agent.reserve} sugar")
         self._display.display_messages(self.messages)
         pygame.display.flip()
-        self.messages = []  # Limpia los mensajes después de mostrarlos
 
     def display_terminal(self):
         pass
