@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1714630791.73957 "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" "Informe.pdf" "Informe" 1714630793.16277 0
+["pdflatex"] 1714631721.17287 "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" "Informe.pdf" "Informe" 1714631722.53986 0
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1714604941 81088 29d6fa367ac022d1b69251d68c0742e6 ""
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbi1095.pk" 1714332417 38336 411a921d543acf963f5bb68ed7ee0497 ""
   "C:/Users/gisam/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1095.pk" 1714332063 28976 1ee0db8dafbafeb780d3eb3c9a0d89a8 ""
@@ -74,10 +74,10 @@
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/graphics/trig.sty" 1665067579 4023 293ea1c16429fc0c4cf605f4da1791a9 ""
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/l3backend/l3backend-pdftex.def" 1708427688 30006 3d512c0edd558928ddea1690180ef77e ""
   "C:/Users/gisam/AppData/Local/Programs/MiKTeX/tex/latex/tools/longtable.sty" 1700599895 12935 94a3291359b5f73ff1b19345a6983105 ""
-  "Informe.aux" 1714630792 10274 1ad978a53740f6399ef6724db0a99799 "pdflatex"
-  "Informe.tex" 1714630790 57636 da00bd22fcb5eb9226ebb5ecbd7de24c ""
-  "Informe.toc" 1714630792 4660 53902a3988e55371dd4ec8bc6ec4d4ed "pdflatex"
-  "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" 1714630790 57636 da00bd22fcb5eb9226ebb5ecbd7de24c ""
+  "Informe.aux" 1714631722 10274 1ad978a53740f6399ef6724db0a99799 "pdflatex"
+  "Informe.tex" 1714631718 57636 da00bd22fcb5eb9226ebb5ecbd7de24c ""
+  "Informe.toc" 1714631722 4660 53902a3988e55371dd4ec8bc6ec4d4ed "pdflatex"
+  "d:/Escuela/Projects/IA y Simulacion/SurvivalAI-Games/docs/Informe.tex" 1714631718 57636 da00bd22fcb5eb9226ebb5ecbd7de24c ""
   "images/Figure_1.png" 1714466647 25689 bc0f45b5e7b703b9b59d91379c14634b ""
   "images/Figure_2.png" 1714466663 36588 c505c8827c7b1ad08a0a8beb7edcac12 ""
   "images/Figure_4.png" 1714466748 37027 5718d5ac198267a320354b7f9bff8884 ""
