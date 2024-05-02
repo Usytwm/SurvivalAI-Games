@@ -43,11 +43,12 @@
 \contentsline {subsubsection}{\numberline {4.2.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{25}{}%
 \contentsline {subsection}{\numberline {4.3}Correlación entre Número de Asociaciones y Victorias}{25}{}%
 \contentsline {subsubsection}{\numberline {4.3.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{26}{}%
-\contentsline {subsection}{\numberline {4.4}Cambio en las Reservas por Tipo de Agente}{26}{}%
-\contentsline {subsubsection}{\numberline {4.4.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{27}{}%
-\contentsline {subsubsection}{\numberline {4.4.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{27}{}%
-\contentsline {subsection}{\numberline {4.5}Porcentaje de Ganadores con y sin Asociaciones}{28}{}%
-\contentsline {subsubsection}{\numberline {4.5.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{28}{}%
-\contentsline {subsubsection}{\numberline {4.5.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{29}{}%
-\contentsline {subsection}{\numberline {4.6}Implicaciones de los Resultados}{29}{}%
-\contentsline {section}{\numberline {5}Conclusiones}{29}{}%
+\contentsline {subsubsection}{\numberline {4.3.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{27}{}%
+\contentsline {subsection}{\numberline {4.4}Cambio en las Reservas por Tipo de Agente}{27}{}%
+\contentsline {subsubsection}{\numberline {4.4.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{28}{}%
+\contentsline {subsubsection}{\numberline {4.4.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{28}{}%
+\contentsline {subsection}{\numberline {4.5}Porcentaje de Ganadores con y sin Asociaciones}{29}{}%
+\contentsline {subsubsection}{\numberline {4.5.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{29}{}%
+\contentsline {subsubsection}{\numberline {4.5.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{30}{}%
+\contentsline {subsection}{\numberline {4.6}Implicaciones de los Resultados}{30}{}%
+\contentsline {section}{\numberline {5}Conclusiones}{30}{}%

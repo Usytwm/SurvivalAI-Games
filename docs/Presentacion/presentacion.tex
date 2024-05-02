@@ -1,0 +1,202 @@
+\documentclass{beamer}
+\usetheme{Madrid} % Tema visual de la presentación.
+
+\title{Sociedades Artificiales y la Ley del Más Fuerte: Insights desde SugarScapes con Inteligencia Artificial}
+\author{Brian Ameht Inclán Quesada C-411 \\ Davier Sánchez Bello C-412 \\ Eric López Tornas C-411}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Índice}
+  \tableofcontents
+\end{frame}
+
+\section{Introducción}
+\begin{frame}{Introducción}
+  \begin{itemize}
+    \item Discusión sobre SugarScapes y su capacidad para modelar interacciones sociales complejas.
+    \item Enfoque en la violencia y formación de agrupaciones sociales utilizando un modelo basado en inteligencia artificial.
+    \item Objetivos: explorar influencias de variables como el rango de visión, movimiento y herencia en la supervivencia de agentes.
+  \end{itemize}
+\end{frame}
+
+\section{Descripción del Modelo}
+\begin{frame}{Descripción del Modelo}
+  \begin{itemize}
+    \item Adaptación de SugarScapes con agentes que poseen comportamientos impulsados por IA.
+    \item Funcionalidades claves: recolección de recursos, formación de asociaciones, conflictos.
+    \item Impacto de parámetros como rango de visión y movimiento en la dinámica del juego.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ventajas}
+  \begin{itemize}
+    \item Destacar las ventajas del modelo desarrollado.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Desventajas}
+  \begin{itemize}
+    \item Discutir las limitaciones o desafíos del modelo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Posibles Mejoras}
+  \begin{itemize}
+    \item Propuestas para mejorar el modelo en futuros trabajos.
+  \end{itemize}
+\end{frame}
+
+\section{Implementación}
+\begin{frame}{Modelo de la Simulación}
+  \begin{itemize}
+    \item Detalles sobre la implementación del modelo de simulación.
+  \end{itemize}
+\end{frame}
+
+\section{Sistemas Expertos}
+\begin{frame}{¿Qué es un Sistema Experto?}
+  \begin{itemize}
+    \item Un sistema experto es una forma de inteligencia artificial que emula la decisión de un experto humano en campos específicos.
+    \item Utiliza conocimientos especializados y reglas inferidas para resolver problemas complejos.
+    \item Consiste en una base de conocimientos y un motor de inferencia que aplica las reglas a la base de datos para deducir conclusiones.
+    \item Proporciona explicaciones y justificaciones para las decisiones tomadas, simulando el razonamiento humano.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplos de Sistemas Expertos}
+  \begin{itemize}
+    \item \textbf{MYCIN:} Desarrollado en los años 70 para diagnosticar enfermedades infecciosas y recomendar tratamientos.
+    \item \textbf{XCON:} Utilizado por Digital Equipment Corporation para configurar sistemas informáticos en base a los pedidos de los clientes.
+    \item \textbf{CADET:} Asistente para el diseño arquitectónico que ayuda en la creación de planos y estructuras.
+    \item \textbf{DENDRAL:} Diseñado para analizar datos científicos y hacer predicciones químicas basándose en espectros de masas.
+  \end{itemize}
+\end{frame}
+
+\section{Agentes}
+\begin{frame}{Agentes}
+  \begin{itemize}
+    \item \textbf{Sistema Experto Incorporado:} Todos los agentes en la simulación están equipados con un sistema experto que les permite aprender y adaptarse a partir de su entorno. Este sistema recopila datos continuamente, mejorando las decisiones del agente a medida que avanza la simulación.
+    \item \textbf{Base de Conocimiento:} Cada agente posee una base de conocimiento que incluye información sobre su entorno, eventos pasados, y resultados de interacciones previas. Esta base de conocimientos se actualiza constantemente con nueva información recopilada durante la simulación.
+    \item \textbf{Motor de Inferencia:} Utilizando los datos de su base de conocimiento, el motor de inferencia de cada agente aplica un conjunto de reglas predefinidas para evaluar situaciones y tomar decisiones. Estas reglas son específicas para cada tipo de agente y definen su comportamiento y estrategias únicas.
+  \end{itemize}
+\end{frame}
+
+\subsection{Agente Random}
+\begin{frame}{Agente Random - Comportamiento General y Asociaciones}
+  \begin{itemize}
+    \item \textbf{Inicialización:} Al crearse, se le asignan hechos iniciales como alianzas, enemigos, y movimientos posibles. Estos hechos son la base para sus decisiones.
+    \item \textbf{Movimiento:} Decide su próximo movimiento de manera aleatoria entre los movimientos posibles.
+    \item \textbf{Asociaciones:}
+          \begin{itemize}
+            \item Decide aleatoriamente si acepta propuestas de asociación.
+            \item Puede proponer asociaciones aleatoriamente si ve otros agentes y no tiene ninguna alianza.
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Agente Random - Ataque e Interacción con el Entorno}
+  \begin{itemize}
+    \item \textbf{Ataque:} Decide aleatoriamente si ataca a agentes visibles en su entorno, distribuyendo los recursos de ataque de manera equitativa entre ellos.
+    \item \textbf{Interacción con el entorno:} Procesa información sobre objetos, recursos y acciones de otros agentes.
+    \item \textbf{Decisiones basadas en reglas:}
+          \begin{itemize}
+            \item \textit{Regla de Movimiento:} Activada si hay movimientos posibles. Elige un movimiento aleatoriamente.
+            \item \textit{Regla de Ataque:} Activada si ve otros agentes; decide aleatoriamente realizar un ataque.
+            \item \textit{Respuesta a Propuestas:} Considera aleatoriamente las propuestas de asociación recibidas.
+          \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{Agente Pacífico}
+\begin{frame}{Agente Pacífico - Comportamiento General y Estrategias}
+  \begin{itemize}
+    \item \textbf{Inicialización:} Configura hechos iniciales como alianzas, enemigos, y otros agentes en el entorno, estableciendo su memoria geográfica y de ataques.
+    \item \textbf{Estrategia General:} Prioriza la evasión y la preservación para evitar conflictos y minimizar interacciones hostiles.
+    \item \textbf{Decisiones de Movimiento:} Se basan en un conjunto de reglas evaluadas continuamente para elegir rutas que maximicen la distancia de las amenazas.
+    \item \textbf{Interacción Social:} Considera propuestas de asociación basándose en su estrategia de no confrontación y decide su participación de manera estratégica.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Agente Pacífico - Reglas de Decisiones Basadas en Sistema Experto}
+  \begin{itemize}
+    \item \textbf{Regla para Moverse Lejos del Atacante:} Activa al recibir un ataque, calcula y ejecuta un movimiento que aumenta la distancia respecto al atacante, usando algoritmos como BFS para determinar la ruta más segura.
+    \item \textbf{Regla para Observar Objetos:} Se activa cuando hay objetos visibles que pueden representar una amenaza. Evalúa y ajusta la ruta para evitar los objetos identificados como peligrosos.
+    \item \textbf{Regla para Observar Acciones:} Analiza acciones observadas que pueden requerir una respuesta evasiva, ayudando al agente a decidir la mejor ruta de evasión.
+    \item \textbf{Movimiento por Defecto:} Selecciona un movimiento al azar de las opciones disponibles cuando no hay amenazas inmediatas detectadas.
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}{Agente Pacífico (PacifistAgent)}
+%   \begin{itemize}
+%     \item Inicialización y configuración de hechos iniciales.
+%     \item Estrategias para evitar conflictos y cómo toma decisiones de movimiento.
+%     \item Métodos de respuesta a ataques y cómo observa y reacciona al entorno.
+%   \end{itemize}
+% \end{frame}
+
+\subsection{Agente Buscador de Comida}
+\begin{frame}{Agente Buscador de Comida - Comportamiento General y Estrategias}
+  \begin{itemize}
+    \item \textbf{Inicialización:} Al crearse, se establecen hechos iniciales como recursos disponibles, posición actual y movimientos posibles.
+    \item \textbf{Estrategia General:} Enfocado en la localización y recolección de recursos alimenticios, evitando conflictos siempre que sea posible.
+    \item \textbf{Movimiento y Recolección:} Utiliza algoritmos de búsqueda avanzados para optimizar sus rutas hacia los recursos.
+    \item \textbf{Interacción con el Entorno:} Evalúa continuamente su entorno para identificar recursos y evitar amenazas potenciales.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Agente Buscador de Comida - Reglas de Decisiones Basadas en Sistema Experto}
+  \begin{itemize}
+    \item \textbf{Regla para Recolectar sin Enemigos:} Activada cuando hay recursos visibles sin enemigos cercanos. Calcula la ruta óptima hacia el recurso más valioso.
+    \item \textbf{Regla para Recolectar con Enemigos:} Se activa cuando hay recursos y enemigos visibles. Decide si es viable atacar, ir en la busqueda de recursos o retirarse basado en la evaluación de riesgo.
+    \item \textbf{Regla para Situaciones de Atasco:} Activa cuando está atascado y hay recursos disponibles. Busca rutas alternativas y evalúa la posibilidad de realizar movimientos estratégicos para acceder a recursos.
+    \item \textbf{Movimiento por Defecto:} Selecciona un movimiento hacia el recurso más cercano o realiza un movimiento predeterminado en ausencia de amenazas directas y recursos visibles.
+  \end{itemize}
+\end{frame}
+
+\subsection{Agente de Combate}
+\begin{frame}{Agente de Combate - Comportamiento General y Estrategias}
+  \begin{itemize}
+    \item \textbf{Inicialización:} Configura hechos iniciales sobre recursos, posición y enemigos, proporcionando una base para decisiones tácticas.
+    \item \textbf{Estrategia de Recolección:} Se enfoca en maximizar la recolección de recursos cuando no hay enemigos visibles, utilizando rutas optimizadas.
+    \item \textbf{Estrategia de Combate:} Prioriza el ataque a enemigos basándose en su fuerza relativa y la disponibilidad de recursos.
+    \item \textbf{Asociación y Alianzas:} Busca formar alianzas cuando es estratégicamente ventajoso, especialmente en situaciones de desventaja numérica o de recursos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Agente de Combate - Reglas de Decisiones Basadas en Sistema Experto}
+  \begin{itemize}
+    \item \textbf{Regla para Recolectar sin Agentes Visibles:} Se activa cuando no hay agentes enemigos visibles y hay recursos accesibles. El agente calcula la ruta más eficiente hacia el recurso más valioso.
+    \item \textbf{Regla de Ataque a Enemigo Visible:} Se activa cuando detecta enemigos en su campo de visión. El agente decide atacar basándose en la evaluación de la amenaza y su propia capacidad de ataque.
+    \item \textbf{Regla de Propuesta de Asociación:} Se activa en condiciones de amenazas múltiples o recursos limitados. El agente propone alianzas para mejorar sus chances de supervivencia.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Agente de Combate - Reglas de Decisiones Basadas en Sistema Experto}
+  \begin{itemize}
+    \item \textbf{Regla de Ataque cuando no hay Enemigos:} Se activa cuando hay agentes que no son enemigos en la vista, pero el contexto permite un ataque. También planifica su movimiento hacia recursos o posiciones estratégicas.
+    \item \textbf{Movimiento por Defecto:} Selecciona un movimiento hacia el recurso más cercano o realiza un movimiento seguro cuando no hay acciones claras de combate o recolección.
+  \end{itemize}
+\end{frame}
+
+\section{Análisis de la Simulación}
+\begin{frame}{Análisis de la Simulación}
+  \begin{itemize}
+    \item Evaluación de los resultados obtenidos durante la simulación.
+    \item Interpretación de los datos y conclusiones preliminares.
+  \end{itemize}
+\end{frame}
+
+\section{Conclusiones}
+\begin{frame}{Conclusiones y Trabajo Futuro}
+  \begin{itemize}
+    \item Recapitulación de los hallazgos clave.
+    \item Implicaciones del trabajo y posibles direcciones futuras.
+  \end{itemize}
+\end{frame}
+
+\end{document}

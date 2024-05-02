@@ -1,0 +1,11 @@
+\beamer@sectionintoc {1}{Introducción}{3}{0}{1}
+\beamer@sectionintoc {2}{Descripción del Modelo}{4}{0}{2}
+\beamer@sectionintoc {3}{Implementación}{8}{0}{3}
+\beamer@sectionintoc {4}{Sistemas Expertos}{9}{0}{4}
+\beamer@sectionintoc {5}{Agentes}{11}{0}{5}
+\beamer@subsectionintoc {5}{1}{Agente Random}{12}{0}{5}
+\beamer@subsectionintoc {5}{2}{Agente Pacífico}{14}{0}{5}
+\beamer@subsectionintoc {5}{3}{Agente Buscador de Comida}{16}{0}{5}
+\beamer@subsectionintoc {5}{4}{Agente de Combate}{18}{0}{5}
+\beamer@sectionintoc {6}{Análisis de la Simulación}{21}{0}{6}
+\beamer@sectionintoc {7}{Conclusiones}{22}{0}{7}
