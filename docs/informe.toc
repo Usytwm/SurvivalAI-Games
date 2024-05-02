@@ -54,4 +54,4 @@
 \contentsline {subsubsection}{\numberline {4.5.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{32}{}%
 \contentsline {subsubsection}{\numberline {4.5.3}Configuración con 500 simulaciones y 400 agentes en un terreno de 40 x 40}{33}{}%
 \contentsline {subsection}{\numberline {4.6}Implicaciones de los Resultados}{33}{}%
-\contentsline {section}{\numberline {5}Conclusiones}{33}{}%
+\contentsline {section}{\numberline {5}Conclusiones}{34}{}%
