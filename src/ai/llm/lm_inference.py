@@ -19,7 +19,59 @@ class LLMInterface:
         except:
             print("Error al acceder al modelo desde el programa xd")
             return False
+        
 
+    def create_Agents(self, character_resume: str, characters, default: int):
+        respuesta = {}
+        # Expresión regular para encontrar los comentarios
+        patron_comentario = r'/\*(.*?)\*/'
+
+        # Buscar todas las coincidencias de comentarios en el texto
+        coincidencias = re.findall(patron_comentario, character_resume, re.DOTALL)
+
+        # Imprimir los cuerpos de los comentarios encontrados
+        for comentario in coincidencias:
+
+            prompt_comparation = f"""
+            Prompt:
+
+            Given a list of character types and their descriptions, find the character type that best matches the user's description.
+
+            User's Description:
+            "{comentario.strip()}"
+
+            Character Types and Descriptions:
+            {characters}
+
+            You should analyze the user's description and compare it with the descriptions of the character types to find the best match. If the user's description shares similarities with multiple character types, in {characters}. If in the description provided by the user it's not clear what type of character it is, it defaults to the character being of the "Random" type.
+            Identify the number of characters of the returned type that appear in the description. If the provided user description does not allow obtaining the number of characters due to the context, return {default}.
+            
+            Direct Output:
+                    *Type: [Type of Character]
+                    *Cant: [Cant]
+            (e.g: "He is bla bla")
+                good Direct Output: 
+                    *Type: string
+                    *Cant: int
+                bad Direct Output:
+                    {{
+                    "Type": string,
+                    "Cant": int
+                    }}
+
+            """
+            response_type = self.model.generate_content(
+            prompt_comparation
+            )
+
+            #print(response_type.text)
+            answer_type = re.search(r':\s+(.+)', response_type.text)
+            answer_cant = re.search(r':\s*(\d+)', response_type.text)
+            respuesta[answer_type.group(1)] = int(answer_cant.group(1))
+    
+        return respuesta
+            
+            
     def create_Agent(self, character_resume: str, characters):
         """
         Creates an agent based on a description provided by the user.
@@ -45,7 +97,10 @@ class LLMInterface:
 
             Vision: A number from 1 to 4, with low values (1) indicating low vision, medium values (2-3) indicating medium vision, and high values (4) indicating high vision.
 
-            You should interpret the user's description and adjust the values for each characteristic accordingly. If the user describes a positive aspect of the character, it should result in high values for the related characteristics. If the user describes a negative aspect, it should result in low values. If the user does not mention a particular aspect, you should assign medium values to that characteristic.
+            You should interpret the user's description and adjust the values for each characteristic accordingly. If the user describes a positive aspect of the character, it should result in high values for the related characteristics. If the user describes a negative aspect, it should result in low values. 
+            If the user does not mention a particular phsic aspect, you should assign medium values to that characteristic.
+            If you are unable to interpret the character description in terms of the provided characteristics, it defaults to returning the terms in medium ranges.
+            Limit yourself to responding in the manner as shown in the examples; do not provide code.
 
             User's character description:
             {character_resume}
@@ -75,10 +130,13 @@ class LLMInterface:
             Character Types and Descriptions:
             {characters}
 
-            You should analyze the user's description and compare it with the descriptions of the character types to find the best match. If the user's description shares similarities with multiple character types, in {characters}.
+            You should analyze the user's description and compare it with the descriptions of the character types to find the best match. If the user's description shares similarities with multiple character types, in {characters}. If in the description provided by the user it's not clear what type of character it is, it defaults to the character being of the "Random" type.
 
             Direct Output:
             - Character Type: [Type of Character]
+            (e.g: "He is bla bla")
+                good Direct Output: 
+                    *Type: string
         """
         
         # Request for resumes to the model
@@ -96,7 +154,10 @@ class LLMInterface:
         patron = r':\s*(\d+)'
         answer = re.findall(patron, response_values.text)
         answer = [int(value) for value in answer]
-        return answer, response_type.text
+        
+        answer_type = re.search(r'- Character Type:\s+(.+)', response_type.text)
+
+        return answer, answer_type.group(1)
     
     def create_Map(self, world_description: str, world_dimensions: tuple[int, int , int]):
         """
@@ -115,7 +176,8 @@ class LLMInterface:
         Prompt:
     
         Given a description of a map, determine the appropriate width and height for the map based on its size description (small, medium, or large). 
-    
+        If the user's description describes a terrain whose dimensions are different from each other, reflect it in the result.
+        "If the user omits key information to identify the dimensions of the terrain or the information is not understood from the context, it defaults to returning the attributes in median dimensions."
         Here's a reference for size categories:
         
         | Size | Dimensions |
