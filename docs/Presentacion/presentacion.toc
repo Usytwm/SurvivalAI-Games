@@ -1,11 +1,16 @@
 \beamer@sectionintoc {1}{Introducción}{3}{0}{1}
-\beamer@sectionintoc {2}{Descripción del Modelo}{4}{0}{2}
-\beamer@sectionintoc {3}{Implementación}{8}{0}{3}
-\beamer@sectionintoc {4}{Sistemas Expertos}{9}{0}{4}
-\beamer@sectionintoc {5}{Agentes}{11}{0}{5}
-\beamer@subsectionintoc {5}{1}{Agente Random}{12}{0}{5}
-\beamer@subsectionintoc {5}{2}{Agente Pacífico}{14}{0}{5}
-\beamer@subsectionintoc {5}{3}{Agente Buscador de Comida}{16}{0}{5}
-\beamer@subsectionintoc {5}{4}{Agente de Combate}{18}{0}{5}
-\beamer@sectionintoc {6}{Análisis de la Simulación}{21}{0}{6}
-\beamer@sectionintoc {7}{Conclusiones}{22}{0}{7}
+\beamer@sectionintoc {2}{Descripción del Modelo}{6}{0}{2}
+\beamer@subsectionintoc {2}{1}{Descripción}{6}{0}{2}
+\beamer@subsectionintoc {2}{2}{Ventajas y desventajas del modelo}{8}{0}{2}
+\beamer@subsectionintoc {2}{3}{Posibles Mejoras}{10}{0}{2}
+\beamer@sectionintoc {3}{Implementación}{11}{0}{3}
+\beamer@subsectionintoc {3}{1}{Step}{12}{0}{3}
+\beamer@subsectionintoc {3}{2}{Tipos}{13}{0}{3}
+\beamer@sectionintoc {4}{Sistemas Expertos}{24}{0}{4}
+\beamer@sectionintoc {5}{Agentes}{26}{0}{5}
+\beamer@subsectionintoc {5}{1}{Agente Random}{27}{0}{5}
+\beamer@subsectionintoc {5}{2}{Agente Pacífico}{29}{0}{5}
+\beamer@subsectionintoc {5}{3}{Agente Buscador de Comida}{31}{0}{5}
+\beamer@subsectionintoc {5}{4}{Agente de Combate}{33}{0}{5}
+\beamer@sectionintoc {6}{Análisis de la Simulación}{36}{0}{6}
+\beamer@sectionintoc {7}{Conclusiones}{37}{0}{7}
