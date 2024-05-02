@@ -4,42 +4,42 @@
 \contentsline {subsection}{\numberline {2.1}Resumen del modelo}{4}{}%
 \contentsline {subsection}{\numberline {2.2}Ventajas}{5}{}%
 \contentsline {subsection}{\numberline {2.3}Desventajas}{5}{}%
-\contentsline {subsection}{\numberline {2.4}Posibles mejoras}{5}{}%
+\contentsline {subsection}{\numberline {2.4}Posibles mejoras}{6}{}%
 \contentsline {section}{\numberline {3}Implementación}{6}{}%
 \contentsline {subsection}{\numberline {3.1}Modelo de la simulación}{6}{}%
-\contentsline {subsection}{\numberline {3.2}Agentes}{12}{}%
+\contentsline {subsection}{\numberline {3.2}Agentes}{13}{}%
 \contentsline {subsubsection}{\numberline {3.2.1}Agente Aleatorio (RandomAgent)}{13}{}%
 \contentsline {paragraph}{Funcionalidad del \textit {RandomAgent}}{13}{}%
-\contentsline {paragraph}{Reglas Definidas}{13}{}%
+\contentsline {paragraph}{Reglas Definidas}{14}{}%
 \contentsline {subsubsection}{\numberline {3.2.2}Agente Pacífico (PacifistAgent)}{14}{}%
-\contentsline {paragraph}{Funcionalidades del \textit {PacifistAgent}}{14}{}%
+\contentsline {paragraph}{Funcionalidades del \textit {PacifistAgent}}{15}{}%
 \contentsline {paragraph}{Reglas del \textit {PacifistAgent}}{15}{}%
-\contentsline {subsubsection}{\numberline {3.2.3}Agente de Combate (CombatantAgent)}{15}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}Agente de Combate (CombatantAgent)}{16}{}%
 \contentsline {paragraph}{Funcionalidades}{16}{}%
 \contentsline {paragraph}{Reglas Definidas}{16}{}%
-\contentsline {subsubsection}{\numberline {3.2.4}Agente Inteligente (SmartAgent)}{16}{}%
-\contentsline {subsubsection}{\numberline {3.2.5}Agente Buscador de Comida (FoodSeekerAgent)}{16}{}%
+\contentsline {subsubsection}{\numberline {3.2.4}Agente Inteligente (SmartAgent)}{17}{}%
+\contentsline {subsubsection}{\numberline {3.2.5}Agente Buscador de Comida (FoodSeekerAgent)}{17}{}%
 \contentsline {paragraph}{Funcionalidades}{17}{}%
 \contentsline {paragraph}{Reglas Definidas}{17}{}%
-\contentsline {subsection}{\numberline {3.3}Base de conocimiento y toma de decisiones}{17}{}%
-\contentsline {subsection}{\numberline {3.4}Algoritmos de búsqueda}{18}{}%
+\contentsline {subsection}{\numberline {3.3}Base de conocimiento y toma de decisiones}{18}{}%
+\contentsline {subsection}{\numberline {3.4}Algoritmos de búsqueda}{19}{}%
 \contentsline {subsubsection}{\numberline {3.4.1}Algoritmo A*}{19}{}%
 \contentsline {paragraph}{Detalles del Funcionamiento}{19}{}%
-\contentsline {paragraph}{Ejemplo de Uso}{19}{}%
+\contentsline {paragraph}{Ejemplo de Uso}{20}{}%
 \contentsline {paragraph}{Implementación}{20}{}%
 \contentsline {subsubsection}{\numberline {3.4.2}Búsqueda en Amplitud (BFS)}{20}{}%
-\contentsline {paragraph}{Funcionamiento de BFS}{20}{}%
+\contentsline {paragraph}{Funcionamiento de BFS}{21}{}%
 \contentsline {paragraph}{Ejemplo de Uso}{21}{}%
-\contentsline {paragraph}{Implementación}{21}{}%
-\contentsline {subsubsection}{\numberline {3.4.3}Monte Carlo Tree Search (MCTS) (Trabajo en proceso)}{21}{}%
+\contentsline {paragraph}{Implementación}{22}{}%
+\contentsline {subsubsection}{\numberline {3.4.3}Monte Carlo Tree Search (MCTS) (Trabajo en proceso)}{22}{}%
 \contentsline {paragraph}{Funcionamiento de MCTS}{22}{}%
 \contentsline {paragraph}{Implementación}{23}{}%
 \contentsline {paragraph}{Ejemplos}{23}{}%
 \contentsline {subsection}{\numberline {3.5}LLM}{23}{}%
-\contentsline {section}{\numberline {4}Análisis de la simulación}{23}{}%
-\contentsline {subsection}{\numberline {4.1}Parámetros de la Simulación}{23}{}%
+\contentsline {section}{\numberline {4}Análisis de la simulación}{24}{}%
+\contentsline {subsection}{\numberline {4.1}Parámetros de la Simulación}{24}{}%
 \contentsline {subsection}{\numberline {4.2}Frecuencia de Victorias por Tipo de Agente}{24}{}%
-\contentsline {subsubsection}{\numberline {4.2.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{24}{}%
+\contentsline {subsubsection}{\numberline {4.2.1}Configuración con 1,000 simulaciones y 100 agentes en un terreno de 20 x 20}{25}{}%
 \contentsline {subsubsection}{\numberline {4.2.2}Configuración con 10,000 simulaciones y 100 agentes en un terreno de 20 x 20}{25}{}%
 \contentsline {subsubsection}{\numberline {4.2.3}Configuración con 500 simulaciones y 400 agentes en un terreno de 40 x 40}{26}{}%
 \contentsline {subsection}{\numberline {4.3}Correlación entre Número de Asociaciones y Victorias}{26}{}%
