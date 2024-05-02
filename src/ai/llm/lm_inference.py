@@ -2,29 +2,30 @@ import google.generativeai as genai
 import os
 import re
 
+
 class LLMInterface:
     """
     Class to interact with a language model through the LMstudio API.
     Allows connecting to the model, creating agents based on descriptions, and generating maps.
     """
+
     def __init__(self) -> None:
         self.connect()
-    
+
     def connect(self) -> bool:
         try:
             """Inicializa la clase y configura la API"""
-            os.environ['API_KEY'] = "AIzaSyAmJMgn4TofXhoMAuojBYoATYyjTSKxheo" #! Reemplaza con tu clave de API
-            genai.configure(api_key=os.environ['API_KEY'])
-            self.model = genai.GenerativeModel('gemini-pro')
+            os.environ["API_KEY"] = "AIzaSyAmJMgn4TofXhoMAuojBYoATYyjTSKxheo"
+            genai.configure(api_key=os.environ["API_KEY"])
+            self.model = genai.GenerativeModel("gemini-pro")
         except:
             print("Error al acceder al modelo desde el programa xd")
             return False
-        
 
     def create_Agents(self, character_resume: str, characters, default: int):
         respuesta = {}
         # Expresión regular para encontrar los comentarios
-        patron_comentario = r'/\*(.*?)\*/'
+        patron_comentario = r"/\*(.*?)\*/"
 
         # Buscar todas las coincidencias de comentarios en el texto
         coincidencias = re.findall(patron_comentario, character_resume, re.DOTALL)
@@ -60,26 +61,23 @@ class LLMInterface:
                     }}
 
             """
-            response_type = self.model.generate_content(
-            prompt_comparation
-            )
+            response_type = self.model.generate_content(prompt_comparation)
 
-            #print(response_type.text)
-            answer_type = re.search(r':\s+(.+)', response_type.text)
-            answer_cant = re.search(r':\s*(\d+)', response_type.text)
+            # print(response_type.text)
+            answer_type = re.search(r":\s+(.+)", response_type.text)
+            answer_cant = re.search(r":\s*(\d+)", response_type.text)
             respuesta[answer_type.group(1)] = int(answer_cant.group(1))
-    
+
         return respuesta
-            
-            
+
     def create_Agent(self, character_resume: str, characters):
         """
         Creates an agent based on a description provided by the user.
         Analyzes the description and generates a 4-tuple of integers representing the character's life, consumption, movement, and vision.
-        
+
         Parameters:
         - character_resume: Character description provided by the user.
-        
+
         Returns:
         - A list of integers representing the character's life, consumption, movement, and vision.
         """
@@ -118,7 +116,7 @@ class LLMInterface:
                 * Power: (Integer representing the Movement)
                 * Vision: (Integer representing the Vision)
         """
-        
+
         prompt_comparation = f"""
             Prompt:
 
@@ -138,36 +136,34 @@ class LLMInterface:
                 good Direct Output: 
                     *Type: string
         """
-        
+
         # Request for resumes to the model
-        response_values = self.model.generate_content(
-            system_content
-        )
-        response_type = self.model.generate_content(
-            prompt_comparation
-        )
+        response_values = self.model.generate_content(system_content)
+        response_type = self.model.generate_content(prompt_comparation)
         print(response_type.text)
-        
+
         # Get the response_values from the model
-        
+
         print(response_values.text)
-        patron = r':\s*(\d+)'
+        patron = r":\s*(\d+)"
         answer = re.findall(patron, response_values.text)
         answer = [int(value) for value in answer]
-        
-        answer_type = re.search(r'- Character Type:\s+(.+)', response_type.text)
+
+        answer_type = re.search(r"- Character Type:\s+(.+)", response_type.text)
 
         return answer, answer_type.group(1)
-    
-    def create_Map(self, world_description: str, world_dimensions: tuple[int, int , int]):
+
+    def create_Map(
+        self, world_description: str, world_dimensions: tuple[int, int, int]
+    ):
         """
         Generates a map based on a description provided by the user.
         Determines the appropriate width and height for the map based on its size description (small, medium, or large).
-        
+
         Parameters:
         - world_description: Map description provided by the user.
         - world_dimensions: The first, second, and third elements of the tuple represent the values small, medium, large respectively.
-        
+
         Returns:
         - A list of integers representing the width and height of the map.
         """
@@ -205,27 +201,26 @@ class LLMInterface:
             *width: (Integer representing the width of the map)
             *heigth: (Integer representing the height of the map)
         """
-    
-        response_values = self.model.generate_content(
-            system_content
-        )
+
+        response_values = self.model.generate_content(system_content)
         print(response_values.text)
-        patron = r':\s*(\d+)'
+        patron = r":\s*(\d+)"
         answer = re.findall(patron, response_values.text)
         answer = [int(value) for value in answer]
         return answer
-    
-    def create_History(self, character_list,character_type, messages):
-        """
-            Generates a narrative continuation for a survival game based on a given character list and action log.
 
-            Parameters:
-                character_list list(str): A string containing a formatted list of characters with their IDs, first names, and descriptions.
-                messages (str): A string representing the latest actions of the characters.
-
-            Returns:
-                str: A narrative continuation crafted by a narrator, aligning with the previous story and actions taken by the characters.
+    def create_History(self, character_list, character_type, messages):
         """
+        Generates a narrative continuation for a survival game based on a given character list and action log.
+
+        Parameters:
+            character_list list(str): A string cfontaining a formatted list of characters with their IDs, first names, and descriptions.
+            messages (str): A string representing the latest actions of the characters.
+
+        Returns:
+            str: A narrative continuation crafted by a narrator, aligning with the previous story and actions taken by the characters.
+        """
+
         prompt = f"""
                 You're a narrator for a survival game, employing a bold and dark tone in your commentary. 
                 Your greatest skill lies in taking a summary of a story and a log representing actions in the game {messages}, then crafting a new narrative that continues the previous one. 
@@ -240,16 +235,6 @@ class LLMInterface:
                 + {messages}
 
         """
-        response = self.model.generate_content(
-            prompt
-        )
+        response = self.model.generate_content(prompt)
         # Get the response_values from the model
         return response.text
-
-
-
-    
-
-
-
-    
