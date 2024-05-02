@@ -105,7 +105,7 @@ except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:
     pygame.quit()
-    print("Simulación terminada")
+    print(simulation.messages)
     print(
         f"Agentes ganadores {[(agent_id,type(handler.agent).__name__) for agent_id, handler in winerr_agents.items()]}"
     )
