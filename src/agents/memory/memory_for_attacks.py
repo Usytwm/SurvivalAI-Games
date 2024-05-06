@@ -18,9 +18,12 @@ class Memory_for_Attacks:
         self.table_name = "attacks_" + str(self.id)
         self.deaths : Dict[int, int] = {}
         self.cursor = self.cursor.execute(CREATE_TABLE%(self.table_name))
+        self.attacks_per_agent : Dict[int, int] = {}
+        #attacks_per_agent guarda para cada agente cuantos ataques ha hecho
     
     def add_attack(self, attacker_id : int, victim_id : int, iteration : int, strength : int):
         self.cursor = self.cursor.execute(INSERT_ATTACK%(attacker_id, victim_id, iteration, strength))
+        self.attacks_per_agent[attacker_id] = self.attacks_per_agent.get(attacker_id, 0) + 1
     
     def add_death(self, dead_id, iteration):
         self.deaths[dead_id] = iteration
