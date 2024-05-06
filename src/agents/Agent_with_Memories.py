@@ -88,7 +88,7 @@ class Agent_with_Memories(IAgent):
             self.attacks_made[self.iteration] = []
         self.attacks_made[self.iteration].append((victim_id, strength))
 
-    def inform_of_attack_received(self, attacker_id: int, strength: int) -> None:
+    def inform_of_attack_received(self, attacker_id: int, strength: int, position_attack_received : Tuple[int, int]) -> None:
         if not self.iteration in self.attacks_received:
             self.attacks_received[self.iteration] = []
         self.attacks_received[self.iteration].append((attacker_id, strength))
