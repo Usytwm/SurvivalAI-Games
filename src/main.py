@@ -9,6 +9,7 @@ from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
 from agents.Agent_with_Memories import Agent_with_Memories
+from agents.ProAgent.pro_agent import ProAgent
 from environment.simple_simulation import SimpleSimulation
 from environment.map import Map
 from environment.agent_handler import Agent_Handler
@@ -65,6 +66,7 @@ def create_agents(num_agents, positions, map):
             map,
             random.choice(
                 [
+                    ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
                     # PacifistAgent(
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
@@ -197,8 +199,8 @@ def stop_simulation():
 
 
 # Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
-timer = threading.Timer(20, stop_simulation)
-timer.start()  # Inicia el temporizador
+#timer = threading.Timer(20, stop_simulation)
+#timer.start()  # Inicia el temporizador
 try:
     while not simulation.__has_ended__():
         winerr_agents = simulation.step(
@@ -212,8 +214,8 @@ finally:
     #     simulation.messages[i : i + 200]
     #     for i in range(0, len(simulation.messages), 200)
     # ]
-    # answer_history = constructor.create_History(
-    #     details, characters_agents, simulation.messages[:200]
-    # )
-    # print(answer_history)
-    timer.cancel()
+    #answer_history = constructor.create_History(
+    #    details, characters_agents, simulation.messages[:200]
+    #)
+    #print(answer_history)
+    #timer.cancel()

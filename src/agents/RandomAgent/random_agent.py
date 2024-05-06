@@ -45,7 +45,6 @@ class RandomAgent(Agent_with_Memories):
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
     def move(self, possible_moves: List[Tuple[int, int]]):
-        super().move(possible_moves)
         # Actualizar los movimientos posibles
         self.estrategy.learn_especific(Knowledge.POSIBLES_MOVEMENTS, possible_moves)
         # Solicitar una decisión de movimiento
@@ -70,7 +69,7 @@ class RandomAgent(Agent_with_Memories):
     def inform_of_attack_received(
         self, attacker_id: int, strength: int, position_attack_received: Tuple[int, int]
     ):
-        super().inform_of_attack_received(attacker_id, strength)
+        super().inform_of_attack_received(attacker_id, strength, position_attack_received)
         # Cuando se recibe un ataque, actualizar los hechos y solicitar una decisión
         self.estrategy.learn_especific(
             Knowledge.RECEIVED_ATTACK,
