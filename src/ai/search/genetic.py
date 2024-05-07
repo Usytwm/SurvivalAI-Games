@@ -70,10 +70,10 @@ def seleccionar_mejor_población(id_ADN, result, top_k):
 
 # Función principal
 def algoritmo_genético(tamaño_población, generaciones):
-    poblacion = crear_poblacion_inicial(tamaño_población,6)  
+    adn_poblacion = crear_poblacion_inicial(tamaño_población,6)  
     adn_optimo = []
     for _ in range(generaciones):
-        agents, id_ADN = create_agents_ADN(poblacion) #TODO Como asocio ADN con agente?
+        agents, id_ADN = create_agents_ADN(adn_poblacion) #TODO Como asocio ADN con agente?
         simulation = create_simulation(50,50,tamaño_población)
         while not simulation.__has_ended__():
             simulation.step(
@@ -85,12 +85,12 @@ def algoritmo_genético(tamaño_población, generaciones):
 
         adn_optimo = mejor_poblacion[0] # Guarda el agente optimo de está generación
 
-        poblacion = reproducir(mejor_poblacion, tamaño_población) # Devuelve solo el ADN
+        adn_poblacion = reproducir(mejor_poblacion, tamaño_población) # Devuelve solo el ADN
 
     with open("SuperAgente.joblib", "wb") as a:
         dump(adn_optimo, a)
 
-def create_agents_ADN(poblacion):
+def create_agents_ADN(adn_poblacion):
     pass
 def Sensor():
 
