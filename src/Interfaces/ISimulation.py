@@ -36,10 +36,10 @@ class ISimulation(ABC):
         self.stoped = False
         self.map = map
         self.agents: Dict[int, Agent_Handler] = {}
-        self.deads = []
+        self.deads = {}
         self.turn = 0
-        self.resourcesPerAgent = [] #!
-        self.AttacksReceivedPerAgent = [] #!
+        self.resourcesPerAgent = {} #!
+        self.AttacksReceivedPerAgent = {} #!
         self.view = view
         self.objects = (
             {}
@@ -51,9 +51,10 @@ class ISimulation(ABC):
             self.agents[id] = agent
             self.objects[id] = agent
 
-        for (id, agent) in agents: #! Tacto
-            self.resourcesPerAgent.append[id] = 0
-            self.AttacksReceivedPerAgent.append[id] = 0
+        for position, id_agent in agents: #! Tacto
+            id = id_agent[0]
+            self.resourcesPerAgent[id] = 0
+            self.AttacksReceivedPerAgent[id] = 0
 
     def step(
         self,

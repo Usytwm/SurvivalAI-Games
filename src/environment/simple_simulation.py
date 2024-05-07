@@ -202,7 +202,7 @@ class SimpleSimulation(ISimulation):
                     (attack_strength * initial_wealth[dead_id]) / sum_of_strengths
                 )
                 self.__feed_single_agent__(attacker_id, reward, dead_id)
-            self.deads.append((dead_id,self.turn)) 
+            self.deads[dead_id] = self.turn
 
     def __execute_association_proposals__(
         self, association_proposals: Dict[int, List[Association_Proposal]]

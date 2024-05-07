@@ -190,7 +190,7 @@ def create_simulation(
     ]
 
 
-simulation, details = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
+simulation, details = create_simulation(20, 20, 100, view=ViewOption.TERMINAL)
 winerr_agents = []
 
 
