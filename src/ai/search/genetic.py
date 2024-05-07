@@ -26,7 +26,17 @@ def generar_f(k,q):
             f.append(transitionij) # 
     return f
 
-def crear_poblacion_inicial(N, K):
+def crear_f_poblacion_inicial(N, K):
+    """
+    Crea una población inicial de tamaño N, donde cada individuo tiene K estados iniciales posibles.
+
+    Args:
+    - N (int): Total de funciones de transicción a devolver.
+    - K (int): Número de estados iniciales de cada función de transicción.
+
+    Returns:
+    - list: Lista de funciones iniciales.
+    """
     fs_iniciales = []
     for _ in range(N):
         f = generar_f(K,6) #
@@ -34,40 +44,80 @@ def crear_poblacion_inicial(N, K):
     return fs_iniciales
 
 def reproducir(padres, tamaño_población):
+    """
+    Genera una nueva lista de funciones de transicción mediante la reproducción de los padres.
+
+    Args:
+    - padres (list): Lista de funciones padres disponibles para la reproducción.
+    - tamaño_población (int): Cantidad de funciones a devolver.
+
+    Returns:
+    - list: Lista de nuevas funciones (hijas) generadas a partir de los funciones padres.
+    """
     hijos = []
     for _ in range(tamaño_población):
         padre1 = random.choice(padres)
         padre2 = random.choice(padres)
-        hijo = cruzar(padre1,padre2)
-        hijo = mutar(hijo)
+        hijo = cruzar_Y_mutar(padre1,padre2)
         hijos.append(hijo)
     return hijos
 
-def mutar(hijo):
-    indice = random.randint(0, len(hijo)-1)
+def mutar(adn):
+    """
+    Realiza una mutación de un trozo de adn.
 
-    if indice == (len(hijo)-1):
+    Args:
+    - adn (list): array que representa un fragmento de adn.
+
+    Returns:
+    - list: array con una posición alterada.
+    """
+    indice = random.randint(0, len(adn)-1)
+
+    if indice == (len(adn)-1):
         mutación = random.randint(1,4)
     else:
         mutación = random.randint(1,3)
 
-    hijo[indice] = mutación
+    adn[indice] = mutación
 
-    return hijo
+    return adn
+
 #TODO En la versión, el cruze debe cambiar
-#def cruzar(padre1, padre2):
-#    f_hijo = []
-#    for k in len(padre1): 
-#        i =  
-#        punto_de_cruce = random.randint(1, len(padre1) - 2)
-#        for i in range(0, punto_de_cruce):
-#            hijo[i] = padre1[i]
-#        for i in range(punto_de_cruce+1, len(padre2)):
-#            hijo[i] = padre2[i]
-#        return hijo
-#def extra_adn(padre1, padre2):
-#
-#    pass
+def cruzar_Y_mutar(padre1, padre2):
+    """
+    Realiza el cruce y la mutación de los fragmentos de adn entre dos funciones padres para generar una función hijo.
+
+    Args:
+    - padre1 list[ ((int,list), int) ]: Primer padre para la reproducción.
+    - padre2 list[ ((int,list), int) ]: Segundo padre para la reproducción.
+
+    Returns:
+    - list[ ((int,list), int) ]: Nuevo individuo (hijo) resultado del cruce y la mutación.
+    """
+    f_hijo = []
+    for k in len(padre1): 
+        par1 = padre1[k]
+        par2 = padre2[k]
+        comp1_padre1 = par1[0]
+        comp1_padre2 = par2[0]
+        adn_K_padre1 = comp1_padre1[0]
+        adn_K_padre2 = comp1_padre2[0]
+        adn_K_hijo = mezclar_Adn(adn_K_padre1,adn_K_padre2)
+        adn_K_hijo = mutar(adn_K_hijo)
+        nueva_transiccion = ((comp1_padre1[0], adn_K_hijo), par1[1])
+        
+        f_hijo.append(nueva_transiccion)
+
+def mezclar_Adn(adn_padre1, adn_padre2):
+    adn_hijo = [0]*len(adn_padre1)
+    punto_de_cruce = random.randint(1, len(adn_padre1) - 2)
+    for i in range(0, punto_de_cruce):
+        adn_hijo[i] = adn_padre1[i]
+    for i in range(punto_de_cruce+1, len(adn_padre2)):
+        adn_hijo[i] = adn_padre2[i]
+    return adn_hijo
+
 
 def función_ponderación(caracterisisticas):
     answer = 0
@@ -85,7 +135,7 @@ def seleccionar_mejor_población(id_ADN, result, top_k):
 
 # Función principal
 def algoritmo_genético(tamaño_población, generaciones):
-    adn_poblacion = crear_poblacion_inicial(tamaño_población,6)  
+    adn_poblacion = crear_f_poblacion_inicial(tamaño_población,6)  
     adn_optimo = []
     for _ in range(generaciones):
         agents, id_ADN = create_agents_ADN(adn_poblacion) #TODO Como asocio ADN con agente?
