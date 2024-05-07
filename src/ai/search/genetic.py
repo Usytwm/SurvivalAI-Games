@@ -74,11 +74,8 @@ def mutar(adn):
     """
     indice = random.randint(0, len(adn)-1)
 
-    if indice == (len(adn)-1):
-        mutación = random.randint(1,4)
-    else:
-        mutación = random.randint(1,3)
-
+    mutación = random.randint(1,3)
+    
     adn[indice] = mutación
 
     return adn
