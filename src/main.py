@@ -70,12 +70,12 @@ def create_agents(num_agents, positions, map):
                     # PacifistAgent(
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
-                    FoodSeekerAgent(
-                        agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    ),
-                    RandomAgent(
-                        agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    ),
+                    #FoodSeekerAgent(
+                    #    agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    #),
+                    #RandomAgent(
+                    #    agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    #),
                     CombatantAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),

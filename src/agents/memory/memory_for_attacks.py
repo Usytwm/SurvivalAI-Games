@@ -3,7 +3,7 @@ from typing import Dict, List, Tuple
 
 CREATE_TABLE = """CREATE TABLE %s (attacker_id INTEGER, victim_id INTEGER,
 iteration INTEGER)"""
-INSERT_ATTACK = """INSERT INTO %s (attacker_id, victim_id, iteration, strength) VALUES(%s, %s, %s, %s)"""
+INSERT_ATTACK = """INSERT INTO %s (attacker_id, victim_id, iteration) VALUES(%s, %s, %s)"""
 QUERY_FOR_ALL_ATTACKS_MADE = """SELECT * FROM %s WHERE attacker_id = %s ORDER BY iteration DESC"""
 QUERY_FOR_LAST_ATTACK_MADE = """SELECT * FROM %s WHERE attacker_id = %s ORDER BY iteration DESC LIMIT 1"""
 QUERY_FOR_ATTACKS_MADE_IN_A_TURN = """SELECT * FROM %s WHERE attacker_id = %s AND iteration = %s"""
@@ -22,7 +22,7 @@ class Memory_for_Attacks:
         #attacks_per_agent guarda para cada agente cuantos ataques ha hecho
     
     def add_attack(self, attacker_id : int, victim_id : int, iteration : int, strength : int):
-        self.cursor = self.cursor.execute(INSERT_ATTACK%(attacker_id, victim_id, iteration, strength))
+        self.cursor = self.cursor.execute(INSERT_ATTACK%(self.table_name, attacker_id, victim_id, iteration))
         self.attacks_per_agent[attacker_id] = self.attacks_per_agent.get(attacker_id, 0) + 1
     
     def add_death(self, dead_id, iteration):

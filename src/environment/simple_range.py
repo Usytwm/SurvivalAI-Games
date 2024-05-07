@@ -89,6 +89,8 @@ class SquareVision(IVision):
                             vision.append(act)
                         case Action_Type.ASSOCIATION_DESTRUCTION.value:
                             vision.append(act)
+                        case Action_Type.ATTACK.value:
+                            vision.append(act)
                         case _:
                             vision.append(
                                 Action_Info(

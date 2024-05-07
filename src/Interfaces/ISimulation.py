@@ -70,6 +70,7 @@ class ISimulation(ABC):
         self.__feed_agents__()
         self.map.grow()
         self.__verify_if_all_agents_gained_resources__()
+        #input()
         return self.__agents_in_simulation__()
 
     def __actualize_agents_vision__(self):
