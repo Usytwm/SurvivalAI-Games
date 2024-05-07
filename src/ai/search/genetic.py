@@ -3,19 +3,21 @@ from main import *
 from environment.simple_simulation import SimpleSimulation
 from dill import dump, load
 
-def generar_adn(K):
+def generar_adn(k,q):
     arrays = []
-    for _ in range(K):
-        array = [random.randint(1, 3) for _ in range(6)] # Genera 6 elementos aleatorios entre 1 y 3
-        array.append(random.randint(1, 4)) # Genera el séptimo elemento aleatorio entre 1 y 4
-        arrays.append(array)
+    for i in range(k): # Por cada estado (Tipo) salen t-1 aristas (Hay una via para ir a los restantes t-1 tipos)  
+        for j in range(k-1):              
+            array = [random.randint(1, 3) for _ in range(q)] # Genera q elementos aleatorios entre 1 y 3
+            #array.append(random.randint(1, k)) # Genera el q elemento aleatorio entre 1 y k (El tipo de agente destino)
+            transitionij = ((i,array),j) 
+            arrays.append(array) # 
     return arrays
 
-def crear_poblacion_inicial(n, K):
+def crear_poblacion_inicial(N, K):
     poblacion_inicial = []
-    for _ in range(n):
-        diccionario = {i+1: random.choice(generar_adn(K)) for i in range(K)}
-        poblacion_inicial.append(diccionario)
+    for _ in range(N):
+        f = {i+1: random.choice(generar_adn(K)) for i in range(K)}
+        poblacion_inicial.append(f)
     return poblacion_inicial
 
 def seleccionar_padres(mejor_población, tamaño_población):
@@ -92,6 +94,7 @@ def algoritmo_genético(tamaño_población, generaciones):
 
 def create_agents_ADN(adn_poblacion):
     pass
+
 def Sensor():
 
     #parámetro A
@@ -101,5 +104,13 @@ def Sensor():
         pass
     else:
         pass
+    #parámetro B
+    if():
+        pass
+    elif():
+        pass
+    else:
+        pass
+
 
 
