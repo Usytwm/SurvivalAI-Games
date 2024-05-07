@@ -70,14 +70,12 @@ class ISimulation(ABC):
         self.__feed_agents__()
         self.map.grow()
         self.__verify_if_all_agents_gained_resources__()
-        #input()
         return self.__agents_in_simulation__()
 
     def __actualize_agents_vision__(self):
         "Passes to all the agents the info about what they can see"
         for agent in self.agents.values():
             position = self.map.peek_id(agent.id)
-
             agent.agent.inform_position(position)
             agent.see_objects(self.objects)
             agent.see_resources()
@@ -106,8 +104,10 @@ class ISimulation(ABC):
     def __execute_moves__(self, moves: Dict[int, Tuple[int, int]]):
         "Move each agent to its destination"
         for id, destiny in moves.items():
+            actual_pos = self.map.peek_id(id)
             self.map.move(id, destiny)
-            self.agents[id].inform_move(destiny)
+            movement = (destiny[0] - actual_pos[0], destiny[1] - actual_pos[1])
+            self.agents[id].inform_move(movement)
 
     def __get_association_proposals__(self) -> Dict[int, List[Association_Proposal]]:
         """Devuelve un diccionario donde a cada id de agente le hace corresponder la lista de

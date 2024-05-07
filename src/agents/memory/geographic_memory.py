@@ -47,3 +47,18 @@ class Geographic_Memory:
     def get_top_of_sugar_in_position(self, row : int, column : int) -> int:
         "Dada una posicion retorna la cantidad maxima de azucar que el agente ha visto en ella"
         return self.top_sugar_per_position[(row, column)]
+    
+    def get_position_with_most_sugar(self, row : int, column : int) -> Tuple[Tuple[int, int], int]:
+        """Dada la posicion en que se encuentra el agente actualmente, devuelve la posicion
+        de mas azucar que el agente ha visto y la cantidad de azucar que tenia en el momento
+        de la observacion"""
+        answer = None
+        for position, resources in self.actual_sugar_per_position.items():
+            if position == (row, column):
+                continue
+            if not answer:
+                answer = (position, resources)
+                continue
+            if answer[1] < resources:
+                answer = (position, resources)
+        return answer
