@@ -3,26 +3,35 @@ from main import *
 from environment.simple_simulation import SimpleSimulation
 from dill import dump, load
 
-def generar_adn(k,q):
-    arrays = []
-    for i in range(k): # Por cada estado (Tipo) salen t-1 aristas (Hay una via para ir a los restantes t-1 tipos)  
+def generar_f(k,q):
+    """
+    Genera una función de transición f para un autómata finito.
+
+    Args:
+        k (int): Número de estados (tipos) en el autómata.
+        q (int): Número de símbolos en cada secuencia de transición.
+
+    Returns:
+        list: Una lista de tuplas que representa la función de transición f.
+              Cada tupla contiene ((estado, adn), estado_destino), donde:
+              - estado: El estado actual del autómata.
+              - adn: Una secuencia de q símbolos generados aleatoriamente entre 1 y 3.
+              - estado_destino: El estado de destino al que transicionar.
+    """
+    f = []
+    for i in range(k): # Por cada estado (Tipo) salen k-1 aristas (Hay una via para ir a los restantes k-1 tipos)  
         for j in range(k-1):              
-            array = [random.randint(1, 3) for _ in range(q)] # Genera q elementos aleatorios entre 1 y 3
-            #array.append(random.randint(1, k)) # Genera el q elemento aleatorio entre 1 y k (El tipo de agente destino)
-            transitionij = ((i,array),j) 
-            arrays.append(array) # 
-    return arrays
+            adn = [random.randint(1, 3) for _ in range(q)] # Genera q elementos aleatorios entre 1 y 3
+            transitionij = ((i,adn),j) # Desde i leyendo adn voy hacia j
+            f.append(transitionij) # 
+    return f
 
 def crear_poblacion_inicial(N, K):
-    poblacion_inicial = []
+    fs_iniciales = []
     for _ in range(N):
-        f = {i+1: random.choice(generar_adn(K)) for i in range(K)}
-        poblacion_inicial.append(f)
-    return poblacion_inicial
-
-def seleccionar_padres(mejor_población, tamaño_población):
-    padres = random.choices(mejor_población)
-    return padres
+        f = generar_f(K,6) #
+        fs_iniciales.append(f)
+    return fs_iniciales
 
 def reproducir(padres, tamaño_población):
     hijos = []
@@ -45,16 +54,20 @@ def mutar(hijo):
     hijo[indice] = mutación
 
     return hijo
- 
-def cruzar(padre1, padre2):
-    hijo = [0]*len(padre1)
-    punto_de_cruce = random.randint(1, len(padre1) - 2)
-    for i in range(0, punto_de_cruce):
-        hijo[i] = padre1[i]
-    for i in range(punto_de_cruce+1, len(padre2)):
-        hijo[i] = padre2[i]
-    return hijo
-
+#TODO En la versión, el cruze debe cambiar
+#def cruzar(padre1, padre2):
+#    f_hijo = []
+#    for k in len(padre1): 
+#        i =  
+#        punto_de_cruce = random.randint(1, len(padre1) - 2)
+#        for i in range(0, punto_de_cruce):
+#            hijo[i] = padre1[i]
+#        for i in range(punto_de_cruce+1, len(padre2)):
+#            hijo[i] = padre2[i]
+#        return hijo
+#def extra_adn(padre1, padre2):
+#
+#    pass
 
 def función_ponderación(caracterisisticas):
     answer = 0
@@ -97,7 +110,7 @@ def create_agents_ADN(adn_poblacion):
 
 def Sensor():
 
-    #parámetro A
+    #parámetro adn
     if():
         pass
     elif():
