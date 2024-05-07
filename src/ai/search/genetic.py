@@ -1,5 +1,8 @@
 import random
+from main import *
+from environment.simple_simulation import SimpleSimulation
 from dill import dump, load
+
 def generar_adn(K):
     arrays = []
     for _ in range(K):
@@ -32,7 +35,7 @@ def reproducir(padres, tamaño_población):
 def mutar(hijo):
     indice = random.randint(0, len(hijo)-1)
 
-    if indice == 6:
+    if indice == (len(hijo)-1):
         mutación = random.randint(1,4)
     else:
         mutación = random.randint(1,3)
@@ -52,25 +55,51 @@ def cruzar(padre1, padre2):
 
 
 def función_ponderación(caracterisisticas):
-    pass
+    answer = 0
+    for value in caracterisisticas:
+        answer+=value
+    return answer/len(caracterisisticas)
 
-def seleccionar_mejor_población(población, tamaño_población):
-    for _ in range():
-        
-class simulacion:
-    a = 3
+def seleccionar_mejor_población(id_ADN, result, top_k):
+    poblacion_ordenada = []
+    for i in range(0,result):
+        valor = función_ponderación(result[i][1])
+        poblacion_ordenada.append((result[i][0], valor))
+    poblacion_ordenada.sort()
+    return poblacion_ordenada[top_k:]
+
 # Función principal
-def algoritmo_genético(poblacion, tamaño_población, generaciones):
-    poblacion
+def algoritmo_genético(tamaño_población, generaciones):
+    poblacion = crear_poblacion_inicial(tamaño_población,6)  
+    adn_optimo = []
     for _ in range(generaciones):
-        resultado = simulacion
-        mejor_poblacion = seleccionar_mejor_población
-        nueva_generacion = reproducir
-        poblacion
+        agents, id_ADN = create_agents_ADN(poblacion) #TODO Como asocio ADN con agente?
+        simulation = create_simulation(50,50,tamaño_población)
+        while not simulation.__has_ended__():
+            simulation.step(
+            sleep_time=0.0001
+        ) # Necesito Turnos que sobrevivio, Recursos que recolecto, combates en los que participo
+        result = simulation.returnResult
+
+        mejor_poblacion = seleccionar_mejor_población(id_ADN, result, tamaño_población) # Selecciona los K mejores
+
+        adn_optimo = mejor_poblacion[0] # Guarda el agente optimo de está generación
+
+        poblacion = reproducir(mejor_poblacion, tamaño_población) # Devuelve solo el ADN
+
     with open("SuperAgente.joblib", "wb") as a:
-        dump(resultado, a)
-    
+        dump(adn_optimo, a)
 
+def create_agents_ADN(poblacion):
+    pass
+def Sensor():
 
+    #parámetro A
+    if():
+        pass
+    elif():
+        pass
+    else:
+        pass
 
 

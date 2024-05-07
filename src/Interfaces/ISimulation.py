@@ -36,6 +36,10 @@ class ISimulation(ABC):
         self.stoped = False
         self.map = map
         self.agents: Dict[int, Agent_Handler] = {}
+        self.deads = []
+        self.turn = 0
+        self.resourcesPerAgent = [] #!
+        self.AttacksReceivedPerAgent = [] #!
         self.view = view
         self.objects = (
             {}
@@ -46,6 +50,10 @@ class ISimulation(ABC):
             self.map.insert(position, id)
             self.agents[id] = agent
             self.objects[id] = agent
+
+        for (id, agent) in agents: #! Tacto
+            self.resourcesPerAgent.append[id] = 0
+            self.AttacksReceivedPerAgent.append[id] = 0
 
     def step(
         self,
@@ -70,6 +78,7 @@ class ISimulation(ABC):
         self.__feed_agents__()
         self.map.grow()
         self.__verify_if_all_agents_gained_resources__()
+        self.turn+=1
         return self.__agents_in_simulation__()
 
     def __actualize_agents_vision__(self):
@@ -173,7 +182,7 @@ class ISimulation(ABC):
             self.__feed_single_agent__(agent_id, crop)
             agent.burn()
             self.objects[agent_id].resources = agent.resources
-
+            self.resourcesPerAgent[agent_id] += crop #! Tacto
         for agent in list(self.agents.values()):
             if agent.IsDead:
                 self.map.add_action(Action(Action_Type.DIE, agent.id))
