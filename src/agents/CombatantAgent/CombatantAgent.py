@@ -74,7 +74,7 @@ class CombatantAgent(Agent_with_Memories):
     def inform_of_attack_received(
         self, attacker_id: int, strength: int, position_attack_received: Tuple[int, int]
     ):
-        super().inform_of_attack_received(attacker_id, strength)
+        super().inform_of_attack_received(attacker_id, strength, position_attack_received)
         # Cuando se recibe un ataque, actualizar los hechos y solicitar una decisión
         self.estrategy.learn_especific(
             Knowledge.RECEIVED_ATTACK,

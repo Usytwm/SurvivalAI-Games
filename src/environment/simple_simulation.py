@@ -11,6 +11,7 @@
 
 from typing import Dict, Tuple, List, Set
 from Interfaces.ISimulation import ISimulation, ViewOption
+import random
 from environment.actions import (
     Action,
     Association_Proposal,
@@ -139,8 +140,11 @@ class SimpleSimulation(ISimulation):
 
         for destiny, travellers in destinations.items():
             if len(travellers) > 1:
+                rnd_id = travellers[random.randint(0, len(travellers) - 1)]
+                moves[rnd_id] = destiny
                 for id in travellers:
-                    moves[id] = self.map.peek_id(id)  # o sea, no se mueve
+                    if rnd_id != id:
+                        moves[id] = self.map.peek_id(id)  # o sea, no se mueve
             else:
                 moves[travellers[0]] = destiny
 
