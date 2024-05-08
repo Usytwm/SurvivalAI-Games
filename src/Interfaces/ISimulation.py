@@ -38,6 +38,8 @@ class ISimulation(ABC):
         self.agents: Dict[int, Agent_Handler] = {}
         self.deads = {}
         self.turn = 0
+        self.totalRecursos = 0
+        self.totalAtaques = 0
         self.resourcesPerAgent = {} #!
         self.AttacksReceivedPerAgent = {} #!
         self.view = view
@@ -184,6 +186,7 @@ class ISimulation(ABC):
             agent.burn()
             self.objects[agent_id].resources = agent.resources
             self.resourcesPerAgent[agent_id] += crop #! Tacto
+            self.
         for agent in list(self.agents.values()):
             if agent.IsDead:
                 self.map.add_action(Action(Action_Type.DIE, agent.id))
