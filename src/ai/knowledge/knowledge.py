@@ -32,6 +32,7 @@ class Knowledge(Enum):
     GEOGRAPHIC_MEMORY = "geographic_memory"
     MEMORY_FOR_AGENTS_SIGHTS = "memory_for_agents_sights"
     MEMORY_FOR_ATTACKS = "memory_for_attacks"
+    BEHAVIOR = "behavior"
 
 
 class Fact:
@@ -141,33 +142,40 @@ class InferenceEngine:
         self.facts = {f for f in self.facts if f.key != fact.key}
         self.facts.add(fact)
 
+    def add_facts(self, facts: List[Fact]):
+        for fact in facts:
+            self.add_fact(fact)
+
     def remove_fact(self, fact: Fact):
         self.facts.discard(fact)
 
+    def remove_all_facts(self):
+        self.facts = set()
+
+    def add_rules(self, rules: List[Rule]):
+        for rule in rules:
+            self.add_rule(rule)
+
     def add_rule(self, rule: Rule):
-        self.rules.append(rule)
+        if not rule in self.rules:
+            self.rules.append(rule)
+        # self.rules.append(rule)
 
     def remove_rule(self, rule: Rule):
         self.rules.remove(rule)
+
+    def remove_all_rules(self):
+        self.rules = []
 
     def run(self) -> List[Fact]:
         new_facts: Set[Fact] = set()
         for rule in self.rules:
             results = rule.evaluate(self.facts)
             new_facts.update(results)
-
-        # Preparar para actualizar o agregar nuevos Facts basados en la clave
-        temp_facts = {
-            fact.key: fact for fact in self.facts
-        }  # Crear un diccionario de los hechos actuales por clave
-
-        # Actualizar o agregar nuevos Facts
+        temp_facts = {fact.key: fact for fact in self.facts}
         for new_fact in new_facts:
-            temp_facts[new_fact.key] = new_fact  # Sobrescribe o añade el nuevo Fact
-
-        # Restablecer self.facts con los Facts actualizados
+            temp_facts[new_fact.key] = new_fact
         self.facts = set(temp_facts.values())
-
         return list(self.facts)
         # new_facts = set()
         # for rule in self.rules:

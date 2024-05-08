@@ -239,7 +239,7 @@ def stuck_and_resources_available_action(facts: Set[Fact]):
     return (Fact(Knowledge.GETATTACKS, get_attacks_currents),)
 
 
-def default_move_condition(facts: Set[Fact]):
+def default_move_condition_foodSeker(facts: Set[Fact]):
     has_see_resource = any(
         fact.key == Knowledge.SEE_RESOURCES and len(fact.data) > 0 for fact in facts
     )
@@ -254,7 +254,7 @@ def default_move_condition(facts: Set[Fact]):
     return has_see_resource and posibles_positions and not_view_objects
 
 
-def default_move_action(facts: Set[Fact]):
+def default_move_action_foodSeker(facts: Set[Fact]):
     see_resource_info = None
     current_pos = None
     possible_moves = None
@@ -319,4 +319,6 @@ eat_enemy_rule = Rule(to_eat_enemy_condition, to_eat_enemy_action)
 stuck_and_resources_available_rule = Rule(
     stuck_and_resources_available_condition, stuck_and_resources_available_action
 )
-default_move_rule = Rule(default_move_condition, default_move_action)
+default_move_rule = Rule(
+    default_move_condition_foodSeker, default_move_action_foodSeker
+)

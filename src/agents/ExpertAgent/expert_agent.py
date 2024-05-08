@@ -1,194 +1,154 @@
-from typing import List, Tuple
-from experta import *
-from random import shuffle, random
+from random import random
+import sqlite3
+from typing import Dict, List, Tuple
 from Interfaces.IAgent import IAgent
-
-from environment.sim_object import Object_Info, Sim_Object
-from environment.actions import Action_Info, Attack, Action
-
-
-class EstadoAgente(Fact):
-    """Información sobre el estado del agente en el juego."""
-
-    salud = Field(int, default=100)
-    posicion = Field(tuple, default=(0, 0))
-    amenaza_cercana = Field(bool, default=False)
-    recurso_cercano = Field(tuple, default=None)
-    objetivo = Field(str, default="explorar")
-    # TODO accion paara saber que se sta haciendo o que se va a hacer
-    # TODO movimineto para saber que se puede hacer
-    # mov = Field(tuple, default=None)
+from agents.Agent_with_Memories import Agent_with_Memories
+from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
+from environment.actions import Action, Action_Info, Association_Proposal, Attack
+from environment.sim_object import Object_Info
+from agents.ExpertAgent.Rules import (
+    eat_not_enemy_rule,
+    eat_enemy_rule,
+    default_move_rule,
+    stuck_and_resources_available_rule,
+)
 
 
-class SistemaDecisionAgente(KnowledgeEngine):
-    # @DefFacts()
-    # def setup_initial_conditions(self):
-    #     yield EstadoAgente(salud=100, posicion=(0, 0), objetivo="explorar")
+class ExpertAgent(Agent_with_Memories):
+    def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
+        super().__init__(id, consume, reserves, conn)
+        self.color = (255, 255, 255)  # white
+        initial_facts = [
+            Fact(Knowledge.ALLIES, set()),
+            Fact(Knowledge.ENEMIES, set()),
+            Fact(Knowledge.AGEENTS, set()),
+            Fact(Knowledge.NEXT_MOVE, (0, 0)),
+            Fact(Knowledge.ID, id),
+            Fact(Knowledge.RESERVE, reserves),
+            Fact(Knowledge.GEOGRAPHIC_MEMORY, self.geographic_memory),
+            Fact(Knowledge.MEMORY_FOR_AGENTS_SIGHTS, self.memory_for_agents_sights),
+            Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
+            Fact(Knowledge.ASSOCIATION, self.associations),
+            Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False),
+        ]
+        initial_rules = []
 
-    @Rule(EstadoAgente(recurso_cercano=MATCH.recurso & P(lambda x: x is not None)))
-    def ir_a_recurso(self, recurso):
-        print(f"Recurso detectado en {recurso}, moviéndose hacia el recurso.")
-        self.declare(EstadoAgente(objetivo="recolectar", recurso_cercano=recurso))
+        self.estrategy = Estrategy(initial_facts, initial_rules)
 
-    @Rule(EstadoAgente(salud=P(lambda x: x < 50), amenaza_cercana=False))
-    def buscar_curacion(self):
-        print("Salud baja, buscando curación.")
-        self.declare(EstadoAgente(objetivo="buscar_curacion"))
-
-    @Rule(EstadoAgente(objetivo="huir"))
-    def huir(self):
-        print("Huyendo de la amenaza.")
-        self.declare(EstadoAgente(objetivo="explorar"))
-
-    @Rule(EstadoAgente(amenaza_cercana=True))
-    def huir_de_amenaza(self):
-        print("Amenaza detectada cerca, huyendo.")
-        self.declare(EstadoAgente(objetivo="huir"))
-
-    @Rule(EstadoAgente(recurso_cercano=MATCH.recurso & P(lambda x: x is not None)))
-    def ir_a_recurso(self, recurso):
-        print(f"Recurso detectado en {recurso}, moviéndose hacia el recurso.")
-        self.declare(EstadoAgente(objetivo="recolectar"))
-
-    @Rule(EstadoAgente(objetivo="recolectar"))
-    def recolectar_recurso(self):
-        print("Recolectando recurso.")
-        self.declare(EstadoAgente(objetivo="explorar"))
-
-
-class ExpertAgent(IAgent, KnowledgeEngine):
-    def __init__(self, id):
-        super().__init__()
-        self.id = id
-        self.position = (0, 0)
-        self.current_see_objects = []
-        self.current_see_resources = []
-        self.current_see_actions = []
-        self.reserve = 0
-        self.health = 100
-        self.threat_nearby = False
-        self.resource_nearby = None
-        self.attack_received = False
-        self.attack_strength = 0
-        self.next_move = (0, 0)
-        self.expert_system = self
-        self.expert_system.reset()
-
-    # todo tengo que poner dentro de los rule los metodos que se ejecutararn caundo se cumpla cada regla y se vea reflejado en el agnete
-
-    @Rule(EstadoAgente(salud=P(lambda x: x < 50), amenaza_cercana=False))
-    def buscar_curacion(self):
-        print("Salud baja, buscando curación.")
-        self.declare(EstadoAgente(objetivo="buscar_curacion"))
-
-    @Rule(EstadoAgente(objetivo="huir"))
-    def huir(self):
-        print("Huyendo de la amenaza.")
-        self.declare(EstadoAgente(objetivo="explorar"))
-
-    @Rule(EstadoAgente(amenaza_cercana=True))
-    def huir_de_amenaza(self):
-        print("Amenaza detectada cerca, huyendo.")
-        self.declare(EstadoAgente(objetivo="huir"))
-
-    @Rule(EstadoAgente(recurso_cercano=MATCH.recurso & P(lambda x: x is not None)))
-    def ir_a_recurso(self, recurso):
-        print(f"Recurso detectado en {recurso}, moviéndose hacia el recurso.")
-        self.declare(EstadoAgente(objetivo="recolectar"))
-
-    @Rule(EstadoAgente(objetivo="recolectar"))
-    def recolectar_recurso(self):
-        print("Recolectando recurso.")
-        self.declare(EstadoAgente(objetivo="explorar"))
-
-    def update_expert_system(self, possible_moves: List[Tuple[int, int]]):
-        possible_moves.remove((0, 0))
-        """Actualiza y procesa el sistema experto con los datos actuales del agente."""
-        valid_resource_positions = filter(
-            lambda pos: pos[0] in possible_moves,
-            [res_pos for res_pos in self.current_see_resources],
-        )
-        # Convertir las posiciones filtradas en una lista
-        valid_resource_positions = list(valid_resource_positions)
-        shuffle(valid_resource_positions)
-
-        best_resource = max(valid_resource_positions, key=lambda x: x[1], default=None)
-        self.expert_system.reset()
-        self.expert_system.declare(
-            EstadoAgente(
-                posicion=self.position,
-                recurso_cercano=best_resource[0] if best_resource else None,
+    def move(self, possible_moves: List[Tuple[int, int]]):
+        # Actualizar los movimientos posibles
+        self.estrategy.learn_especific(Knowledge.POSIBLES_MOVEMENTS, possible_moves)
+        # Solicitar una decisión de movimiento
+        type = random.randint(1, 4)
+        decision = self.estrategy.make_decision()
+        filter_desicion = list(filter(lambda x: x.key == Knowledge.NEXT_MOVE, decision))
+        move = list(
+            map(
+                lambda x: x.data,
+                filter_desicion,
             )
-        )
-        self.expert_system.run()
-
-    def move(self, possible_moves) -> Tuple[int, int]:
-        """Decide el siguiente movimiento basado en el recurso más cercano y rico en azúcar."""
-        self.update_expert_system(possible_moves)
-        for fact_id, fact in self.expert_system.facts.items():
-            if isinstance(fact, EstadoAgente):
-                resource_pos = fact.get("recurso_cercano", None)
-                if resource_pos:
-                    print(
-                        f"Agnte {self.id} Decidido mover hacia el recurso en {resource_pos}."
-                    )
-                    return resource_pos
-        # if resource_pos:
-        #     print(f"Decidido mover hacia el recurso en {resource_pos}.")
-        #     return resource_pos
-        return (0, 0)
+        )[0]
+        position = self.estrategy.get_knowledge(Knowledge.POSITION)
+        self.estrategy.learn_especific(Knowledge.PREVPOSSITION, position)
+        return move
 
     def inform_move(self, movement: Tuple[int, int]):
-        self.position = movement
-        print(f"Se ha movido a la posición {movement}")
+        super().inform_move(movement)
+        # self.position = position
+        # Informar al motor de inferencia la nueva posición
+        self.estrategy.learn_especific(Knowledge.POSITION, movement)
 
-    def inform_position(
-        self, position: Tuple[int] = None, reserve: int = None, health: int = None
-    ) -> None:
+    def inform_position(self, position: Tuple[int, int] = None):
         if position:
             self.position = position
-        if reserve:
-            self.reserve = reserve
-        if health:
-            self.health = health
+            self.estrategy.learn_especific(Knowledge.POSITION, position)
+
+    def inform_of_attack_received(
+        self, attacker_id: int, strength: int, position_attack_received: Tuple[int, int]
+    ):
+        super().inform_of_attack_received(
+            attacker_id, strength, position_attack_received
+        )
+        # Cuando se recibe un ataque, actualizar los hechos y solicitar una decisión
+        self.estrategy.learn_especific(
+            Knowledge.RECEIVED_ATTACK,
+            (
+                attacker_id,
+                strength,
+                position_attack_received,
+            ),
+        )
+        enemy = self.estrategy.get_knowledge(Knowledge.ENEMIES)
+        enemy.add(attacker_id)
+        self.estrategy.learn_especific(Knowledge.ENEMIES, enemy)
 
     def get_attacks(self) -> List[Action]:
-        attacks = []
-        for i in range(1, 2):
-            if random() < 0.5:
-                attacks.append(Attack(self.id, i, 1))
+        decision = self.estrategy.make_decision()
+        filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
+        if len(filtered) == 0:
+            return []
+        attacks = list(map(lambda x: x.data, filtered))[0]
         return attacks
-        # if randint(0, 100) < 20:  # 20% chance to attack
-        #     target_id = randint(1, 10)  # Random target for example
-        #     return [Attack(self.id, target_id, 1)]
-        # return []
 
     def get_association_proposals(self) -> List:
-        return []
+        decision = self.estrategy.make_decision()
+        filtered = list(
+            filter(lambda x: x.key == Knowledge.GETASSOCIATIONPROPOSALS, decision)
+        )
+        if len(filtered) == 0:
+            return []
+        association_Proposal = list(map(lambda x: x.data, filtered))[0]
+        return association_Proposal
+
+    def inform_joined_association(
+        self,
+        association_id: int,
+        members: List[int],
+        commitments: Dict[int, Tuple[int]],
+    ):
+        super().inform_joined_association(association_id, members, commitments)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
+
+    def inform_broken_association(self, association_id: int):
+        super().inform_broken_association(association_id)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION, self.associations)
+
+    def consider_association_proposal(self, proposal: Association_Proposal) -> bool:
+        super().consider_association_proposal(proposal)
+        self.estrategy.learn_especific(Knowledge.ASSOCIATION_PROPOSALS, proposal)
+        desicion = self.estrategy.make_decision()
+        filtered = list(
+            filter(lambda x: x.key == Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, desicion)
+        )
+        if len(filtered) == 0:
+            return False
+        return list(map(lambda x: x.data, filtered))[0]
 
     def inform_of_attack_made(self, victim_id: int, strength: int) -> None:
-        print(f"Attack made on agent {victim_id} with strength {strength}")
-
-    def inform_of_received_attack(self, attacker_id: int, strength: int) -> None:
-        print(f"Received attack from agent {attacker_id} with strength {strength}")
+        super().inform_of_attack_made(victim_id, strength)
 
     def take_attack_reward(self, victim_id: int, reward: int):
-        print(f"Received reward of {reward} for defeating agent {victim_id}")
+        super().take_attack_reward(victim_id, reward)
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
-    def see_objects(self, info: List[Object_Info]) -> None:
-        self.current_see_objects = info
-        print(f"Seeing objects: {info}")
+    def see_objects(self, info: List[Object_Info]):
+        super().see_objects(info)
+        # Actualizar la base de hechos con la información de objetos vistos
+        self.estrategy.learn_especific(Knowledge.SEE_OBJECTS, info)
 
     def see_resources(self, info: List[Tuple[Tuple[int, int], int]]) -> None:
-        self.current_see_resources = info
-        print(f"Seeing resources: {info}")
+        super().see_resources(info)
+        self.estrategy.learn_especific(Knowledge.SEE_RESOURCES, info)
 
     def see_actions(self, info: List[Action_Info]):
-        self.current_see_actions = info
-        print(f"Actions seen: {info}")
+        super().see_actions(info)
+        # Actualizar la base de hechos con acciones vistas
+        self.estrategy.learn_especific(Knowledge.SEE_ACTIONS, info)
 
     def feed(self, sugar: int) -> None:
-        print(f"Received {sugar} units of sugar")
+        super().feed(sugar)
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)
 
     def burn(self) -> None:
-        print("Consuming daily ration of sugar")
+        super().burn()
+        self.estrategy.learn_especific(Knowledge.RESERVE, self.reserves)

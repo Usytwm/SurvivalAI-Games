@@ -85,13 +85,13 @@ def get_attacks_action(facts: Set[Fact]):
     return [Fact(Knowledge.GETATTACKS, atacks)]
 
 
-def recived_proposal_condition(facts: Set[Fact]):
+def recived_proposal_condition_random(facts: Set[Fact]):
     return any(
         fact.key == Knowledge.ASSOCIATION_PROPOSALS and fact.data for fact in facts
     )
 
 
-def recived_proposal_action(facts: Set[Fact]):
+def recived_proposal_action_random(facts: Set[Fact]):
 
     return [Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, random.choice([True, False]))]
 
@@ -155,7 +155,7 @@ association_propose_rule = Rule(
     propose_association_condition, propose_association_action
 )
 recived_association_propose_rule = Rule(
-    recived_proposal_condition, recived_proposal_action
+    recived_proposal_condition_random, recived_proposal_action_random
 )
 move_rule = Rule(move_condition, move_action)
 attack_rule = Rule(get_attacks_condition, get_attacks_action)

@@ -156,7 +156,7 @@ def move_away_from_attacker_action(facts: Set[Fact]):
     return [Fact(Knowledge.NEXT_MOVE, random.choice(possible_moves))]
 
 
-def default_move_condition(facts: Set[Fact]):
+def default_move_condition_pasific(facts: Set[Fact]):
     enemies = set()
     for fact in facts:
         if fact.key == Knowledge.ENEMIES:
@@ -180,7 +180,7 @@ def default_move_condition(facts: Set[Fact]):
     return not_view_objects and not_view_actions and not_received_attack
 
 
-def default_move_action(facts: Set[Fact]):
+def default_move_action_pasific(facts: Set[Fact]):
     for fact in facts:
         if fact.key == Knowledge.POSIBLES_MOVEMENTS:
             return [Fact(Knowledge.NEXT_MOVE, random.choice(fact.data))]
@@ -190,4 +190,4 @@ def default_move_action(facts: Set[Fact]):
 move_away_rule = Rule(move_away_from_attacker_condition, move_away_from_attacker_action)
 see_objects_rule = Rule(see_objects_condition, see_objects_action)
 see_actions_rule = Rule(see_actions_condition, see_actions_action)
-default_move = Rule(default_move_condition, default_move_action)
+default_move = Rule(default_move_condition_pasific, default_move_action_pasific)
