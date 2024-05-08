@@ -1,5 +1,5 @@
 import random
-from main import *
+#from main import create_simulation
 from environment.simple_simulation import SimpleSimulation
 from dill import dump, load
 
@@ -93,18 +93,26 @@ def cruzar_Y_mutar(padre1, padre2):
     - list[ ((int,list), int) ]: Nuevo individuo (hijo) resultado del cruce y la mutación.
     """
     f_hijo = []
-    for k in len(padre1): 
+    for k in range(len(padre1)): 
         par1 = padre1[k]
         par2 = padre2[k]
         comp1_padre1 = par1[0]
         comp1_padre2 = par2[0]
-        adn_K_padre1 = comp1_padre1[0]
-        adn_K_padre2 = comp1_padre2[0]
+        adn_K_padre1 = comp1_padre1[1]
+        adn_K_padre2 = comp1_padre2[1]
         adn_K_hijo = mezclar_Adn(adn_K_padre1,adn_K_padre2)
         adn_K_hijo = mutar(adn_K_hijo)
-        nueva_transiccion = ((comp1_padre1[0], adn_K_hijo), par1[1])
-        
-        f_hijo.append(nueva_transiccion)
+        new_estado_adn = (comp1_padre1[0], adn_K_hijo)
+        if new_estado_adn not in f_hijo:
+            nueva_transiccion = ((comp1_padre1[0], adn_K_hijo), par1[1])
+            f_hijo.append(nueva_transiccion)
+            
+        else:
+            # Realizar alguna acción para manejar la colisión de claves, como ignorarla o modificarla
+            adn_k_hijo_extra = mutar(adn_K_hijo)
+            nueva_transiccion = ((comp1_padre1[0], adn_k_hijo_extra), par1[1])
+            f_hijo.append(nueva_transiccion)
+    return f_hijo
 
 def mezclar_Adn(adn_padre1, adn_padre2):
     adn_hijo = [0]*len(adn_padre1)
@@ -136,12 +144,14 @@ def algoritmo_genético(tamaño_población, generaciones):
     adn_optimo = []
     for _ in range(generaciones):
         agents, id_ADN = create_agents_ADN(adn_poblacion) #TODO Como asocio ADN con agente?
-        simulation = create_simulation(50,50,tamaño_población)
-        while not simulation.__has_ended__():
-            simulation.step(
-            sleep_time=0.0001
-        ) # Necesito Turnos que sobrevivio, Recursos que recolecto, combates en los que participo
-        result = simulation.returnResult
+        #simulation = create_simulation(50,50,tamaño_población)
+        #while not simulation.__has_ended__():
+        #    simulation.step(
+        #    sleep_time=0.0001
+        #) # Necesito Turnos que sobrevivio, Recursos que recolecto, combates en los que participo
+        #result = simulation.returnResult
+        
+        result = {}
 
         mejor_poblacion = seleccionar_mejor_población(id_ADN, result, tamaño_población) # Selecciona los K mejores
 
@@ -152,8 +162,10 @@ def algoritmo_genético(tamaño_población, generaciones):
     with open("SuperAgente.joblib", "wb") as a:
         dump(adn_optimo, a)
 
-algoritmo_genético(10, 10)
+#algoritmo_genético(10, 10)
 
+A = [((1,[1,2,3,1,2,3,1]),1), ((2,[3,2,1,1,1,3,1]),2)]
+B = [((1,[1,1,1,1,1,3,1]),1), ((2,[1,2,3,3,3,3,1]),2)]
 
 def create_agents_ADN(adn_poblacion):
     pass

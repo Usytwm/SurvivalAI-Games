@@ -113,7 +113,7 @@ class SimpleSimulation(ISimulation):
         """
         answer = []
         for id, agent in self.agents:
-            answer.append((id,(self.deads[id], self.resourcesPerAgent[id], self.AttacksReceivedPerAgent[id])))
+            answer.append((id,((self.deads[id]/self.turn), self.resourcesPerAgent[id] / self.totalRecursos, self.AttacksReceivedPerAgent[id]/self.totalAtaques)))
         return answer
     
     def add_message(self, message: str):
@@ -194,6 +194,7 @@ class SimpleSimulation(ISimulation):
                 if not victim_id in attackers:
                     attackers[victim_id] = {}
                 attackers[victim_id][actor_id] = attack_strength
+                self.totalAtaques += 1
 
         for dead_id in deads:
             sum_of_strengths = sum(attackers[dead_id].values())
