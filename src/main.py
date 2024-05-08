@@ -5,9 +5,12 @@ import threading
 from httpcore import TimeoutException
 from Interfaces.ISimulation import ViewOption
 from agents.CombatantAgent.CombatantAgent import CombatantAgent
+from agents.ExpertAgent.expert_agent import ExpertAgent
 from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
-from agents.FoodSeekerAgentwithAstar.FoodSeekerAgentwithAstar import FoodSeekerAgentwithAstar
+from agents.FoodSeekerAgentwithAstar.FoodSeekerAgentwithAstar import (
+    FoodSeekerAgentwithAstar,
+)
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
 from agents.Agent_with_Memories import Agent_with_Memories
 from agents.ProAgent.pro_agent import ProAgent
@@ -22,29 +25,6 @@ import pandas as pd
 import seaborn as sns
 import google.generativeai as genai
 from ai.llm.lm_inference import LLMInterface
-
-# characters_agents = [
-#     (
-#         "CombatantAgent",
-#         "Violent, their goal is to destroy their enemies, prefers to attack above all. Expert in the use of firearms and stealthy movement.",
-#     ),
-#     (
-#         "PacifistAgent",
-#         "Prioritizes peaceful conflict resolution and resource exploitation. Flees from any danger.",
-#     ),
-#     (
-#         "FoodSeekerAgent",
-#         "Expert in exploring the environment and searching for resources. Attacks to take possession of resources.",
-#     ),
-#     ("RandomAgent", "Incomprehensible, acts unexpectedly."),
-# ]
-
-# constructor = LLMInterface()
-# # description = "/*Creame 2 agentes q sean fuertes y siempre quieran estar en pronlemas*/ y /*6 que sean mas pacificos y no se metan en lios*/"
-
-# # constructor = LLMInterface()
-
-# # answer_agents = constructor.create_Agents(description, characters_agents, 10)
 
 
 def create_agents(num_agents, positions, map):
@@ -67,20 +47,25 @@ def create_agents(num_agents, positions, map):
             map,
             random.choice(
                 [
-                    #FoodSeekerAgentwithAstar(agent_id, consume, reserves, sqlite3.connect(":memory:")),
-                    ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
+                    # FoodSeekerAgentwithAstar(
+                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    # ),
+                    # ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
                     # PacifistAgent(
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
-                    #FoodSeekerAgent(
-                    #    agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    #),
-                    #RandomAgent(
-                    #    agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    #),
-                    #CombatantAgent(
-                    #    agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    #),
+                    FoodSeekerAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    RandomAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    CombatantAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    ExpertAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
                 ]
             ),  # Objeto del mapa  # Crear una instancia de PacifistAgent con el ID único
             SimpleWalking(),  # Instancia de SimpleWalking
@@ -89,75 +74,6 @@ def create_agents(num_agents, positions, map):
         )
         expert_agents.append((position, (agent_id, handler)))
     return expert_agents
-
-
-# def create_agents_Aux(list_agent, positions, map):
-#     id_counter = 1
-#     expert_agents = []
-#     for key in list_agent.keys():
-#         for j in range(list_agent[key]):
-#             agent_id = j + 1
-#             reserves = random.randint(1, 100)
-#             consume = 1
-#             agent_type = {}
-#             if key == "PacifistAgent":
-#                 agent_type = PacifistAgent(
-#                     agent_id, consume, reserves, sqlite3.connect(":memory:")
-#                 )
-#             elif key == "FoodSeekerAgent":
-#                 agent_type = FoodSeekerAgent(
-#                     agent_id, consume, reserves, sqlite3.connect(":memory:")
-#                 )
-#             elif key == "CombatantAgent":
-#                 agent_type = CombatantAgent(
-#                     agent_id, consume, reserves, sqlite3.connect(":memory:")
-#                 )
-
-#             else:
-#                 agent_type = RandomAgent(
-#                     agent_id, consume, reserves, sqlite3.connect(":memory:")
-#                 )
-
-#             handler = Agent_Handler(
-#                 id_counter,  # ID único del agente
-#                 reserves,  # Algún valor de configuración
-#                 consume,  # Otro valor de configuración
-#                 map,
-#                 agent_type,
-#                 # Objeto del mapa  # Crear una instancia de PacifistAgent con el ID único
-#                 SimpleWalking(),  # Instancia de SimpleWalking
-#                 SquareVision(3),  # Instancia de SquareVision
-#                 SquareAttackRange(3),  # Instancia de SquareAttackRange
-#             )
-#             expert_agents.append((id_counter, handler))
-#             id_counter += 1
-#     positions = set()
-#     while len(positions) < len(expert_agents):
-#         new_position = (randint(0, map.width - 1), randint(0, map.height - 1))
-#         if not new_position in positions:
-#             positions.add(new_position)
-#     return_agents = []
-#     for i, pos in enumerate(positions):
-#         return_agents.append((pos, (expert_agents[i][0], expert_agents[i][1])))
-
-#     return return_agents
-
-
-# def user_input_for_agents():
-#     # Solicitar al usuario que elija entre configuración por defecto o personalizada
-#     use_custom = (
-#         input("¿Desea ingresar datos personalizados para los agentes? (s/n): ").lower()
-#         == "s"
-#     )
-#     if use_custom:
-#         # Solicitar descripción para el LLM
-#         description = input(
-#             "Introduzca la descripción de los agentes para la simulación: "
-#         )
-
-#         answer_agents = constructor.create_Agents(description, characters_agents, 10)
-#         return answer_agents, True
-#     return None, False
 
 
 def create_simulation(
@@ -181,12 +97,7 @@ def create_simulation(
         if not new_position in positions:
             positions.add(new_position)
     positions = list(positions)
-    # if custom_agents:
-    #     agents = create_agents_Aux(custom_agents, positions, map)
-    # else:
     agents = create_agents(num_of_agents, positions, map)
-    # agentsllm = create_agents_Aux(answer_agents, positions, map)
-    # agents = create_agents(num_of_agents, positions, map)
     return SimpleSimulation(map, agents, view), [
         (id, type(agent.agent).__name__) for _, (id, agent) in agents
     ]
@@ -201,23 +112,14 @@ def stop_simulation():
 
 
 # Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
-#timer = threading.Timer(20, stop_simulation)
-#timer.start()  # Inicia el temporizador
+# timer = threading.Timer(20, stop_simulation)
+# timer.start()  # Inicia el temporizador
 try:
     while not simulation.__has_ended__():
         winerr_agents = simulation.step(
-            sleep_time=0.0001
+            sleep_time=0.0001,  # Tiempo de espera entre cada paso
         )  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:
     pygame.quit()
-    # sublists = [
-    #     simulation.messages[i : i + 200]
-    #     for i in range(0, len(simulation.messages), 200)
-    # ]
-    #answer_history = constructor.create_History(
-    #    details, characters_agents, simulation.messages[:200]
-    #)
-    #print(answer_history)
-    #timer.cancel()
