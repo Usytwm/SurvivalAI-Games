@@ -5,6 +5,7 @@ import threading
 from httpcore import TimeoutException
 from Interfaces.ISimulation import ViewOption
 from agents.CombatantAgent.CombatantAgent import CombatantAgent
+from agents.ExpertAgent.expert_agent import ExpertAgent
 from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
 from agents.FoodSeekerAgentwithAstar.FoodSeekerAgentwithAstar import (
@@ -46,22 +47,25 @@ def create_agents(num_agents, positions, map):
             map,
             random.choice(
                 [
-                    FoodSeekerAgentwithAstar(
-                        agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    ),
+                    # FoodSeekerAgentwithAstar(
+                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    # ),
                     # ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
                     # PacifistAgent(
                     #     agent_id, consume, reserves, sqlite3.connect(":memory:")
                     # ),
-                    # FoodSeekerAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
-                    # RandomAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
-                    # CombatantAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
+                    FoodSeekerAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    RandomAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    CombatantAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    ExpertAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
                 ]
             ),  # Objeto del mapa  # Crear una instancia de PacifistAgent con el ID único
             SimpleWalking(),  # Instancia de SimpleWalking
@@ -113,7 +117,7 @@ def stop_simulation():
 try:
     while not simulation.__has_ended__():
         winerr_agents = simulation.step(
-            sleep_time=0.0001
+            sleep_time=0.0001,  # Tiempo de espera entre cada paso
         )  # Actualiza el estado del simulador
 except KeyboardInterrupt:
     print("Simulación interrumpida")

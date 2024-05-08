@@ -14,7 +14,11 @@ def see_objects_condition(facts: Set[Fact]):
         fact.key == Knowledge.SEE_OBJECTS and len(fact.data) > 0 for fact in facts
     )
     has_enemies = any(fact.key == Knowledge.ENEMIES for fact in facts)
-    return has_see_objects and has_enemies
+    posibles_movements = any(
+        fact.key == Knowledge.POSIBLES_MOVEMENTS and len(fact.data) > 0
+        for fact in facts
+    )
+    return has_see_objects and has_enemies and posibles_movements
 
 
 def see_objects_action(facts: Set[Fact]):

@@ -1,4 +1,5 @@
 # *OK no hay agentes en mi camo de vision y hay recursos parta aumentar mi fuerza de ataque
+from typing import Set
 from agents.CombatantAgent.Rules import (
     recived_attacker_action,
     recived_attacker_condition,
@@ -45,7 +46,7 @@ from agents.RandomAgent.Rules import (
     recived_proposal_action_random,
     recived_proposal_condition_random,
 )
-from ai.knowledge.knowledge import Rule
+from ai.knowledge.knowledge import Fact, Knowledge, Rule
 
 
 # ? Reglas de experto
@@ -118,3 +119,60 @@ random_recived_association_propose_rule = Rule(
 )
 random_move_rule = Rule(move_condition, move_action)
 random_attack_rule = Rule(get_attacks_condition, get_attacks_action)
+
+
+# Conjuntos de reglas por tipo de comportamiento
+combat_rules = [
+    combatant_eat_not_agents_rule,
+    combatant_association_proposal_rule,
+    combatant_recived_association_proposal_rule,
+    combatant_attack_enemy_in_vision,
+    combatant_attack_not_enemy_in_vision,
+    combatant_move_not_enemy,
+    combatant_recived_attacker,
+    combatant_default_move,
+]
+
+pacifist_rules = [
+    pasific_move_away_rule,
+    pasific_see_objects_rule,
+    pasific_see_actions_rule,
+    pasific_default_move,
+]
+
+resource_seeker_rules = [
+    food_seeker_association_proposal_rule,
+    food_seeker_eat_not_enemy_rule,
+    food_seeker_eat_enemy_rule,
+    food_seeker_stuck_and_resources_available_rule,
+    food_seeker_default_move_rule,
+]
+
+random_rules = [
+    random_association_propose_rule,
+    random_recived_association_propose_rule,
+    random_move_rule,
+    random_attack_rule,
+]
+
+
+def behavior_based_rule_selector(behavior_value, applicable_rules):
+    """Retorna una función que actúa como metarregla"""
+
+    def metarule_condition(facts: Set[Fact]):
+        behavior = next(
+            (fact for fact in facts if fact.key == Knowledge.BEHAVIOR), None
+        )
+        return behavior and behavior.data == behavior_value
+
+    def metarule_action(facts: Set[Fact]):
+        return applicable_rules
+
+    return Rule(metarule_condition, metarule_action, meta_rule=True)
+
+
+# Crear metarreglas para cada tipo de comportamiento
+combat_metarule = behavior_based_rule_selector(1, combat_rules)
+pacifist_metarule = behavior_based_rule_selector(2, pacifist_rules)
+resource_seeker_metarule = behavior_based_rule_selector(3, resource_seeker_rules)
+random_metarule = behavior_based_rule_selector(4, random_rules)

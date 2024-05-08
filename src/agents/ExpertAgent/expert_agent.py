@@ -1,4 +1,4 @@
-from random import random
+import random
 import sqlite3
 from typing import Dict, List, Tuple
 from Interfaces.IAgent import IAgent
@@ -7,10 +7,10 @@ from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import Action, Action_Info, Association_Proposal, Attack
 from environment.sim_object import Object_Info
 from agents.ExpertAgent.Rules import (
-    eat_not_enemy_rule,
-    eat_enemy_rule,
-    default_move_rule,
-    stuck_and_resources_available_rule,
+    combat_metarule,
+    pacifist_metarule,
+    random_metarule,
+    resource_seeker_metarule,
 )
 
 
@@ -30,8 +30,14 @@ class ExpertAgent(Agent_with_Memories):
             Fact(Knowledge.MEMORY_FOR_ATTACKS, self.memory_for_attacks),
             Fact(Knowledge.ASSOCIATION, self.associations),
             Fact(Knowledge.CONSIDER_ASSOCIATION_PROPOSAL, False),
+            Fact(Knowledge.BEHAVIOR, 1),
         ]
-        initial_rules = []
+        initial_rules = [
+            combat_metarule,
+            pacifist_metarule,
+            random_metarule,
+            resource_seeker_metarule,
+        ]
 
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
@@ -40,6 +46,8 @@ class ExpertAgent(Agent_with_Memories):
         self.estrategy.learn_especific(Knowledge.POSIBLES_MOVEMENTS, possible_moves)
         # Solicitar una decisión de movimiento
         type = random.randint(1, 4)
+        self.estrategy.learn_especific(Knowledge.BEHAVIOR, type)
+        self.estrategy.remove_all_rules()
         decision = self.estrategy.make_decision()
         filter_desicion = list(filter(lambda x: x.key == Knowledge.NEXT_MOVE, decision))
         move = list(
@@ -83,6 +91,9 @@ class ExpertAgent(Agent_with_Memories):
         self.estrategy.learn_especific(Knowledge.ENEMIES, enemy)
 
     def get_attacks(self) -> List[Action]:
+        type = random.randint(1, 4)
+        self.estrategy.learn_especific(Knowledge.BEHAVIOR, type)
+        self.estrategy.remove_all_rules()
         decision = self.estrategy.make_decision()
         filtered = list(filter(lambda x: x.key == Knowledge.GETATTACKS, decision))
         if len(filtered) == 0:
@@ -91,6 +102,9 @@ class ExpertAgent(Agent_with_Memories):
         return attacks
 
     def get_association_proposals(self) -> List:
+        type = random.randint(1, 4)
+        self.estrategy.learn_especific(Knowledge.BEHAVIOR, type)
+        self.estrategy.remove_all_rules()
         decision = self.estrategy.make_decision()
         filtered = list(
             filter(lambda x: x.key == Knowledge.GETASSOCIATIONPROPOSALS, decision)

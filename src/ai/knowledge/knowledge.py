@@ -59,9 +59,11 @@ class Rule:
         self,
         condition: Callable[[Set[Fact]], bool],
         action: Callable[[Set[Fact]], List[Fact]],
+        meta_rule: bool = False,
     ):
         self.condition = condition
         self.action = action
+        self.meta_rule = meta_rule
 
     def evaluate(self, facts: Set[Fact]) -> List[Fact]:
         if self.condition(facts):
@@ -102,10 +104,12 @@ class BaseKnowledge(ABC):
 class Estrategy(BaseKnowledge):
     def __init__(self, initial_facts: List[Fact] = [], initial_rules: List[Rule] = []):
         self.engine = InferenceEngine()
-        for fact in initial_facts:
-            self.engine.add_fact(fact)
-        for rule in initial_rules:
-            self.engine.add_rule(rule)
+        self.engine.add_facts(initial_facts)
+        # for fact in initial_facts:
+        #     self.engine.add_fact(fact)
+        self.engine.add_rules(initial_rules)
+        # for rule in initial_rules:
+        #     self.engine.add_rule(rule)
 
     def learn(self, data: Dict[Knowledge, Any]):
         for key, value in data.items():
@@ -129,14 +133,24 @@ class Estrategy(BaseKnowledge):
         for fact in to_remove:
             self.engine.remove_fact(fact)
 
+    def add_rule(self, rule: Rule):
+        self.engine.add_rule(rule)
+
+    def remove_rule(self, rule: Rule):
+        self.engine.remove_rule(rule)
+
+    def remove_all_rules(self):
+        self.engine.remove_all_rules()
+
     def remove_all_knowledge(self):
-        self.engine.facts = []
+        self.engine.remove_all_facts()
 
 
 class InferenceEngine:
     def __init__(self):
         self.facts: Set[Fact] = set()
         self.rules: List[Rule] = []
+        self.meta_rules: List[Rule] = []
 
     def add_fact(self, fact: Fact):
         self.facts = {f for f in self.facts if f.key != fact.key}
@@ -156,18 +170,27 @@ class InferenceEngine:
         for rule in rules:
             self.add_rule(rule)
 
+    # def add_rule(self, rule: Rule):
+    #     if not rule in self.rules:
+    #         self.rules.append(rule)
+    #     # self.rules.append(rule)
+
     def add_rule(self, rule: Rule):
-        if not rule in self.rules:
+        if rule.meta_rule:
+            self.meta_rules.append(rule)
+        else:
             self.rules.append(rule)
-        # self.rules.append(rule)
 
     def remove_rule(self, rule: Rule):
-        self.rules.remove(rule)
+        if rule in self.meta_rules:
+            self.meta_rules.remove(rule)
+        else:
+            self.rules.remove(rule)
 
     def remove_all_rules(self):
         self.rules = []
 
-    def run(self) -> List[Fact]:
+    def runf(self) -> List[Fact]:
         new_facts: Set[Fact] = set()
         for rule in self.rules:
             results = rule.evaluate(self.facts)
@@ -177,9 +200,29 @@ class InferenceEngine:
             temp_facts[new_fact.key] = new_fact
         self.facts = set(temp_facts.values())
         return list(self.facts)
-        # new_facts = set()
-        # for rule in self.rules:
-        #     results = rule.evaluate(self.facts)
-        #     new_facts.update(results)
-        # self.facts.update(new_facts)
-        # return list(new_facts)
+
+    def run(self) -> List[Fact]:
+        # Ejecutar primero las metarreglas para determinar qué reglas aplicar
+        active_rules = self.evaluate_meta_rules()
+
+        # Ejecutar reglas activas
+        new_facts: Set[Fact] = set()
+        for rule in active_rules:
+            results = rule.evaluate(self.facts)
+            new_facts.update(results)
+
+        # Actualizar el conjunto de hechos
+        temp_facts = {fact.key: fact for fact in self.facts}
+        for new_fact in new_facts:
+            temp_facts[new_fact.key] = new_fact
+        self.facts = set(temp_facts.values())
+        return list(self.facts)
+
+    def evaluate_meta_rules(self):
+        # Determinar qué reglas deben estar activas basadas en las metarreglas
+        active_rules = set(self.rules)  # Por defecto todas las reglas están activas
+        for rule in self.meta_rules:
+            if rule.condition(self.facts):
+                # Aquí puedes modificar `active_rules` según la lógica de la metarregla
+                active_rules.update(rule.action(self.facts))
+        return active_rules
