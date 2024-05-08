@@ -7,6 +7,7 @@ from Interfaces.ISimulation import ViewOption
 from agents.CombatantAgent.CombatantAgent import CombatantAgent
 from agents.RandomAgent.random_agent import RandomAgent
 from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
+from agents.FoodSeekerAgentwithAstar.FoodSeekerAgentwithAstar import FoodSeekerAgentwithAstar
 from agents.PacifistAgent.PacifistAgent import PacifistAgent
 from agents.Agent_with_Memories import Agent_with_Memories
 from agents.ProAgent.pro_agent import ProAgent
@@ -66,10 +67,11 @@ def create_agents(num_agents, positions, map):
             map,
             random.choice(
                 [
+                    FoodSeekerAgentwithAstar(agent_id, consume, reserves, sqlite3.connect(":memory:")),
                     ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
-                    # PacifistAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
+                     PacifistAgent(
+                         agent_id, consume, reserves, sqlite3.connect(":memory:")
+                     ),
                     FoodSeekerAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),

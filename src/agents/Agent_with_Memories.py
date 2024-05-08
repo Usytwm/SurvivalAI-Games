@@ -69,7 +69,7 @@ class Agent_with_Memories(IAgent):
                         action.destinataries_ids[0],
                         self.iteration,
                         action.strength,
-                    )
+                        )
                 case Action_Type.ASSOCIATION_CREATION.value:
                     self.memory_for_associations.add_association(
                         action.association_id,
@@ -92,6 +92,7 @@ class Agent_with_Memories(IAgent):
         if not self.iteration in self.attacks_received:
             self.attacks_received[self.iteration] = []
         self.attacks_received[self.iteration].append((attacker_id, strength))
+        self.memory_for_attacks.add_attack(attacker_id, self.id, self.iteration, strength)
 
     def inform_joined_association(
         self, association_id: int, members: Set[int], commitments: Dict[int, Tuple[int]]

@@ -6,7 +6,7 @@ current_dir = os.getcwd()
 sys.path.insert(0, current_dir + "/src")
 sys.path.insert(0, current_dir + "/src/environment")
 from typing import Tuple, Dict, List
-from actions import Action
+from actions import Action, Action_Type
 
 
 class Map:
@@ -108,6 +108,11 @@ class Map:
                 )
 
     def add_action(self, action: Action):
+        if (action.type.value == Action_Type.ATTACK.value):
+            print(str(action.actor_id) + " ataca a " + str(action.destinataries_ids[0]) + " with strength " + str(action.strength))
+        else:
+            if (action.type.value == Action_Type.DIE.value):
+                print(str(action.actor_id) + " ha muerto")
         position = self.peek_id(action.actor_id)
         if not position in self.last_turn_actions:
             self.last_turn_actions[position] = []

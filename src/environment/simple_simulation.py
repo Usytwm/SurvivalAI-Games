@@ -17,6 +17,7 @@ from environment.actions import (
     Association_Proposal,
     Attack,
     Association_Creation,
+    Action_Type
 )
 from environment.graph_of_attacks import Graph_of_Attacks, Component_of_Attacks_Graph
 from environment.association import Association
@@ -177,6 +178,8 @@ class SimpleSimulation(ISimulation):
                 self.agents[victim_id].inform_of_attack_received(
                     actor_id, attack_strength
                 )  # el danho que realiza
+                action = Attack(actor_id, victim_id, attack_strength)
+                self.map.add_action(action)
                 if self.agents[victim_id].IsDead:
                     deads.add(victim_id)
                     self.add_message(f"Agent {victim_id} is dead")
@@ -185,6 +188,8 @@ class SimpleSimulation(ISimulation):
                 attackers[victim_id][actor_id] = attack_strength
 
         for dead_id in deads:
+            action = Action(Action_Type.DIE, dead_id)
+            self.map.add_action(action)
             sum_of_strengths = sum(attackers[dead_id].values())
             for attacker_id, attack_strength in attackers[dead_id].items():
                 reward = int(

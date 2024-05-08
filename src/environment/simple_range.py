@@ -24,6 +24,9 @@ class SimpleWalking(IMovement):
             except:
                 continue
         return possible_movements
+    
+    def pure_moves(self) -> List[Tuple[int]]:
+        return [(0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)]
 
 
 class SquareRange(IRange):
@@ -88,6 +91,9 @@ class SquareVision(IVision):
                         case Action_Type.ASSOCIATION_CREATION.value:
                             vision.append(act)
                         case Action_Type.ASSOCIATION_DESTRUCTION.value:
+                            vision.append(act)
+                        case Action_Type.ATTACK.value:
+                            act.position = (row, column)
                             vision.append(act)
                         case _:
                             vision.append(

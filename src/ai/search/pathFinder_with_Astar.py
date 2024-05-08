@@ -1,21 +1,28 @@
 import heapq
-from typing import Callable
+from typing import Callable, Tuple
 
+
+def default_heuristic(A, B):
+    return abs(B[0] - A[0]) + abs(B[1] - A[1])
+
+def default_cost_function(A, B, goal):
+    return 1
 
 class PathFinder:
     def __init__(
         self,
         validate_movements: Callable[[int, int], bool],
+        heuristic: Callable[[Tuple[int, int], Tuple[int, int]], float] = default_heuristic,
+        cost_function: Callable[[Tuple[int, int], Tuple[int, int], Tuple[int, int]], float] = default_cost_function, 
     ):
 
         self.obstacles = set()  # A set to store obstacle positions
         self.validate_movements = validate_movements
+        self.heuristic = heuristic
+        self.cost_function = cost_function
 
     def set_obstacles(self, obstacles):
         self.obstacles = set(obstacles)  # Update obstacle positions
-
-    def heuristic(self, a, b):
-        return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
     def a_star(self, start, goal, movements=[(0, 0), (-1, 0), (0, -1), (0, 1), (1, 0)]):
         open_heap = []
@@ -39,7 +46,7 @@ class PathFinder:
                     self.validate_movements(next[0], next[1])
                     and next not in self.obstacles
                 ):
-                    new_cost = current_cost + 1
+                    new_cost = current_cost + self.cost_function(current, next, goal)
                     if next not in cost_so_far or new_cost < cost_so_far[next]:
                         cost_so_far[next] = new_cost
                         priority = new_cost + self.heuristic(next, goal)

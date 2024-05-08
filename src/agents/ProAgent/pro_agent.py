@@ -33,9 +33,9 @@ class ProAgent(Agent_with_Memories):
             if agent_id in self.memory_for_attacks.deaths:
                 continue
             other_agent_position, _, other_agent_sugar = self.memory_for_agents_sights.get_last_info_from_agent(agent_id)
-            distance = max(abs(self.position[0] - other_agent_position[0]) + abs(self.position[1] - other_agent_position[1]), 1)
+            distance = max(abs(position[0] - other_agent_position[0]) + abs(position[1] - other_agent_position[1]), 1)
             agresivity = self.computated_agresivities[agent_id]
-            risk += (agresivity*other_agent_sugar)/(distance*max(self.reserves, 1))
+            risk += (agresivity*other_agent_sugar)/(distance)
         return risk
     
     def get_association_proposals(self) -> List[Association_Proposal]:
