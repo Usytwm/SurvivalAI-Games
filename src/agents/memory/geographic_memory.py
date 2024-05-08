@@ -62,3 +62,17 @@ class Geographic_Memory:
             if answer[1] < resources:
                 answer = (position, resources)
         return answer
+    
+    def get_max_sugar_around_position(self, row : int, column : int):
+        """Dada una posicion, retorna cual la mayor cantidad de azucar entre las nueve casillas
+        a su alrededor"""
+        max_sugar_around = 0
+        for r in range(row - 1, row + 1):
+            for c in range(column - 1, column + 1):
+                if r == row and c == column:
+                    continue
+                try:
+                    max_sugar_around = max(max_sugar_around, self.get_last_info_of_sugar_in_position(r, c)[1])
+                except:
+                    pass
+        return max_sugar_around
