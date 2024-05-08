@@ -119,7 +119,7 @@ class SimpleSimulation(ISimulation):
             dead = (self.deads[id])/self.turn
             reources = self.resourcesPerAgent[id] / self.totalRecursos
             attacks = self.AttacksReceivedPerAgent[id]/(self.totalAtaques+1)
-            answer.append((id,(dead, reources, reources)))
+            answer.append((id,(dead, reources, attacks)))
         return answer
     
     def add_message(self, message: str):
