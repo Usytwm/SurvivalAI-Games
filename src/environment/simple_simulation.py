@@ -112,8 +112,14 @@ class SimpleSimulation(ISimulation):
             Returns a tuple (id, results) of the agent in the simulation.
         """
         answer = []
-        for id, agent in self.agents:
-            answer.append((id,((self.deads[id]/self.turn), self.resourcesPerAgent[id] / self.totalRecursos, self.AttacksReceivedPerAgent[id]/self.totalAtaques)))
+        
+        for id in self.agents.keys():
+            if id is not self.deads.keys():
+                self.deads[id] = self.turn
+            dead = (self.deads[id])/self.turn
+            reources = self.resourcesPerAgent[id] / self.totalRecursos
+            attacks = self.AttacksReceivedPerAgent[id]/(self.totalAtaques+1)
+            answer.append((id,(dead, reources, reources)))
         return answer
     
     def add_message(self, message: str):
