@@ -101,11 +101,22 @@ class SimpleSimulation(ISimulation):
         agents: List[Tuple[Tuple[int] | Tuple[int | Agent_Handler]]],
         view: ViewOption = ViewOption.TERMINAL,
     ):
+        
         super().__init__(map, agents, view)
         if self.view == ViewOption.PYGAME:
             self._display = Display(map, len(agents))
+        self.resultPerAgent = [] #! OJO OJO
         self.messages = []  # Almacenar mensajes para la simulación
-
+    @property
+    def returnResult(self): #! OJO OJO
+        """
+            Returns a tuple (id, results) of the agent in the simulation.
+        """
+        answer = []
+        for id, agent in self.agents:
+            answer.append((id,((self.deads[id]/self.turn), self.resourcesPerAgent[id] / self.totalRecursos, self.AttacksReceivedPerAgent[id]/self.totalAtaques)))
+        return answer
+    
     def add_message(self, message: str):
         self.messages.append(message)
 
@@ -186,6 +197,7 @@ class SimpleSimulation(ISimulation):
                 if not victim_id in attackers:
                     attackers[victim_id] = {}
                 attackers[victim_id][actor_id] = attack_strength
+                self.totalAtaques += 1
 
         for dead_id in deads:
             action = Action(Action_Type.DIE, dead_id)
@@ -196,6 +208,7 @@ class SimpleSimulation(ISimulation):
                     (attack_strength * initial_wealth[dead_id]) / sum_of_strengths
                 )
                 self.__feed_single_agent__(attacker_id, reward, dead_id)
+            self.deads[dead_id] = self.turn
 
     def __execute_association_proposals__(
         self, association_proposals: Dict[int, List[Association_Proposal]]
