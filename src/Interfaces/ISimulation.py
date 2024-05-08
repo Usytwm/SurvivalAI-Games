@@ -186,6 +186,7 @@ class ISimulation(ABC):
             agent.burn()
             self.objects[agent_id].resources = agent.resources
             self.resourcesPerAgent[agent_id] += crop #! Tacto
+            self.totalRecursos += crop
         for agent in list(self.agents.values()):
             if agent.IsDead:
                 self.map.add_action(Action(Action_Type.DIE, agent.id))
