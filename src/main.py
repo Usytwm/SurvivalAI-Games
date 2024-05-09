@@ -47,13 +47,13 @@ def create_agents(num_agents, positions, map):
             map,
             random.choice(
                 [
-                    # FoodSeekerAgentwithAstar(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
-                    # ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
-                    # PacifistAgent(
-                    #     agent_id, consume, reserves, sqlite3.connect(":memory:")
-                    # ),
+                    FoodSeekerAgentwithAstar(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
+                    ProAgent(agent_id, consume, reserves, sqlite3.connect(":memory:")),
+                    PacifistAgent(
+                        agent_id, consume, reserves, sqlite3.connect(":memory:")
+                    ),
                     FoodSeekerAgent(
                         agent_id, consume, reserves, sqlite3.connect(":memory:")
                     ),
@@ -103,7 +103,7 @@ def create_simulation(
     ]
 
 
-simulation, details = create_simulation(20, 20, 100, view=ViewOption.TERMINAL)
+simulation, details = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
 winerr_agents = []
 
 

@@ -229,6 +229,7 @@ class SimpleSimulation(ISimulation):
                         set(proposal.destinataries_ids), proposal.commitments
                     )
                     self.associations[association.id] = association
+                    print("Creada Asociacion entre " + " ".join([str(id) for id in association.members]))
                     for destinatary_id in proposal.destinataries_ids:
                         self.agents[destinatary_id].inform_joined_association(
                             association
