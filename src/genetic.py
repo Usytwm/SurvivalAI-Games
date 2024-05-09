@@ -1,5 +1,6 @@
 import random
 import sqlite3
+import threading
 
 # from main import create_simulation
 from Interfaces.ISimulation import ViewOption
@@ -331,11 +332,11 @@ def create_agents_ADN(adn_poblacion):
 
 def seleccionar_mejor_población(id_ADN, result, top_k):
     poblacion_ordenada = []
-    for i in range(0, result):
+    for i in range(0, len(result)):
         valor = función_ponderación(result[i][1])
-        poblacion_ordenada.append((result[i][0], valor))
-    poblacion_ordenada.sort()
-    return poblacion_ordenada[top_k:]
+        poblacion_ordenada.append((result[i], valor))
+    poblacion_ordenada.sort(key=lambda x: x[1], reverse=True)
+    return poblacion_ordenada[:top_k]
 
 
 # Función principal
@@ -344,12 +345,20 @@ def algoritmo_genético(tamaño_población, generaciones):
     adn_optimo = []
     for _ in range(generaciones):
         agents, id_ADN = create_agents_ADN(adn_poblacion)
+
         # TODO Como asocio ADN con agente?
+        def stop_simulation():
+            simulation.stop()
+
+        # Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
+        timer = threading.Timer(20, stop_simulation)
+        timer.start()  # Inicia el temporizador
         simulation, agents = create_simulation_genetic(50, 50, agents)
         while not simulation.__has_ended__():
             simulation.step(
                 sleep_time=0.0001
             )  # Necesito Turnos que sobrevivio, Recursos que recolecto, combates en los que participo
+        timer.cancel()
         result = simulation.returnResult
 
         # result = {}
@@ -358,8 +367,10 @@ def algoritmo_genético(tamaño_población, generaciones):
             id_ADN, result, tamaño_población
         )  # Selecciona los K mejores
 
-        adn_optimo = mejor_poblacion[0]  # Guarda el agente optimo de está generación
-
+        adn_optimo = mejor_poblacion[0][0][
+            2
+        ]  # Guarda el agente optimo de está generación
+        mejor_poblacion = [poblacion[0][2] for poblacion in mejor_poblacion]
         adn_poblacion = reproducir(
             mejor_poblacion, tamaño_población
         )  # Devuelve solo el ADN

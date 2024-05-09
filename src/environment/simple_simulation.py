@@ -9,6 +9,7 @@
    lanzo sea analizado
 """
 
+from copy import deepcopy
 from typing import Dict, Tuple, List, Set
 from Interfaces.ISimulation import ISimulation, ViewOption
 import random
@@ -105,6 +106,7 @@ class SimpleSimulation(ISimulation):
         super().__init__(map, agents, view)
         if self.view == ViewOption.PYGAME:
             self._display = Display(map, len(agents))
+        self.initial_agents = [agent[1] for agent in agents]
         self.resultPerAgent = []  #! OJO OJO
         self.messages = []  # Almacenar mensajes para la simulación
 
@@ -114,15 +116,20 @@ class SimpleSimulation(ISimulation):
         Returns a tuple (id, results) of the agent in the simulation.
         """
         answer = []
-        for id, agent in self.agents.items():
+        for id, agent in self.initial_agents:
+            try:
+                turn_of_death = self.deads[id]
+            except:
+                turn_of_death = self.turn
             answer.append(
                 (
                     id,
                     (
-                        (self.deads[id] / self.turn),
+                        (turn_of_death / self.turn),
                         self.resourcesPerAgent[id] / self.totalRecursos,
                         self.AttacksReceivedPerAgent[id] / self.totalAtaques,
                     ),
+                    agent.agent.transition_function,
                 )
             )
         return answer
@@ -239,7 +246,6 @@ class SimpleSimulation(ISimulation):
                         set(proposal.destinataries_ids), proposal.commitments
                     )
                     self.associations[association.id] = association
-                    print("Creada Asociacion entre " + " ".join([str(id) for id in association.members]))
                     for destinatary_id in proposal.destinataries_ids:
                         self.agents[destinatary_id].inform_joined_association(
                             association
