@@ -143,8 +143,20 @@ class Memory_for_Agents_Sights:
         for agent_id in self.agents_seen:
             answer[agent_id] = self.get_last_info_from_agent(agent_id)
         return answer
-
-
+    
+    def get_agents_around_position(self, position : Tuple[int, int]) -> List[Tuple[int, int]]:
+        "Retorna una lista con los agentes alrededor de la posicion dada y el azucar que llevaban"
+        answer = []
+        for i in range(-1, 1):
+            for j in range(-1, 1):
+                if (i == 0) and (j == 0):
+                    continue
+                try:
+                    id, resources = self.get_last_info_of_position(position[0] + i, position[1] + j)[1]
+                    answer.append((id, resources))
+                except:
+                    pass
+        return answer
 # conn = sqlite3.connect(':memory:')
 # m = Memory_for_Agents_Sights(3, conn)
 # cursor = m.add_appearence(1, (0, 0), 0, 0)
