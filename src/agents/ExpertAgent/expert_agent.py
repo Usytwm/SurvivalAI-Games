@@ -12,6 +12,7 @@ from agents.ExpertAgent.Rules import (
     random_metarule,
     resource_seeker_metarule,
 )
+from dill import dump, load
 
 
 class ExpertAgent(Agent_with_Memories):
@@ -25,7 +26,14 @@ class ExpertAgent(Agent_with_Memories):
     ):
         super().__init__(id, consume, reserves, conn)
         self.color = (255, 255, 255)  # white
-        self.transition_function = trasnsition_function
+        if trasnsition_function is None:
+            try:
+                with open("SuperAgente.joblib", "rb") as a:
+                    self.transition_function = load(a)
+            except:
+                self.transition_function = None
+        else:
+            self.transition_function = trasnsition_function
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
             Fact(Knowledge.ENEMIES, set()),

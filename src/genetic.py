@@ -172,9 +172,7 @@ def Sensor(aliados, enemigos, recursos, vitalidad, reserva, hostilidades, asocia
     )
 
 
-# print(Sensor(6, 7, 10000, 1000, 100, 3, 4))
-
-def generar_f(k,q): 
+def generar_f(k, q):
     """
     Genera una función de transición f para un autómata finito.
 
@@ -190,16 +188,21 @@ def generar_f(k,q):
               - estado_destino: El estado de destino al que transicionar.
     """
     f = []
-    for i in range(k): # Por cada estado (Tipo) salen k-1 aristas (Hay una via para ir a los restantes k-1 tipos)  
-        for j in range(k):   
+    for i in range(
+        k
+    ):  # Por cada estado (Tipo) salen k-1 aristas (Hay una via para ir a los restantes k-1 tipos)
+        for j in range(k):
             if j == i:
-                continue           
-            adn = [random.randint(1, 3) for _ in range(q)] # Genera q elementos aleatorios entre 1 y 3
-            transitionij = ((i,adn),j) # Desde i leyendo adn voy hacia j
-            f.append(transitionij) # 
+                continue
+            adn = [
+                random.randint(1, 3) for _ in range(q)
+            ]  # Genera q elementos aleatorios entre 1 y 3
+            transitionij = ((i, adn), j)  # Desde i leyendo adn voy hacia j
+            f.append(transitionij)  #
     return f
 
-def crear_f_poblacion_inicial(N, K): 
+
+def crear_f_poblacion_inicial(N, K):
     """
     Crea una población inicial de tamaño N, donde cada individuo tiene K estados iniciales posibles.
 
@@ -212,9 +215,10 @@ def crear_f_poblacion_inicial(N, K):
     """
     fs_iniciales = []
     for _ in range(N):
-        f = generar_f(K,6) #
+        f = generar_f(K, 6)  #
         fs_iniciales.append(f)
     return fs_iniciales
+
 
 def reproducir(padres, tamaño_población):
     """
@@ -231,9 +235,10 @@ def reproducir(padres, tamaño_población):
     for _ in range(tamaño_población):
         padre1 = random.choice(padres)
         padre2 = random.choice(padres)
-        hijo = cruzar_Y_mutar(padre1,padre2)
+        hijo = cruzar_Y_mutar(padre1, padre2)
         hijos.append(hijo)
     return hijos
+
 
 def mutar(adn):
     """
@@ -245,10 +250,10 @@ def mutar(adn):
     Returns:
     - list: array con una posición alterada.
     """
-    indice = random.randint(0, len(adn)-1)
+    indice = random.randint(0, len(adn) - 1)
 
-    mutación = random.randint(1,3)
-    
+    mutación = random.randint(1, 3)
+
     adn[indice] = mutación
 
     return adn
@@ -266,20 +271,20 @@ def cruzar_Y_mutar(padre1, padre2):
     - list[ ((int,list), int) ]: Nuevo individuo (hijo) resultado del cruce y la mutación.
     """
     f_hijo = []
-    for k in range(len(padre1)): 
+    for k in range(len(padre1)):
         par1 = padre1[k]
         par2 = padre2[k]
         comp1_padre1 = par1[0]
         comp1_padre2 = par2[0]
         adn_K_padre1 = comp1_padre1[1]
         adn_K_padre2 = comp1_padre2[1]
-        adn_K_hijo = mezclar_Adn(adn_K_padre1,adn_K_padre2)
+        adn_K_hijo = mezclar_Adn(adn_K_padre1, adn_K_padre2)
         adn_K_hijo = mutar(adn_K_hijo)
         new_estado_adn = (comp1_padre1[0], adn_K_hijo)
         if new_estado_adn not in f_hijo:
             nueva_transiccion = ((comp1_padre1[0], adn_K_hijo), par1[1])
             f_hijo.append(nueva_transiccion)
-            
+
         else:
             # Realizar alguna acción para manejar la colisión de claves, como ignorarla o modificarla
             adn_k_hijo_extra = mutar(adn_K_hijo)
@@ -287,12 +292,13 @@ def cruzar_Y_mutar(padre1, padre2):
             f_hijo.append(nueva_transiccion)
     return f_hijo
 
+
 def mezclar_Adn(adn_padre1, adn_padre2):
-    adn_hijo = [0]*len(adn_padre1)
+    adn_hijo = [0] * len(adn_padre1)
     punto_de_cruce = random.randint(1, len(adn_padre1) - 2)
     for i in range(0, punto_de_cruce):
         adn_hijo[i] = adn_padre1[i]
-    for i in range(punto_de_cruce+1, len(adn_padre2)):
+    for i in range(punto_de_cruce + 1, len(adn_padre2)):
         adn_hijo[i] = adn_padre2[i]
     return adn_hijo
 
@@ -300,10 +306,11 @@ def mezclar_Adn(adn_padre1, adn_padre2):
 def función_ponderación(caracterisisticas):
     answer = 0
     for value in caracterisisticas:
-        answer+=value
-    return answer/len(caracterisisticas)
+        answer += value
+    return answer / len(caracterisisticas)
 
-def seleccionar_mejor_población(id_ADN, result, top_k):
+
+def seleccionar_mejor_poblacións(id_ADN, result, top_k):
     poblacion_ordenada = []
     for i in range(len(result)):
         valor = función_ponderación(result[i][1])
@@ -318,16 +325,6 @@ def seleccionar_mejor_población(id_ADN, result, top_k):
                 mejores_funcionesADN.append(lista)
                 break  # Salir del bucle interior una vez que se ha encontrado la coincidencia
     return mejores_funcionesADN
-
-
-
-
-
-
-
-
-
-
 
 
 def create_agents_ADN(adn_poblacion):
@@ -348,8 +345,7 @@ def create_agents_ADN(adn_poblacion):
     return agents, id
 
 
-
-def seleccionar_mejor_poblacións(id_ADN, result, top_k):
+def seleccionar_mejor_población(id_ADN, result, top_k):
     poblacion_ordenada = []
     for i in range(0, len(result)):
         valor = función_ponderación(result[i][1])
@@ -399,3 +395,10 @@ def algoritmo_genético(tamaño_población, generaciones):
 
 
 algoritmo_genético(10, 10)
+
+
+# adn_optimo = None
+# with open("SuperAgente.joblib", "rb") as a:
+#     adn_optimo = load(a)
+
+# print(adn_optimo)
