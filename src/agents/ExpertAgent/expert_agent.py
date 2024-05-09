@@ -15,9 +15,17 @@ from agents.ExpertAgent.Rules import (
 
 
 class ExpertAgent(Agent_with_Memories):
-    def __init__(self, id, consume: int, reserves, conn: sqlite3.Connection):
+    def __init__(
+        self,
+        id,
+        consume: int,
+        reserves,
+        conn: sqlite3.Connection,
+        trasnsition_function=None,
+    ):
         super().__init__(id, consume, reserves, conn)
         self.color = (255, 255, 255)  # white
+        self.transition_function = trasnsition_function
         initial_facts = [
             Fact(Knowledge.ALLIES, set()),
             Fact(Knowledge.ENEMIES, set()),

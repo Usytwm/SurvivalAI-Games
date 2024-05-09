@@ -17,7 +17,7 @@ from environment.actions import (
     Association_Proposal,
     Attack,
     Association_Creation,
-    Action_Type
+    Action_Type,
 )
 from environment.graph_of_attacks import Graph_of_Attacks, Component_of_Attacks_Graph
 from environment.association import Association
@@ -101,22 +101,32 @@ class SimpleSimulation(ISimulation):
         agents: List[Tuple[Tuple[int] | Tuple[int | Agent_Handler]]],
         view: ViewOption = ViewOption.TERMINAL,
     ):
-        
+
         super().__init__(map, agents, view)
         if self.view == ViewOption.PYGAME:
             self._display = Display(map, len(agents))
-        self.resultPerAgent = [] #! OJO OJO
+        self.resultPerAgent = []  #! OJO OJO
         self.messages = []  # Almacenar mensajes para la simulación
+
     @property
-    def returnResult(self): #! OJO OJO
+    def returnResult(self):  #! OJO OJO, poner para que cuando no halla muerto le de 1
         """
-            Returns a tuple (id, results) of the agent in the simulation.
+        Returns a tuple (id, results) of the agent in the simulation.
         """
         answer = []
-        for id, agent in self.agents:
-            answer.append((id,((self.deads[id]/self.turn), self.resourcesPerAgent[id] / self.totalRecursos, self.AttacksReceivedPerAgent[id]/self.totalAtaques)))
+        for id, agent in self.agents.items():
+            answer.append(
+                (
+                    id,
+                    (
+                        (self.deads[id] / self.turn),
+                        self.resourcesPerAgent[id] / self.totalRecursos,
+                        self.AttacksReceivedPerAgent[id] / self.totalAtaques,
+                    ),
+                )
+            )
         return answer
-    
+
     def add_message(self, message: str):
         self.messages.append(message)
 
