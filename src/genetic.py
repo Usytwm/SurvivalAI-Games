@@ -302,7 +302,7 @@ def algoritmo_genético(tamaño_población, generaciones):
         dump(adn_optimo, a)
 
 
-algoritmo_genético(10, 10)
+algoritmo_genético(100, 100)
 
 
 # adn_optimo = None
