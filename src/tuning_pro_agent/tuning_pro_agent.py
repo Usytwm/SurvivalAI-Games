@@ -110,7 +110,12 @@ class Tuning_Pro_Agent(IGenetic_SugarScape):
         population[2].appeal_recquired_to_associate = 2
         population[2].security_umbral = 0.3
 
-        #El otro es el predefinido
+        #Medio
+        population[3].alfa = 0.5
+        population[3].beta = 0.5
+        population[3].minimun_free_portion = 0.5
+        population[3].appeal_recquired_to_associate = 0.5
+        population[3].security_umbral = 1
         return population
 
 a = Tuning_Pro_Agent()
