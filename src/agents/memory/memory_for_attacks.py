@@ -1,6 +1,7 @@
 import sqlite3
 from typing import Dict, List, Tuple
 
+DROP_TABLE_IF_EXISTS = """DROP TABLE IF EXISTS %s"""
 CREATE_TABLE = """CREATE TABLE %s (attacker_id INTEGER, victim_id INTEGER,
 iteration INTEGER)"""
 INSERT_ATTACK = """INSERT INTO %s (attacker_id, victim_id, iteration) VALUES(%s, %s, %s)"""
@@ -17,6 +18,7 @@ class Memory_for_Attacks:
         self.cursor = conn.cursor()
         self.table_name = "attacks_" + str(self.id)
         self.deaths : Dict[int, int] = {}
+        self.cursor = self.cursor.execute(DROP_TABLE_IF_EXISTS%(self.table_name))
         self.cursor = self.cursor.execute(CREATE_TABLE%(self.table_name))
         self.attacks_per_agent : Dict[int, int] = {}
         #attacks_per_agent guarda para cada agente cuantos ataques ha hecho

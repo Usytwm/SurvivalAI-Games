@@ -1,6 +1,7 @@
 import sqlite3
 from typing import Tuple, List, Dict
 
+DROP_TABLE_IF_EXISTS = """DROP TABLE IF EXISTS %s"""
 CREATE_TABLE = """CREATE TABLE %s (agent_id INTEGER, row INTEGER, column INTEGER,
 iteration INTEGER, resources INTEGER)"""
 INSERT_APPEARENCE = """INSERT INTO %s (agent_id, row, column, iteration, resources) VALUES(%s, %s, %s, %s, %s);"""
@@ -35,6 +36,7 @@ class Memory_for_Agents_Sights:
         self.id = id
         self.cursor = conn.cursor()
         self.table_name = "agents_sights_" + str(self.id)
+        self.cursor = self.cursor.execute(DROP_TABLE_IF_EXISTS%(self.table_name))
         self.cursor = self.cursor.execute(CREATE_TABLE % (self.table_name))
         self.agents_seen : Dict[int, int] = {}
         #agents_seen guarda para cada agente la cantidad de veces que lo hemos visto
