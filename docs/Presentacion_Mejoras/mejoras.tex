@@ -64,4 +64,100 @@
     \end{itemize}
 \end{frame}
 
+\section{Smarter Agents}
+\subsection{Pro Agent}
+\begin{frame}{Descripcion General del Pro Agent}
+    Pro Agent es un agente cuyo comportamiento esta guiado por formulas, que a su vez dependen de parametros que se pueden ajustar a medida que se desea lograr uno u otro comportamiento en el agente.
+    Las acciones a realizar en un turno las decide de manera coordinada, de manera que un tipo de accion pueda suplir las carencias de la otra.
+    Para sus decisiones se apoya en caracterizaciones que realiza de los restantes agentes, decidiendo de una manera diferente respecto a otro agente de acuerdo a su nivel de agresividad o lejania. Ademas realiza evaluaciones del riesgo en las casillas a su alrededor y en la casilla propia en que se encuentra.
+\end{frame}
+
+\begin{frame}{Parameters}
+    Sus parametros son:
+    \begin{itemize}
+        \item alfa
+        \item beta
+        \item $apeal\_recquired\_to\_associate$
+        \item $minimun\_free\_portion$
+        \item $security\_umbral$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Move}
+    Para tomar la decision de hacia que posicion moverse, el ProAgent asigna una valoracion a cada casilla de cuan bueno seria moverse a ella. Esta evaluacion surge a partir de una formula donde se ponderan el riesgo de ir a esa casilla y la cantidad de azucar que esa casilla contiene.
+    La formula es:
+    El riesgo de una posicion es calculado como la suma de las amenazas potenciales de cada uno de los agentes conocidos a esa posicion. La amenaza potencial de cada agente a una posicion sera inversamente proporcional a su distancia y directamente proporcional a la cantidad de recursos que tenga y estara multiplicada por la agresividad del agente.
+    La agresividad de un agente, que usaremos numerosas veces en lo adelante, se calcula como el cociente de la cantidad de ataques que hemos visto realizar al agente y la cantidad de veces que lo hemos visto.
+\end{frame}
+
+\begin{frame}{Parametro Alfa}
+    El valor del parametro alfa va entre 0 y 1
+    Mientras mas cercano sea alfa a cero, mas importancia dara el agente al riesgo a la hora de evaluar una posicion
+    Mientras mas cercano sea alfa a uno, mas el agente considerara la cantidad de azucar que hay en la posicion, en detrimento del riesgo
+\end{frame}
+
+\begin{frame}{Decision de los Ataques y Asociaciones}
+    La decision de las acciones a realizar durante el turno por el agente se toma una sola vez, al comenzar al turno. Luego cuando son requeridas los ataques y las propuestas de  asociaciones por separado, el agente devuelve aquello que ya decidio, Esto permite coordinar sus atques y sus asociaciones.
+    Primeramente para ello precomputa la agresividad presumida de cada agente. Luego decide que ataques realizar y guarda ademas una lista de aquellos agentes a los que de atacar, podia haber destruido, pero no pudo atacar en este turno por cuestiones logisticas. Tales agentes seran luego extorsionados, a traves de asociaciones ventajosas que nuestro agente propondra, entre las asociaciones que decida proponer como culminacion de esta etapa.
+\end{frame}
+
+\begin{frame}{Ataques}
+    El ProAgent solo ataca a aquellos agentes que sabe con seguridad que puede matar en el proximo turno. Para ello para cada agente dentro de su rango de ataque valora, si es posible matarlo en el siguiente turno, de ser asi la fuerza requerida para ello y ademas el atractivo de matarlo. Luego a aquellos agentes que puede matar, los ordena en orden decreciente de su atractivo como victimas (kill_apeal, formula de la que hablaremos mas adelante).
+    El ProAgent tiene un parameto denominado security_umbral, que expresa la minima proporcion que el agente esta dispuesto a permitir entre su nivel de azucar, y el riesgo que existe en la posicion en que se encuentra. El ProAgent realiza ataques a estos agentes vulnerables con la fuerza suficiente para destruirlos, mientras no comprometa una cantidad de azucar que haga caer dicha proporcion por debajo del security_umbral. Los id de agentes vulnerables que no puedan ser atacados en este turno, por motivos de proteger el security_umbral, seran guardados, para luego hacerles propuestas de asociaciones ventajosas para el agente actual, o sea, extorsiones.
+\end{frame}
+
+\begin{frame}{security_umbral}
+    Security_Umbral es un parametro no negativo.
+    Expresa la proporcion minima que el agente se va a permitir entre la cantidad de recursos no comprometidos que posee y el riesgo de la posicion enque se encuentra (que es mas menos equivalente a la mayor suma de ataques que podria recibir).
+    El AgentPro realiza ataques mientras no comprometa su cumplimiento del Security_Umbral, de manera que mientras mayor el Security_Umbral menos ataques realiza el agente, mas se preocupa por su seguridad.
+\end{frame}
+
+\begin{frame}{Association_Proposals}
+    El ProAgent propone tres tipos de asociaciones. Asociaciones para protegerse de amenazas cercanas, extorsiones a aquellos agentes vulnerables a los que no pudo atacar y propuestas de paz a agentes con mas menos sus mismos recursos para evitar futuros conflictos
+    Para cada agente a extorsionar, le propone un trato donde el agente extorsionado debe entregar el 25 porciento de sus futuras ganancias, mientras el ProAgent no entrega nada, mas alla del compromiso de no atacarlo.
+\end{frame}
+
+\begin{frame}{Defensive Associations}
+    El ProAgent identifica como una amenaza a cada agente dentro de su rango de vista que tiene mas recursos y ademas tiene un historial de ataques no despreciable (por ahora seteamos como 25 porciento de agresividad ese limite). Los agentes que cumplen estas condiciones son identificados como amenazas debido a que pudieran, de desearlo destruir al ProAgent con un solo ataque.
+    A todos tales agentes que constituyen amenazas se les proponen asociaciones. La porcion minima de las ganancias personales que el agente considera obligatorio conservar esta codificada por el parametro minimum_free_portion. Cuan jugosa es la porcion otorgada a cada amenaza en la propuesta de asociacion depende de la cantidad de amenazas y de la porcion de las ganancias del agente que aun no se ha comprometido, asi como de la porcion que no esta dispuesto a comprometer. No obstante, aunq no tenga recursos para ofrecr, el agente siempre ofrecera alianzas a los agentes que considera amenazas
+\end{frame}
+
+\begin{frame}{Peace_Treaties}
+    Para los agentes que no caen en ninguna de las categorias anteriores, o sea, con los cuales existe mas menos una paridad en cuanto a recursos, el ProAgent, valora para cada cual cuan atractiva es una asociacion con el. Dada la formula del kill_apeal, encontramos que esa formula tambien describe muy bien cuan atractivo es otro agente para realizar una asociacion.
+    A todos aquellos agentes en esta tercera categoria cuyo kill_apeal sea mayor que el parametro apeal_recquired_to_associate se les hara una propuesta de asociacion donde ninguno de los dos agentes compromete sus ganancias, o sea, un tratado de paz
+\end{frame}
+
+\begin{frame}{El Kill_Apeal}
+    El kill_appeal vendria siendo asi como cuan molesto es el agente rival evaluado en los planes del ProAgent. Por supuesto, mientras mas cercano, o mientras mas agresivo, mas molesto. La medida en que se da ma valor para el calculo de esta metrica viene dada por el parametro beta.
+    Sera mas atractivo matar o asociarse con un agente que tenga un kill_appeal mas elevado, pues asi un problema menos. Tienen kill_appeal mas alto aquellos agentes con mas posibilidad de atacarnos, bloquear nuestro camino o ambos.
+\end{frame}
+
+\begin{frame}{Parametro Beta}
+    El parametro beta corre entre 0 y 1 y es la llave de paso que regula la ponderacion usada en la formula del kill_apeal.
+    Mientras mas cercano a cero mas peso toma el reverso de la distancia
+    Mientras mas cercano a uno mas peso toma la agresividad del agente rival
+\end{frame}
+
+\begin{frame}{Consider Association_Proposals}
+    Al considerar las propuestas de asociaciones se toma las siguientes consideraciones, con el mismo orden de prioridad en que aparecen:
+    \begin{itemize}
+        \item Si en ella se encuentra algun agente que constituye una amenaza directa (o sea la propuesta es una extorsion) y ademas el ProAgent esta dspuesto a pagar lo requerido en la asociacion, entonces la propuesta es aceptada
+        \item Si en la propuesta hay algun agente que podemos destruir en este turno, obviamente ese agente esta tratando de librarse de una muerte segura, y entonces no aceptamos la asociacion
+        \item De otra forma, si para cada uno de los agentes en la propuesta se cumple que su kill_apeal es mayor que el parametro appeal_recquired_to_associate y ademas aceptar la sociacion no compromete el cumplimiento del parametro minimun_free_portion, entonces, el ProAgent acepta la asociacion
+    \end{itemize}
+\end{frame}
+
+\subsection{Tunear los parametros de ProAgent}
+\begin{frame}{Algoritmo Genetico}
+    Un algoritmo genetico es una metaheuristica para solucionar problemas de optimizacion basada en la teoria de la evolucion de Charles Darwin, que presenta relativa facilidad para superar minimos locales. Permite reducir cualquier problema, por complejo que sea a unas cuantas definiciones, digase, como codificar en genes cada solucion, como tomar caracteristicas de dos soluciones diferentes y mezclarlas en una nueva solucion, como alterar ligeramente de manera aleatoria las soluciones de manera que se alcance todo el espacio de busqueda sin introducir aleatoreidad abrumadora y que porcion preservar de las soluciones y que porcion desechar y sustituir por la mezcla de las soluciones preservadas.
+    Estas caracteristicas de los algoritmos geneticos nos permite encontrar buena soluciones a problemas de optimizacion que seria dificil expresar en terminos matematicos estrictos.
+\end{frame}
+
+\begin{frame}{Por que Algoritmos Geneticos?}
+    Escogimos algoritmos geneticos para tunear el ProAgent porque:
+    \begin{itemize}
+        \item 
+    \end{itemize}
+\end{frame}
+
 \end{document}
