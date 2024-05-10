@@ -156,8 +156,65 @@
 \begin{frame}{Por que Algoritmos Geneticos?}
     Escogimos algoritmos geneticos para tunear el ProAgent porque:
     \begin{itemize}
-        \item 
+        \item La cantidad de parametros a ajustar (5), su rango de valores y la escasa necesidad de una precision mas alla de la primera cifra decimal, hacen del espacio de busqueda lo suficientemente pequenho como para que un algoritmo genetico bien aplicado en 1000 generaciones (alrededor de 15 minutos de simulacion) de un resulta considerablemente bueno y del cual se puedan extraer conclusiones solidas sobre los valores optimos de los parametros.
+        \item Es comparable el proceso de la supervivencia de los agentes en la simulacion al de la supervivencia del mas apto en la naturaleza
+        \item El propio valor de los parametros sin mas codificacion puede ser usado como codigo genetico
+        \item Permite evitar la complejidad de la modelacion de este problema de una manera que realmente ningun otro de los algoritmos valorados permitia
     \end{itemize}
+\end{frame}
+
+\begin{frame}{La Implementacion}
+En el modulo ai, en el submodulo search, en la carpeta genetc implementamos una interfaz para problemas geneticos en general, donde le damos cuerpo a los metodos offpring (crear la nueva generacion) y abstraemos los metodos fitness, mutate, crossover y criterio de parada.
+En el modulo Interfaces creamos una interfaz para problemas geneticos cuyo fitness este dado por el episodio en el cual muere un agente en una simulacion de SugarScapes. Alli damos cuerpo a fitness y a la simulacion.
+En la carpeta tuning_pro_agent, directamente implementamos el problema de encontrar los parametros optimos para la supervivencia del ProAgent y lo modelamos como descriiremos a continuacion.
+\end{frame}
+
+\begin{frame}{Modelacion}
+    Usamos una poblacion de tan solo 20 ProAgents. Cada vez que realizamos una simulacion de SugarScapes usamos a los ProAgents de la poblacion y otros 80 agentes de otros tipos escogidos al azar. Mantenemos a los 5 ProAgents que mas tiempo se mantuvieron con vida, y sustituimos a los restantes por mezclas de estos 5 ProAgents susceptibles a mutaciones.
+    Si bien usar una poblacion tan pequenha es un drawback en cuanto a velocidad de la convergencia de los resultados, tomamos este sacrificio en aras de que el tuning de los parametros de ProAgent ocurriera en circunstancias similares a donde despues seria puesto a prueba (simulaciones de 100 agentes de tipos aleatorios). Una posible solucion, que no pensamos a tiempo, seria tener una poblacion de 100 agentes, pero separarlos en 5 simulaciones distintas, y quedarnos con los 5 mejores ProAgents de cada simulacion. No obstante notemos que aunque esta solucion mejora la convergencia en terminos de cantidad de generaciones, en realidad no mejora la velocidad de ejecucion del tuning, puesto que realiza 5 simulaciones por generacion en lugar de 1.
+\end{frame}
+
+\begin{frame}{Modelacion}
+    Los genes los modelamos como los propios valores que toman los parametros que tratamos de optimizar.
+    La funcion fitness esta dada por la cantidad de episodios que sobrevivio el agente en la simulacion. Se realiza una simulacion por cada generacion
+    Para la funcion crossover, hacemos que cada parametro tome un valor intermedio entre los valores que alcanza el parametro en los padres. Este valor intermedio es seleccionado aleatoriamente, con una distribucion en forma de V, de manera que lo mas probable es que el valor de un parametro se parezca mucho al valor de ese mismo parametro en uno de sus progenitores. Lo hicimos de esta manera pues consideramos que es la manera mas natural de preservar los rasgos de los padres, dado que en la vida real, la mayor parte de los rasgos fisicos de las personas son heredados de uno de sus progenitores, no de ambos a la vez.
+    Para la funcion mutate, seleccionamos un nuevo numero aleatorio con distribucion normal en el caso de aquellos parametros que corren entre 0 y 1. Para aquellos parametros que no tienen valor fijo, modificamos su valor en un numero random entre -0.5 y 0.5, con distribucion aleatoria.
+\end{frame}
+
+\begin{frame}{Modelacion}
+    La poblacion inicial consistio en algunos agentes con parametros colocados intencionalmente para simular actitudes, confrontacionales, cuidadosas o moderadas, y el resto de los agentes con parametros seleccionados al azar.
+    El criterio de parada usado fue estudiar 1000 generaciones. Si bien algunos parametros convergieron desde momentos relativamente tempranos, para otros parametros la convergencia no se manifesto mas alla de una tendencia a converger. Tomamos ese criterio de parada, porque realmente nos parecio avaricioso aspirar a poner como crterio de parada que convergieran todos los parametros puesto que puede que no fuera el modelo adecuado el mas adecuado para alguno de ellos, y 1000 generaciones nos parecio, y la practica lo corroboro un numero lo suficientemente exhaustivo como para obtener buenos parametros, sin poner en riesgo nuestros medios de computo, que se sobrecalientan y demas...
+\end{frame}
+
+\begin{frame}{Los parametros optimos obtenidos}
+    El primer parametro en converger, haciendolo de una manera inobjetable fue security_umbral. Alrededor de la generacion 300 ya aparecia de manera regular el valor 2.7 como security_umbral y este valor aparecio en la mayoria abrumadora de los agentes que quedaron como ultimos sobrevivientes de simulaciones. De hecho la exactitud fue bastante incuestionable, 2.7, ni mas ni menos. Este es un valor muy alto, lo que da indicios de que los agentes mas conservadores a la hora de realizar ataques (o sea aquellos que solo atacan cuando se sienten muy seguros), tienen una mayor garantia de exito. Del hecho de que el valor no continuara creciendo a medida que avanzo la simulacion, asumimos se debe a que cierto nivel de ofensiva es requerido para no dejar pasar oportunidades claras de asesinar a otros agentes.
+\end{frame}
+
+\begin{frame}{Los parametros optimos obtenidos}
+    El segundo parametro en converger fue el apeal_for_associate, que cayo a numeros negativos de una manera relativamente rapida. Si bien no se estabilizo en un numero negativo como tal, si quedo inobjetablemente bajo cero, frecuentando el -1.5, aunq variando mucho entre -0.8 y -2. La verdad, este parametro, por debajo de cero quiere decir, propon alianzas pacificas a todo agente que tenga mas menos tantos recursos como tu, por lo cual. O sea, cuando esta por debajo de cero poco importa el valor que tenga siempre se va a comportar de la misma manera, proponiendo y aceptando todas las alianzas pacificas posibles.
+\end{frame}
+
+\begin{frame}{Los parametros optimos obtenidos}
+    Los parametros alfa, beta y minimun_free_portion no convergieron, pero pudimos apreciar que de hacerlo en algun momento sin duda los valores candidatos serian 0.6, 0.4 y 0.5 respectivamente. Estos valores aparecieron mas de la cuenta, y parecian ademas funcionar bien juntos, apareciendo ellos tres a la vez en el mejor ProAgent de cada simulacion una cantidad significativa de veces.
+    Un valor de alfa de 0.6 quiere decir un agente que se arriesga moderadamente en busqueda de azucar, sin despreciar el peligro que representan los agentes a su alrededor.
+    Un valor de beta de 0.4 quiere decir un agente que considera ligeramente mas molesto a un agente mas agresivo que a un agente cercano, pero ambos le causan molestias.
+    Un minimun_free_portion de 0.5, es un valor flexible, que permite al agente proponer asociaciones que salven su vida instantaneamente sin comprometer su futuro al entrar en tratos injustos.
+\end{frame}
+
+\begin{frame}{Resultados}
+    De esta manera, el ProAgent que predomino fue un agente, conservador a la hora de atacar, propenso a hacer alianzas y sin temor de ir a buscar azucar, aunq sin ser temerario en ese aspecto tampoco. No solo nos parece logica esta combinacion de criterios, sino que como se vera posteriormente en los resultados estadisticos exhaustivos para contrastar los diferentes tipos de agentes, el ProAgent tuvo rotundo exito
+\end{frame}
+
+\subsection{FoodSeekerAgentWithA*}
+\begin{frame}{FoodSeekerAgentWithA*}
+    En esencia este es un agente que fija trayectorias convenientes hacia las posiciones mas ricas en azucar que ha visto. Las trayectorias que fija no son necesariamente las mas cortas, sino las mas provechosas en terminso de azucar recolectada, de manera que aspira a siempre tener una buena reserva de azucar.
+    Siendo consecuente con su plan, ataca solo a aquellos agentes que amenazan con ocupar la casilla objetivo del agente y que son vulnerables, o sea, pueden morir de un ataque, con lo cual el agente evitaria que su objetivo sea tomado por otro agente
+    Propone asociaciones a aquellos agentes que se encuentran cercanos y tienen un caracter agresivo, tratando de evitar asi ataques que disminuyan sus reservas de azucar
+\end{frame}
+
+\begin{frame}{Modelacion de este problema con A*}
+    El problema lo modelamos como encontrar el camino menos costoso al objetivo, pero con la peculiaridad de que el costo de realizar un movimiento no es fijo, sino que es inversamente proporcional a la cantidad de azucar en la nueva casilla visitada y directamente proporcional a cuantos turnos nos retrasa comparado a si tomaramos el camino mas corto acorde a la distancia manhattan
+    La heuristica tomada parte del hecho de que la casilla con mas valor que hemos visto es aquella que fijamos como objetivo, de manera que el camino optimo tomado debe tener un costo necesariamente mayor que el costo que tuviera el camino mas corto en cuanto a distancia manhattan, si estuviera lleno de casillas cuya cantidad de azucar sea igual a la cantidad de azucar en la casilla destino
 \end{frame}
 
 \end{document}
