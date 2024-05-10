@@ -1,6 +1,7 @@
 import sqlite3
 from typing import Tuple, List, Dict
 
+DROP_TABLE_IF_EXISTS = """DROP TABLE IF EXISTS %s"""
 CREATE_TABLE = """CREATE TABLE %s (agent_id INTEGER, row INTEGER, column INTEGER,
 iteration INTEGER, resources INTEGER)"""
 INSERT_APPEARENCE = """INSERT INTO %s (agent_id, row, column, iteration, resources) VALUES(%s, %s, %s, %s, %s);"""
@@ -35,6 +36,7 @@ class Memory_for_Agents_Sights:
         self.id = id
         self.cursor = conn.cursor()
         self.table_name = "agents_sights_" + str(self.id)
+        self.cursor = self.cursor.execute(DROP_TABLE_IF_EXISTS%(self.table_name))
         self.cursor = self.cursor.execute(CREATE_TABLE % (self.table_name))
         self.agents_seen : Dict[int, int] = {}
         #agents_seen guarda para cada agente la cantidad de veces que lo hemos visto
@@ -143,8 +145,20 @@ class Memory_for_Agents_Sights:
         for agent_id in self.agents_seen:
             answer[agent_id] = self.get_last_info_from_agent(agent_id)
         return answer
-
-
+    
+    def get_agents_around_position(self, position : Tuple[int, int]) -> List[Tuple[int, int]]:
+        "Retorna una lista con los agentes alrededor de la posicion dada y el azucar que llevaban"
+        answer = []
+        for i in range(-1, 1):
+            for j in range(-1, 1):
+                if (i == 0) and (j == 0):
+                    continue
+                try:
+                    id, resources = self.get_last_info_of_position(position[0] + i, position[1] + j)[1]
+                    answer.append((id, resources))
+                except:
+                    pass
+        return answer
 # conn = sqlite3.connect(':memory:')
 # m = Memory_for_Agents_Sights(3, conn)
 # cursor = m.add_appearence(1, (0, 0), 0, 0)

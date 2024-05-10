@@ -1,0 +1,220 @@
+\documentclass{beamer}
+\usetheme{Madrid} % Tema visual de la presentación.
+\usepackage[utf8]{inputenc} % Para caracteres especiales en español
+\usepackage[spanish]{babel} % Para configurar LaTeX en español
+\title{Sociedades Artificiales y la Ley del Más Fuerte: Mejoras}
+\author{Brian Ameht Inclán Quesada C-411 \\ Davier Sánchez Bello C-412 \\ Eric López Tornas C-411}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Índice}
+    \tableofcontents
+\end{frame}
+
+\section{Sistema Experto}
+
+\begin{frame}{Introducción al Sistema Experto Mejorado}
+    \begin{itemize}
+        \item Contexto inicial: Problemas de flexibilidad en la gestión de reglas.
+        \item Necesidad de mejora: Incapacidad del sistema para adaptarse dinámicamente a cambios en el entorno.
+        \item Objetivo de las mejoras: Aumentar la eficiencia del sistema permitiendo ajustes dinámicos de las reglas.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Gestión Dinámica de Reglas}
+    \begin{itemize}
+        \item Implementación de la funcionalidad para añadir y eliminar reglas:
+              \begin{itemize}
+                  \item Posibilidad de añadir y eliminar reglas individualmente o en grupos.
+                  \item Método utilizado: Interfaces de usuario e integración en tiempo real con el sistema experto.
+              \end{itemize}
+        \item Beneficios directos: Mayor adaptabilidad y respuesta rápida a cambios operativos.
+        \item Ejemplo práctico: Añadir reglas para responder a un aumento de lo enemigos de un agente en un escenario dado.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Implementación de Metarreglas}
+    \begin{itemize}
+        \item Definición de metarreglas y su propósito en la toma de decisiones estratégicas.
+        \item Proceso de decisión mediante metarreglas:
+              \begin{itemize}
+                  \item Evaluación de contexto para determinar la aplicabilidad de reglas.
+                  \item Determinación de la prioridad de ejecución de las reglas en tiempo real.
+              \end{itemize}
+        \item Impacto operativo: Mejora en la coherencia y efectividad de las decisiones tomadas por el sistema.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Función de Transición y Similitud de Coseno}
+    \begin{itemize}
+        \item Descripción de la función de transición que utiliza similitud de coseno para evaluar posibles estados futuros.
+        \item Detalle del uso de la similitud de coseno:
+              \begin{itemize}
+                  \item Medición de la cercanía entre el vector de características actual y los vectores de estados potenciales.
+              \end{itemize}
+        \item Ejemplo detallado:
+              \begin{itemize}
+                  \item Análisis de un escenario donde el agente compara múltiples opciones y elige la más alineada con las condiciones ambientales actuales.
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{Smarter Agents}
+\subsection{Pro Agent}
+\begin{frame}{Descripcion General del Pro Agent}
+    Pro Agent es un agente cuyo comportamiento esta guiado por formulas, que a su vez dependen de parametros que se pueden ajustar a medida que se desea lograr uno u otro comportamiento en el agente.
+    Las acciones a realizar en un turno las decide de manera coordinada, de manera que un tipo de accion pueda suplir las carencias de la otra.
+    Para sus decisiones se apoya en caracterizaciones que realiza de los restantes agentes, decidiendo de una manera diferente respecto a otro agente de acuerdo a su nivel de agresividad o lejania. Ademas realiza evaluaciones del riesgo en las casillas a su alrededor y en la casilla propia en que se encuentra.
+\end{frame}
+
+\begin{frame}{Parameters}
+    Sus parametros son:
+    \begin{itemize}
+        \item alfa
+        \item beta
+        \item $apeal\_recquired\_to\_associate$
+        \item $minimun\_free\_portion$
+        \item $security\_umbral$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Move}
+    Para tomar la decision de hacia que posicion moverse, el ProAgent asigna una valoracion a cada casilla de cuan bueno seria moverse a ella. Esta evaluacion surge a partir de una formula donde se ponderan el riesgo de ir a esa casilla y la cantidad de azucar que esa casilla contiene.
+    La formula es:
+    El riesgo de una posicion es calculado como la suma de las amenazas potenciales de cada uno de los agentes conocidos a esa posicion. La amenaza potencial de cada agente a una posicion sera inversamente proporcional a su distancia y directamente proporcional a la cantidad de recursos que tenga y estara multiplicada por la agresividad del agente.
+    La agresividad de un agente, que usaremos numerosas veces en lo adelante, se calcula como el cociente de la cantidad de ataques que hemos visto realizar al agente y la cantidad de veces que lo hemos visto.
+\end{frame}
+
+\begin{frame}{Parametro Alfa}
+    El valor del parametro alfa va entre 0 y 1
+    Mientras mas cercano sea alfa a cero, mas importancia dara el agente al riesgo a la hora de evaluar una posicion
+    Mientras mas cercano sea alfa a uno, mas el agente considerara la cantidad de azucar que hay en la posicion, en detrimento del riesgo
+\end{frame}
+
+\begin{frame}{Decision de los Ataques y Asociaciones}
+    La decision de las acciones a realizar durante el turno por el agente se toma una sola vez, al comenzar al turno. Luego cuando son requeridas los ataques y las propuestas de  asociaciones por separado, el agente devuelve aquello que ya decidio, Esto permite coordinar sus atques y sus asociaciones.
+    Primeramente para ello precomputa la agresividad presumida de cada agente. Luego decide que ataques realizar y guarda ademas una lista de aquellos agentes a los que de atacar, podia haber destruido, pero no pudo atacar en este turno por cuestiones logisticas. Tales agentes seran luego extorsionados, a traves de asociaciones ventajosas que nuestro agente propondra, entre las asociaciones que decida proponer como culminacion de esta etapa.
+\end{frame}
+
+\begin{frame}{Ataques}
+    El ProAgent solo ataca a aquellos agentes que sabe con seguridad que puede matar en el proximo turno. Para ello para cada agente dentro de su rango de ataque valora, si es posible matarlo en el siguiente turno, de ser asi la fuerza requerida para ello y ademas el atractivo de matarlo. Luego a aquellos agentes que puede matar, los ordena en orden decreciente de su atractivo como victimas (kill_apeal, formula de la que hablaremos mas adelante).
+    El ProAgent tiene un parameto denominado security_umbral, que expresa la minima proporcion que el agente esta dispuesto a permitir entre su nivel de azucar, y el riesgo que existe en la posicion en que se encuentra. El ProAgent realiza ataques a estos agentes vulnerables con la fuerza suficiente para destruirlos, mientras no comprometa una cantidad de azucar que haga caer dicha proporcion por debajo del security_umbral. Los id de agentes vulnerables que no puedan ser atacados en este turno, por motivos de proteger el security_umbral, seran guardados, para luego hacerles propuestas de asociaciones ventajosas para el agente actual, o sea, extorsiones.
+\end{frame}
+
+\begin{frame}{security_umbral}
+    Security_Umbral es un parametro no negativo.
+    Expresa la proporcion minima que el agente se va a permitir entre la cantidad de recursos no comprometidos que posee y el riesgo de la posicion enque se encuentra (que es mas menos equivalente a la mayor suma de ataques que podria recibir).
+    El AgentPro realiza ataques mientras no comprometa su cumplimiento del Security_Umbral, de manera que mientras mayor el Security_Umbral menos ataques realiza el agente, mas se preocupa por su seguridad.
+\end{frame}
+
+\begin{frame}{Association_Proposals}
+    El ProAgent propone tres tipos de asociaciones. Asociaciones para protegerse de amenazas cercanas, extorsiones a aquellos agentes vulnerables a los que no pudo atacar y propuestas de paz a agentes con mas menos sus mismos recursos para evitar futuros conflictos
+    Para cada agente a extorsionar, le propone un trato donde el agente extorsionado debe entregar el 25 porciento de sus futuras ganancias, mientras el ProAgent no entrega nada, mas alla del compromiso de no atacarlo.
+\end{frame}
+
+\begin{frame}{Defensive Associations}
+    El ProAgent identifica como una amenaza a cada agente dentro de su rango de vista que tiene mas recursos y ademas tiene un historial de ataques no despreciable (por ahora seteamos como 25 porciento de agresividad ese limite). Los agentes que cumplen estas condiciones son identificados como amenazas debido a que pudieran, de desearlo destruir al ProAgent con un solo ataque.
+    A todos tales agentes que constituyen amenazas se les proponen asociaciones. La porcion minima de las ganancias personales que el agente considera obligatorio conservar esta codificada por el parametro minimum_free_portion. Cuan jugosa es la porcion otorgada a cada amenaza en la propuesta de asociacion depende de la cantidad de amenazas y de la porcion de las ganancias del agente que aun no se ha comprometido, asi como de la porcion que no esta dispuesto a comprometer. No obstante, aunq no tenga recursos para ofrecr, el agente siempre ofrecera alianzas a los agentes que considera amenazas
+\end{frame}
+
+\begin{frame}{Peace_Treaties}
+    Para los agentes que no caen en ninguna de las categorias anteriores, o sea, con los cuales existe mas menos una paridad en cuanto a recursos, el ProAgent, valora para cada cual cuan atractiva es una asociacion con el. Dada la formula del kill_apeal, encontramos que esa formula tambien describe muy bien cuan atractivo es otro agente para realizar una asociacion.
+    A todos aquellos agentes en esta tercera categoria cuyo kill_apeal sea mayor que el parametro apeal_recquired_to_associate se les hara una propuesta de asociacion donde ninguno de los dos agentes compromete sus ganancias, o sea, un tratado de paz
+\end{frame}
+
+\begin{frame}{El Kill_Apeal}
+    El kill_appeal vendria siendo asi como cuan molesto es el agente rival evaluado en los planes del ProAgent. Por supuesto, mientras mas cercano, o mientras mas agresivo, mas molesto. La medida en que se da ma valor para el calculo de esta metrica viene dada por el parametro beta.
+    Sera mas atractivo matar o asociarse con un agente que tenga un kill_appeal mas elevado, pues asi un problema menos. Tienen kill_appeal mas alto aquellos agentes con mas posibilidad de atacarnos, bloquear nuestro camino o ambos.
+\end{frame}
+
+\begin{frame}{Parametro Beta}
+    El parametro beta corre entre 0 y 1 y es la llave de paso que regula la ponderacion usada en la formula del kill_apeal.
+    Mientras mas cercano a cero mas peso toma el reverso de la distancia
+    Mientras mas cercano a uno mas peso toma la agresividad del agente rival
+\end{frame}
+
+\begin{frame}{Consider Association_Proposals}
+    Al considerar las propuestas de asociaciones se toma las siguientes consideraciones, con el mismo orden de prioridad en que aparecen:
+    \begin{itemize}
+        \item Si en ella se encuentra algun agente que constituye una amenaza directa (o sea la propuesta es una extorsion) y ademas el ProAgent esta dspuesto a pagar lo requerido en la asociacion, entonces la propuesta es aceptada
+        \item Si en la propuesta hay algun agente que podemos destruir en este turno, obviamente ese agente esta tratando de librarse de una muerte segura, y entonces no aceptamos la asociacion
+        \item De otra forma, si para cada uno de los agentes en la propuesta se cumple que su kill_apeal es mayor que el parametro appeal_recquired_to_associate y ademas aceptar la sociacion no compromete el cumplimiento del parametro minimun_free_portion, entonces, el ProAgent acepta la asociacion
+    \end{itemize}
+\end{frame}
+
+\subsection{Tunear los parametros de ProAgent}
+\begin{frame}{Algoritmo Genetico}
+    Un algoritmo genetico es una metaheuristica para solucionar problemas de optimizacion basada en la teoria de la evolucion de Charles Darwin, que presenta relativa facilidad para superar minimos locales. Permite reducir cualquier problema, por complejo que sea a unas cuantas definiciones, digase, como codificar en genes cada solucion, como tomar caracteristicas de dos soluciones diferentes y mezclarlas en una nueva solucion, como alterar ligeramente de manera aleatoria las soluciones de manera que se alcance todo el espacio de busqueda sin introducir aleatoreidad abrumadora y que porcion preservar de las soluciones y que porcion desechar y sustituir por la mezcla de las soluciones preservadas.
+    Estas caracteristicas de los algoritmos geneticos nos permite encontrar buena soluciones a problemas de optimizacion que seria dificil expresar en terminos matematicos estrictos.
+\end{frame}
+
+\begin{frame}{Por que Algoritmos Geneticos?}
+    Escogimos algoritmos geneticos para tunear el ProAgent porque:
+    \begin{itemize}
+        \item La cantidad de parametros a ajustar (5), su rango de valores y la escasa necesidad de una precision mas alla de la primera cifra decimal, hacen del espacio de busqueda lo suficientemente pequenho como para que un algoritmo genetico bien aplicado en 1000 generaciones (alrededor de 15 minutos de simulacion) de un resulta considerablemente bueno y del cual se puedan extraer conclusiones solidas sobre los valores optimos de los parametros.
+        \item Es comparable el proceso de la supervivencia de los agentes en la simulacion al de la supervivencia del mas apto en la naturaleza
+        \item El propio valor de los parametros sin mas codificacion puede ser usado como codigo genetico
+        \item Permite evitar la complejidad de la modelacion de este problema de una manera que realmente ningun otro de los algoritmos valorados permitia
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{La Implementacion}
+En el modulo ai, en el submodulo search, en la carpeta genetc implementamos una interfaz para problemas geneticos en general, donde le damos cuerpo a los metodos offpring (crear la nueva generacion) y abstraemos los metodos fitness, mutate, crossover y criterio de parada.
+En el modulo Interfaces creamos una interfaz para problemas geneticos cuyo fitness este dado por el episodio en el cual muere un agente en una simulacion de SugarScapes. Alli damos cuerpo a fitness y a la simulacion.
+En la carpeta tuning_pro_agent, directamente implementamos el problema de encontrar los parametros optimos para la supervivencia del ProAgent y lo modelamos como descriiremos a continuacion.
+\end{frame}
+
+\begin{frame}{Modelacion}
+    Usamos una poblacion de tan solo 20 ProAgents. Cada vez que realizamos una simulacion de SugarScapes usamos a los ProAgents de la poblacion y otros 80 agentes de otros tipos escogidos al azar. Mantenemos a los 5 ProAgents que mas tiempo se mantuvieron con vida, y sustituimos a los restantes por mezclas de estos 5 ProAgents susceptibles a mutaciones.
+    Si bien usar una poblacion tan pequenha es un drawback en cuanto a velocidad de la convergencia de los resultados, tomamos este sacrificio en aras de que el tuning de los parametros de ProAgent ocurriera en circunstancias similares a donde despues seria puesto a prueba (simulaciones de 100 agentes de tipos aleatorios). Una posible solucion, que no pensamos a tiempo, seria tener una poblacion de 100 agentes, pero separarlos en 5 simulaciones distintas, y quedarnos con los 5 mejores ProAgents de cada simulacion. No obstante notemos que aunque esta solucion mejora la convergencia en terminos de cantidad de generaciones, en realidad no mejora la velocidad de ejecucion del tuning, puesto que realiza 5 simulaciones por generacion en lugar de 1.
+\end{frame}
+
+\begin{frame}{Modelacion}
+    Los genes los modelamos como los propios valores que toman los parametros que tratamos de optimizar.
+    La funcion fitness esta dada por la cantidad de episodios que sobrevivio el agente en la simulacion. Se realiza una simulacion por cada generacion
+    Para la funcion crossover, hacemos que cada parametro tome un valor intermedio entre los valores que alcanza el parametro en los padres. Este valor intermedio es seleccionado aleatoriamente, con una distribucion en forma de V, de manera que lo mas probable es que el valor de un parametro se parezca mucho al valor de ese mismo parametro en uno de sus progenitores. Lo hicimos de esta manera pues consideramos que es la manera mas natural de preservar los rasgos de los padres, dado que en la vida real, la mayor parte de los rasgos fisicos de las personas son heredados de uno de sus progenitores, no de ambos a la vez.
+    Para la funcion mutate, seleccionamos un nuevo numero aleatorio con distribucion normal en el caso de aquellos parametros que corren entre 0 y 1. Para aquellos parametros que no tienen valor fijo, modificamos su valor en un numero random entre -0.5 y 0.5, con distribucion aleatoria.
+\end{frame}
+
+\begin{frame}{Modelacion}
+    La poblacion inicial consistio en algunos agentes con parametros colocados intencionalmente para simular actitudes, confrontacionales, cuidadosas o moderadas, y el resto de los agentes con parametros seleccionados al azar.
+    El criterio de parada usado fue estudiar 1000 generaciones. Si bien algunos parametros convergieron desde momentos relativamente tempranos, para otros parametros la convergencia no se manifesto mas alla de una tendencia a converger. Tomamos ese criterio de parada, porque realmente nos parecio avaricioso aspirar a poner como crterio de parada que convergieran todos los parametros puesto que puede que no fuera el modelo adecuado el mas adecuado para alguno de ellos, y 1000 generaciones nos parecio, y la practica lo corroboro un numero lo suficientemente exhaustivo como para obtener buenos parametros, sin poner en riesgo nuestros medios de computo, que se sobrecalientan y demas...
+\end{frame}
+
+\begin{frame}{Los parametros optimos obtenidos}
+    El primer parametro en converger, haciendolo de una manera inobjetable fue security_umbral. Alrededor de la generacion 300 ya aparecia de manera regular el valor 2.7 como security_umbral y este valor aparecio en la mayoria abrumadora de los agentes que quedaron como ultimos sobrevivientes de simulaciones. De hecho la exactitud fue bastante incuestionable, 2.7, ni mas ni menos. Este es un valor muy alto, lo que da indicios de que los agentes mas conservadores a la hora de realizar ataques (o sea aquellos que solo atacan cuando se sienten muy seguros), tienen una mayor garantia de exito. Del hecho de que el valor no continuara creciendo a medida que avanzo la simulacion, asumimos se debe a que cierto nivel de ofensiva es requerido para no dejar pasar oportunidades claras de asesinar a otros agentes.
+\end{frame}
+
+\begin{frame}{Los parametros optimos obtenidos}
+    El segundo parametro en converger fue el apeal_for_associate, que cayo a numeros negativos de una manera relativamente rapida. Si bien no se estabilizo en un numero negativo como tal, si quedo inobjetablemente bajo cero, frecuentando el -1.5, aunq variando mucho entre -0.8 y -2. La verdad, este parametro, por debajo de cero quiere decir, propon alianzas pacificas a todo agente que tenga mas menos tantos recursos como tu, por lo cual. O sea, cuando esta por debajo de cero poco importa el valor que tenga siempre se va a comportar de la misma manera, proponiendo y aceptando todas las alianzas pacificas posibles.
+\end{frame}
+
+\begin{frame}{Los parametros optimos obtenidos}
+    Los parametros alfa, beta y minimun_free_portion no convergieron, pero pudimos apreciar que de hacerlo en algun momento sin duda los valores candidatos serian 0.6, 0.4 y 0.5 respectivamente. Estos valores aparecieron mas de la cuenta, y parecian ademas funcionar bien juntos, apareciendo ellos tres a la vez en el mejor ProAgent de cada simulacion una cantidad significativa de veces.
+    Un valor de alfa de 0.6 quiere decir un agente que se arriesga moderadamente en busqueda de azucar, sin despreciar el peligro que representan los agentes a su alrededor.
+    Un valor de beta de 0.4 quiere decir un agente que considera ligeramente mas molesto a un agente mas agresivo que a un agente cercano, pero ambos le causan molestias.
+    Un minimun_free_portion de 0.5, es un valor flexible, que permite al agente proponer asociaciones que salven su vida instantaneamente sin comprometer su futuro al entrar en tratos injustos.
+\end{frame}
+
+\begin{frame}{Resultados}
+    De esta manera, el ProAgent que predomino fue un agente, conservador a la hora de atacar, propenso a hacer alianzas y sin temor de ir a buscar azucar, aunq sin ser temerario en ese aspecto tampoco. No solo nos parece logica esta combinacion de criterios, sino que como se vera posteriormente en los resultados estadisticos exhaustivos para contrastar los diferentes tipos de agentes, el ProAgent tuvo rotundo exito
+\end{frame}
+
+\subsection{FoodSeekerAgentWithA*}
+\begin{frame}{FoodSeekerAgentWithA*}
+    En esencia este es un agente que fija trayectorias convenientes hacia las posiciones mas ricas en azucar que ha visto. Las trayectorias que fija no son necesariamente las mas cortas, sino las mas provechosas en terminso de azucar recolectada, de manera que aspira a siempre tener una buena reserva de azucar.
+    Siendo consecuente con su plan, ataca solo a aquellos agentes que amenazan con ocupar la casilla objetivo del agente y que son vulnerables, o sea, pueden morir de un ataque, con lo cual el agente evitaria que su objetivo sea tomado por otro agente
+    Propone asociaciones a aquellos agentes que se encuentran cercanos y tienen un caracter agresivo, tratando de evitar asi ataques que disminuyan sus reservas de azucar
+\end{frame}
+
+\begin{frame}{Modelacion de este problema con A*}
+    El problema lo modelamos como encontrar el camino menos costoso al objetivo, pero con la peculiaridad de que el costo de realizar un movimiento no es fijo, sino que es inversamente proporcional a la cantidad de azucar en la nueva casilla visitada y directamente proporcional a cuantos turnos nos retrasa comparado a si tomaramos el camino mas corto acorde a la distancia manhattan
+    La heuristica tomada parte del hecho de que la casilla con mas valor que hemos visto es aquella que fijamos como objetivo, de manera que el camino optimo tomado debe tener un costo necesariamente mayor que el costo que tuviera el camino mas corto en cuanto a distancia manhattan, si estuviera lleno de casillas cuya cantidad de azucar sea igual a la cantidad de azucar en la casilla destino
+\end{frame}
+
+\end{document}

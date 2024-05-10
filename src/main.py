@@ -112,8 +112,8 @@ def stop_simulation():
 
 
 # Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
-# timer = threading.Timer(20, stop_simulation)
-# timer.start()  # Inicia el temporizador
+timer = threading.Timer(20, stop_simulation)
+timer.start()  # Inicia el temporizador
 try:
     while not simulation.__has_ended__():
         winerr_agents = simulation.step(
@@ -123,3 +123,4 @@ except KeyboardInterrupt:
     print("Simulación interrumpida")
 finally:
     pygame.quit()
+    timer.cancel()  #

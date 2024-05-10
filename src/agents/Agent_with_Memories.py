@@ -30,6 +30,7 @@ class Agent_with_Memories(IAgent):
         self.attacks_received: Dict[int, Tuple[int, int]] = {}
         self.memory_for_associations = Associations_Memory(id, conn)
         self.associations: Dict[int, Association] = {}
+        self.free_portion = 1
 
     # En IAgent deberiamos cambiar el nombre del parametro position por movement
     def inform_move(self, movement: Tuple[int, int]) -> None:
@@ -99,8 +100,10 @@ class Agent_with_Memories(IAgent):
     ):
         association = Association(members, commitments)
         self.associations[association_id] = association
+        self.free_portion -= association.commitments[self.id][0]
 
     def inform_broken_association(self, association_id: int):
+        self.free_portion += self.associations[association_id].commitments[self.id][0]
         self.associations.pop(association_id)
 
     def burn(self) -> None:

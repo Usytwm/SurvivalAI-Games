@@ -1,5 +1,6 @@
 import sqlite3
 from typing import List, Set, Tuple, Dict
+DROP_TABLE_IF_EXISTS = """DROP TABLE IF EXISTS %s"""
 CREATE_TABLE = """CREATE TABLE %s (agent_id INTEGER, association_id INTEGER, duty INTEGER,
     reward INTEGER)"""
 INSERT_MEMBRESY = """INSERT INTO %s (agent_id, association_id, duty, reward) VALUES(%s, %s, %s, %s);"""
@@ -14,6 +15,7 @@ class Associations_Memory:
         self.id = id
         self.cursor = conn.cursor()
         self.table_name = "associations_" + str(self.id)
+        self.cursor = self.cursor.execute(DROP_TABLE_IF_EXISTS%(self.table_name))
         self.cursor = self.cursor.execute(CREATE_TABLE%(self.table_name))
         self.association_creation_time : Dict[int, int] = {}
     
