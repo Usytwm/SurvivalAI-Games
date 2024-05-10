@@ -130,8 +130,9 @@ class ExpertAgent(Agent_with_Memories):
         self.color = (255, 255, 255)  # white
         if trasnsition_function is None:
             try:
-                with open(f"{entorno_virtual}\SuperAgente.joblib", "rb") as a:
-                    self.transition_function = load(a)
+                with open("SuperAgente.joblib", "rb") as a:
+                    functions = load(a)
+                    self.transition_function = functions[0]
             except:
                 self.transition_function = None
         else:
