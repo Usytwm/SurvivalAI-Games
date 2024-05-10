@@ -103,24 +103,24 @@ def create_simulation(
     ]
 
 
-# simulation, details = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
-# winerr_agents = []
+simulation, details = create_simulation(20, 20, 100, view=ViewOption.PYGAME)
+winerr_agents = []
 
 
-# def stop_simulation():
-#     simulation.stop()
+def stop_simulation():
+    simulation.stop()
 
 
-# # Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
-# timer = threading.Timer(20, stop_simulation)
-# timer.start()  # Inicia el temporizador
-# try:
-#     while not simulation.__has_ended__():
-#         winerr_agents = simulation.step(
-#             sleep_time=0.0001,  # Tiempo de espera entre cada paso
-#         )  # Actualiza el estado del simulador
-# except KeyboardInterrupt:
-#     print("Simulación interrumpida")
-# finally:
-#     pygame.quit()
-#     timer.cancel()  #
+# Configura un temporizador que llamará a stop_simulation después de `timeout` segundos
+timer = threading.Timer(20, stop_simulation)
+timer.start()  # Inicia el temporizador
+try:
+    while not simulation.__has_ended__():
+        winerr_agents = simulation.step(
+            sleep_time=0.0001,  # Tiempo de espera entre cada paso
+        )  # Actualiza el estado del simulador
+except KeyboardInterrupt:
+    print("Simulación interrumpida")
+finally:
+    pygame.quit()
+    timer.cancel()  #

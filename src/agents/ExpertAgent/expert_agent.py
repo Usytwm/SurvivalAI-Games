@@ -1,10 +1,9 @@
 from math import inf
-import random
+import os
 import sqlite3
 from typing import Dict, List, Tuple
 
 import numpy as np
-from Interfaces.IAgent import IAgent
 from agents.Agent_with_Memories import Agent_with_Memories
 from ai.knowledge.knowledge import Estrategy, Fact, Knowledge
 from environment.actions import (
@@ -12,7 +11,6 @@ from environment.actions import (
     Action_Info,
     Action_Type,
     Association_Proposal,
-    Attack,
 )
 from environment.sim_object import Agent_Info, Object_Info, Sim_Object_Type
 from agents.ExpertAgent.Rules import (
@@ -21,7 +19,8 @@ from agents.ExpertAgent.Rules import (
     random_metarule,
     resource_seeker_metarule,
 )
-from dill import dump, load
+from dill import load
+from venv import entorno_virtual
 
 
 def Sensor(aliados, enemigos, recursos, reserva, hostilidades, asociaciones):
@@ -131,7 +130,7 @@ class ExpertAgent(Agent_with_Memories):
         self.color = (255, 255, 255)  # white
         if trasnsition_function is None:
             try:
-                with open("SuperAgente.joblib", "rb") as a:
+                with open(f"{entorno_virtual}\SuperAgente.joblib", "rb") as a:
                     self.transition_function = load(a)
             except:
                 self.transition_function = None

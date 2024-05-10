@@ -267,7 +267,7 @@ def create_agents_ADN(adn_poblacion):
 def algoritmo_genético(tamaño_población, generaciones):
     adn_poblacion = crear_f_poblacion_inicial(tamaño_población, 6)
     adn_optimo = []
-    for _ in range(generaciones):
+    for i in range(generaciones):
         agents, id_ADN = create_agents_ADN(adn_poblacion)
 
         # TODO Como asocio ADN con agente?
@@ -284,6 +284,7 @@ def algoritmo_genético(tamaño_población, generaciones):
             )  # Necesito Turnos que sobrevivio, Recursos que recolecto, combates en los que participo
         timer.cancel()
         result = simulation.returnResult
+        print(f"Simulation {i} ended")
 
         # result = {}
 
