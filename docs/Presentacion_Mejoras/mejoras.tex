@@ -1,0 +1,67 @@
+\documentclass{beamer}
+\usetheme{Madrid} % Tema visual de la presentación.
+\usepackage[utf8]{inputenc} % Para caracteres especiales en español
+\usepackage[spanish]{babel} % Para configurar LaTeX en español
+\title{Sociedades Artificiales y la Ley del Más Fuerte: Mejoras}
+\author{Brian Ameht Inclán Quesada C-411 \\ Davier Sánchez Bello C-412 \\ Eric López Tornas C-411}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Índice}
+    \tableofcontents
+\end{frame}
+
+\section{Sistema Experto}
+
+\begin{frame}{Introducción al Sistema Experto Mejorado}
+    \begin{itemize}
+        \item Contexto inicial: Problemas de flexibilidad en la gestión de reglas.
+        \item Necesidad de mejora: Incapacidad del sistema para adaptarse dinámicamente a cambios en el entorno.
+        \item Objetivo de las mejoras: Aumentar la eficiencia del sistema permitiendo ajustes dinámicos de las reglas.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Gestión Dinámica de Reglas}
+    \begin{itemize}
+        \item Implementación de la funcionalidad para añadir y eliminar reglas:
+              \begin{itemize}
+                  \item Posibilidad de añadir y eliminar reglas individualmente o en grupos.
+                  \item Método utilizado: Interfaces de usuario e integración en tiempo real con el sistema experto.
+              \end{itemize}
+        \item Beneficios directos: Mayor adaptabilidad y respuesta rápida a cambios operativos.
+        \item Ejemplo práctico: Añadir reglas para responder a un aumento de lo enemigos de un agente en un escenario dado.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Implementación de Metarreglas}
+    \begin{itemize}
+        \item Definición de metarreglas y su propósito en la toma de decisiones estratégicas.
+        \item Proceso de decisión mediante metarreglas:
+              \begin{itemize}
+                  \item Evaluación de contexto para determinar la aplicabilidad de reglas.
+                  \item Determinación de la prioridad de ejecución de las reglas en tiempo real.
+              \end{itemize}
+        \item Impacto operativo: Mejora en la coherencia y efectividad de las decisiones tomadas por el sistema.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Función de Transición y Similitud de Coseno}
+    \begin{itemize}
+        \item Descripción de la función de transición que utiliza similitud de coseno para evaluar posibles estados futuros.
+        \item Detalle del uso de la similitud de coseno:
+              \begin{itemize}
+                  \item Medición de la cercanía entre el vector de características actual y los vectores de estados potenciales.
+              \end{itemize}
+        \item Ejemplo detallado:
+              \begin{itemize}
+                  \item Análisis de un escenario donde el agente compara múltiples opciones y elige la más alineada con las condiciones ambientales actuales.
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\end{document}
