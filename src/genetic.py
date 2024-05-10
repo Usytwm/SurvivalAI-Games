@@ -1,7 +1,19 @@
 import random
 import sqlite3
 import threading
+import random
+import sqlite3
+import threading
 
+from httpcore import TimeoutException
+from Interfaces.ISimulation import ViewOption
+from agents.CombatantAgent.CombatantAgent import CombatantAgent
+from agents.ExpertAgent.expert_agent import ExpertAgent
+from agents.RandomAgent.random_agent import RandomAgent
+from agents.FoodSeekerAgent.FoodSeekerAgent import FoodSeekerAgent
+from agents.FoodSeekerAgentwithAstar.FoodSeekerAgentwithAstar import (
+    FoodSeekerAgentwithAstar,
+)
 # from main import create_simulation
 from Interfaces.ISimulation import ViewOption
 from agents.CombatantAgent.CombatantAgent import CombatantAgent
@@ -334,7 +346,7 @@ def create_agents_ADN(adn_poblacion):
     agents = []
     id = 0
     id_ADN = []
-    extras = 5*len(adn_poblacion)
+    extras = 2*len(adn_poblacion)
     for adn in adn_poblacion:
         reserve = adn[0][0][1][4]
         reserve = (
@@ -388,7 +400,7 @@ def create_agents_ADN(adn_poblacion):
 # Función principal
 def algoritmo_genético(tamaño_población, generaciones):
     #adn_poblacion = crear_f_poblacion_inicial(tamaño_población, 4)
-    with open("pacif.joblib", "rb") as a:
+    with open("Exposicion5.joblib", "rb") as a:
         adn_poblacion = load(a)
     adn_poblacion = reproducir(
             adn_poblacion, tamaño_población
@@ -420,13 +432,13 @@ def algoritmo_genético(tamaño_población, generaciones):
         )  # Selecciona los K mejores
 
         adn_optimo = mejor_poblacion  # Guarda el agente optimo de está generación
-        if (0.05 *geneticosVivos) > NogeneticosVivos:
+        if (0.3 *geneticosVivos) > NogeneticosVivos:
             print("genticos vivos ", geneticosVivos, " No geneticos vivos ", NogeneticosVivos)
 
             print(agentesVIvos)
             with open("SuperAgenteAux.joblib", "wb") as a:
                 dump(adn_optimo, a)
-            input("HiJJJ")
+            input("Halt")
             break
         #if True:
         #    print("genticos vivos ", geneticosVivos, " No geneticos vivos ", NogeneticosVivos)
@@ -442,7 +454,7 @@ def algoritmo_genético(tamaño_población, generaciones):
         dump(adn_optimo, a)
 
 
-algoritmo_genético(30, 100)
+algoritmo_genético(50, 100)
 
 
 # adn_optimo = None

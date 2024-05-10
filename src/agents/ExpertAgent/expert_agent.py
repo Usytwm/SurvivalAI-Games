@@ -131,8 +131,8 @@ class ExpertAgent(Agent_with_Memories):
         self.color = (255, 255, 255)  # white
         if trasnsition_function is None:
             try:
-                with open("SuperAgente.joblib", "rb") as a:
-                    self.transition_function = load(a)
+                with open("Exposicion.joblib", "rb") as a:
+                    self.transition_function = load(a)[0]
             except:
                 self.transition_function = None
         else:
@@ -162,7 +162,7 @@ class ExpertAgent(Agent_with_Memories):
         self.resources_count = 0
         self.vitality = 0
         self.hostility_count = 0
-        self.type = 0
+        self.type = 3
         self.estrategy = Estrategy(initial_facts, initial_rules)
 
     def move(self, possible_moves: List[Tuple[int, int]]):
@@ -180,6 +180,8 @@ class ExpertAgent(Agent_with_Memories):
                 filter_desicion,
             )
         )[0]
+        if move ==(0,0):
+            print(self.type)
         position = self.estrategy.get_knowledge(Knowledge.POSITION)
         self.estrategy.learn_especific(Knowledge.PREVPOSSITION, position)
         return move
@@ -366,4 +368,6 @@ class ExpertAgent(Agent_with_Memories):
             if current_value > max_value:
                 max_value = current_value
                 type_return = key
+            #if value[0][1] == caracteristics:
+            #    type_return = key
         return type_return

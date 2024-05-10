@@ -172,7 +172,7 @@ def behavior_based_rule_selector(behavior_value, applicable_rules):
 
 
 # Crear metarreglas para cada tipo de comportamiento
-combat_metarule = behavior_based_rule_selector(1, combat_rules)
-pacifist_metarule = behavior_based_rule_selector(2, pacifist_rules)
-resource_seeker_metarule = behavior_based_rule_selector(3, resource_seeker_rules)
-random_metarule = behavior_based_rule_selector(4, random_rules)
+combat_metarule = behavior_based_rule_selector(0, combat_rules)
+pacifist_metarule = behavior_based_rule_selector(1, pacifist_rules)
+resource_seeker_metarule = behavior_based_rule_selector(2, resource_seeker_rules)
+random_metarule = behavior_based_rule_selector(3, random_rules)
