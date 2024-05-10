@@ -125,9 +125,13 @@ class SimpleSimulation(ISimulation):
                 (
                     id,
                     (
-                        (turn_of_death / self.turn),
+                        turn_of_death / self.turn,
                         self.resourcesPerAgent[id] / self.totalRecursos,
-                        self.AttacksReceivedPerAgent[id] / self.totalAtaques,
+                        (
+                            self.AttacksReceivedPerAgent[id] / self.totalAtaques
+                            if self.totalAtaques > 0
+                            else 0
+                        ),
                     ),
                     agent.agent.transition_function,
                 )
