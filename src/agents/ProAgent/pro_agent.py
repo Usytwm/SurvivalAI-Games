@@ -10,11 +10,11 @@ class ProAgent(Agent_with_Memories):
     def __init__(self, id: int, consume: int, reserves, conn: sqlite3.Connection):
         super().__init__(id, consume, reserves, conn)
         self.color = (160, 32, 240)  # purple
-        self.alfa = 0.5
-        self.beta = 0.5
-        self.security_umbral = 1
-        self.minimun_free_portion = 0.1
-        self.appeal_recquired_to_associate = 0.5
+        self.alfa = 0.6
+        self.beta = 0.4
+        self.security_umbral = 2.7
+        self.minimun_free_portion = 0.5
+        self.appeal_recquired_to_associate = -1.5
         self.attacks_planned = []
         self.association_proposals_planned = []
         self.computated_agresivities: Dict[int, int] = {}
