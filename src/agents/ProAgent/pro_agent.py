@@ -75,6 +75,7 @@ class ProAgent(Agent_with_Memories):
                 direct_threats.append((other_id, other_resources, distance))
             else:
                 par_agents.append((other_id, other_resources, distance))
+                
         #Ordenamos las amenazas directas por agresividad y distancia en ese orden
         left_free_portion = self.free_portion
         direct_threats.sort(key= lambda tpl : (self.computated_agresivities[tpl[0]], tpl[2]), reverse= True)

@@ -116,27 +116,39 @@ class SimpleSimulation(ISimulation):
         Returns a tuple (id, results) of the agent in the simulation.
         """
         answer = []
+        agentes = []
+        genticosVivos = 0
+        Total = 0
         for id, agent in self.initial_agents:
             try:
                 turn_of_death = self.deads[id]
             except:
                 turn_of_death = self.turn
-            answer.append(
-                (
-                    id,
+                
+            try:
+                answer.append(
                     (
-                        turn_of_death / self.turn,
-                        self.resourcesPerAgent[id] / self.totalRecursos,
+                        id,
                         (
-                            self.AttacksReceivedPerAgent[id] / self.totalAtaques
-                            if self.totalAtaques > 0
-                            else 0
+                            turn_of_death / self.turn,
+                            self.resourcesPerAgent[id] / self.totalRecursos,
+                            (
+                                self.AttacksReceivedPerAgent[id] / self.totalAtaques
+                                if self.totalAtaques > 0
+                                else 0
+                            ),
                         ),
-                    ),
-                    agent.agent.transition_function,
+                        agent.agent.transition_function,
+                    )
                 )
-            )
-        return answer
+                if 1 == (turn_of_death / self.turn):
+                    genticosVivos+=1
+            except:
+                pass
+        for _ in self.agents:
+            Total+=1
+
+        return answer, genticosVivos, (Total - genticosVivos ), agentes
 
     def add_message(self, message: str):
         self.messages.append(message)
